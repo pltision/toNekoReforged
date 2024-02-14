@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.capability;
+package yee.pltision.tonekoreforged.neko.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -12,8 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.interfaces.NekoState;
-import yee.pltision.tonekoreforged.object.NekoStateObject;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
+import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 @Mod.EventBusSubscriber
 public class NekoCapabilityProvider implements ICapabilityProvider {

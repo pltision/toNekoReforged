@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.interfaces;
+package yee.pltision.tonekoreforged.neko.interfaces;
 
 import net.minecraft.world.entity.player.Player;
 
@@ -21,12 +21,12 @@ public interface NekoRecord {
     /**
      * @return 对主人的好感度
      */
-    int getExp();
+    float getExp();
 
     /**
      * 设置对主人的好感度
      */
-    void setExp(int exp);
+    void setExp(float exp);
 
     /**
      * @return 好感度增长因数

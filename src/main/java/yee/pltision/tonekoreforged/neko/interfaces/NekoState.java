@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.interfaces;
+package yee.pltision.tonekoreforged.neko.interfaces;
 
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -38,16 +38,16 @@ public interface NekoState {
      * @param owner 要移除的主人。
      * @return 如果成功移除了。
      */
-    boolean removeOwnerAndSet(UUID owner);
+    boolean removeOwnerAndState(UUID owner);
 
     /**
      * 移除一个主人。
      * @param owner 要移除的主人。
-     * @param removeSet 是否要移除集合
+     * @param removeState 是否要移除集合
      * @return 如果成功移除了。
      */
-    default boolean removeOwner(UUID owner,boolean removeSet){
-        return removeSet? removeOwnerAndSet(owner):removeOwner(owner);
+    default boolean removeOwner(UUID owner,boolean removeState){
+        return removeState? removeOwnerAndState(owner):removeOwner(owner);
     }
 
 

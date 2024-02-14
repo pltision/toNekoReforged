@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.object;
+package yee.pltision.tonekoreforged.neko.object;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -7,8 +7,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.interfaces.NekoRecord;
-import yee.pltision.tonekoreforged.interfaces.NekoState;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
 
 import java.util.*;
 
@@ -66,7 +66,7 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
     }
 
     @Override
-    public boolean removeOwnerAndSet(UUID owner) {
+    public boolean removeOwnerAndState(UUID owner) {
         if(ownerMap==null)return false;
         NekoRecordObject removed=ownerMap.remove(owner);
         if(removed==null){

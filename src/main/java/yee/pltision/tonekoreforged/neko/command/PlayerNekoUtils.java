@@ -1,11 +1,12 @@
-package yee.pltision.tonekoreforged.command;
+package yee.pltision.tonekoreforged.neko.command;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
-import yee.pltision.tonekoreforged.interfaces.NekoState;
-import yee.pltision.tonekoreforged.capability.NekoCapabilityProvider;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
+import yee.pltision.tonekoreforged.neko.capability.NekoCapabilityProvider;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,6 +60,36 @@ public class PlayerNekoUtils {
         return removedSet.get();
     }
 
+    /**
+     * 可以修改离线玩家的数据（未实现）
+     * @return 是否成功执行consumer，false则未找到记录
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean modifyStateRecord(Player player, UUID get, NonNullConsumer<NekoRecord> consumer){
+        LazyOptional<NekoState> state= player.getCapability(NekoCapabilityProvider.NEKO_STATE);
+        AtomicBoolean success=new AtomicBoolean(false);
+        if(state.isPresent())
+            state.ifPresent(cap->{
+                NekoRecord playerRecord=cap.getOwner(get);
+                if(playerRecord==null){
+                    if(cap.checkNeko(get)&&player.getServer()!=null){
+                        modifyPlayerState(player.getServer(), get, otherState -> {
+                            NekoRecord otherRecord = otherState.getOwner(player.getUUID());
+                            if (otherRecord != null) {
+                                consumer.accept(otherRecord);
+                                success.set(true);
+                            }
+                        });
+                    }
+                    //否则失败
+                }
+                else {
+                    consumer.accept(playerRecord);
+                    success.set(true);
+                }
+            });
+        return success.get();
+    }
 
     public enum OperatorState{
         NEKO,OWNER

@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged;
+package yee.pltision.tonekoreforged.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -7,6 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+import yee.pltision.tonekoreforged.ToNeko;
 
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = ToNeko.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config
 {
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     private static final ForgeConfigSpec.BooleanValue REMOVE_SET_WHEN_REMOVED_ALL_OWNER = BUILDER
             .comment("If true, when command removed a neko's all owner, the neko will be not a neko.")
@@ -23,20 +24,14 @@ public class Config
             .define("removeSetWhenRemovedAllOwner", true);
 
 
-    static final ForgeConfigSpec SPEC = BUILDER.build();
+    public static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static boolean removeSetWhenRemovedAllOwner;
-    public static Set<Item> items;
-
-    private static boolean validateItemName(final Object obj)
-    {
-        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName));
-    }
+    public static boolean removeStateWhenRemovedAllOwner;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
-        removeSetWhenRemovedAllOwner = REMOVE_SET_WHEN_REMOVED_ALL_OWNER.get();
+        removeStateWhenRemovedAllOwner = REMOVE_SET_WHEN_REMOVED_ALL_OWNER.get();
 
     }
 }

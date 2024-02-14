@@ -1,15 +1,15 @@
-package yee.pltision.tonekoreforged.object;
+package yee.pltision.tonekoreforged.neko.object;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import yee.pltision.tonekoreforged.interfaces.NekoRecord;
+import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
 
 import java.util.UUID;
 
 public class NekoRecordObject implements NekoRecord {
     public final @NotNull UUID uuid;
-    public int exp;
+    public float exp;
     public float factor=1;
 
     public NekoRecordObject(@NotNull UUID uuid,int exp) {
@@ -23,12 +23,12 @@ public class NekoRecordObject implements NekoRecord {
     }
 
     @Override
-    public int getExp() {
+    public float getExp() {
         return exp;
     }
 
     @Override
-    public void setExp(int exp) {
+    public void setExp(float exp) {
         this.exp=exp;
     }
 
@@ -66,7 +66,8 @@ public class NekoRecordObject implements NekoRecord {
     public CompoundTag serializeNBT() {
         CompoundTag tag= new CompoundTag();
         tag.putUUID("uuid",uuid);
-        tag.putInt("exp",exp);
+        tag.putFloat("exp",exp);
+        tag.putFloat("factor",factor);
         return tag;
     }
 
