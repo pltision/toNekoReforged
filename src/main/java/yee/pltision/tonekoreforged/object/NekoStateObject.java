@@ -3,30 +3,24 @@ package yee.pltision.tonekoreforged.object;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.common.util.NonNullConsumer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.api.NekoState;
-import yee.pltision.tonekoreforged.capability.NekoCapabilityProvider;
+import yee.pltision.tonekoreforged.interfaces.NekoRecord;
+import yee.pltision.tonekoreforged.interfaces.NekoState;
 
 import java.util.*;
 
 public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag> {
     public static int DEFAULT_EXP=10;
 
-    public BiMap<UUID, NekoRecordObject> nekoMap;
+    public Set<UUID> nekoSet;
     public @Nullable BiMap<UUID,NekoRecordObject> ownerMap;
 
-    //如果有需要的话，Player可以泛化成Entity。
-    public Player player;
-
     public NekoStateObject(){
-        nekoMap=null;
-        ownerMap= HashBiMap.create();
+        nekoSet =new HashSet<>();
+        ownerMap= null;
     }
 
     @Override
@@ -35,9 +29,11 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
     }
 
     @Override
-    public void addOwner(UUID owner) {
+    public boolean addOwner(UUID owner){
         if(ownerMap==null) ownerMap=HashBiMap.create();
-        ownerMap.putIfAbsent(owner,new NekoRecordObject(owner,DEFAULT_EXP));
+        if(ownerMap.containsKey(owner)) return false;
+        ownerMap.put(owner,new NekoRecordObject(owner,DEFAULT_EXP));
+        return true;
     }
 
     /*@Override
@@ -63,41 +59,48 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
     }
 
     @Override
-    public NekoRecordObject removeOwner(UUID owner) {
-        return ownerMap==null?null:ownerMap.remove(owner);
+    public boolean removeOwner(UUID owner) {
+        if(ownerMap==null)return false;
+        NekoRecord removed=ownerMap.remove(owner);
+        return removed != null;
     }
 
     @Override
-    public NekoRecordObject removeOwnerAndSet(UUID owner) {
-        if(ownerMap==null)return null;
+    public boolean removeOwnerAndSet(UUID owner) {
+        if(ownerMap==null)return false;
         NekoRecordObject removed=ownerMap.remove(owner);
-        if(removed==null)return null;
+        if(removed==null){
+            return false;
+        }
         else {
             if(ownerMap.size()==0) ownerMap=null;
-            return removed;
+            return true;
         }
     }
 
     @Override
-    public @NotNull Set<NekoRecordObject> getNekos() {
-        return nekoMap.values();
+    public @NotNull Set<UUID> getNekos() {
+        return Collections.unmodifiableSet(nekoSet);
     }
 
     @Override
-    public void addNeko(UUID neko) {
-        nekoMap.putIfAbsent(neko,new NekoRecordObject(neko,DEFAULT_EXP));
+    public boolean addNeko(UUID neko){
+        return nekoSet.add(neko);
     }
 
 
     @Override
-    public @Nullable NekoRecordObject getNeko(UUID uuid) {
-        return nekoMap.get(uuid);
+    public boolean checkNeko(UUID uuid) {
+        return nekoSet.contains(uuid);
     }
 
     @Override
-    public NekoRecordObject removeNeko(UUID neko) {
-        return nekoMap.remove(neko);
+    public boolean removeNeko(UUID neko) {
+        return nekoSet.remove(neko);
     }
+
+    @Override
+    public void tick(Player player) {}
 
     @Override
     public CompoundTag serializeNBT() {
@@ -109,42 +112,5 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
 
     }
 
-    public void modifyPlayerState(MinecraftServer server, UUID uuid, NonNullConsumer<NekoState> consumer){
-        Player player =server.getPlayerList().getPlayer(uuid);
-        if(player!=null){
-            LazyOptional<NekoState> state= player.getCapability(NekoCapabilityProvider.NEKO_STATE);
-            if(state.isPresent())
-                state.ifPresent(consumer);
-            else{
-                //TODO: 抛出异常
-            }
-        }
-        //TODO: 读取存档中的
-    }
 
-    public void connect(OperatorState operatorState,UUID other){
-        MinecraftServer server=player.getServer();
-        if(server==null) return;
-        modifyPlayerState(server,other,state->{
-            switch (operatorState){
-                case NEKO -> state.addOwner(other);
-                case OWNER -> state.addNeko(other);
-            }
-        });
-    }
-
-    public void remove(OperatorState operatorState,UUID other){
-        MinecraftServer server=player.getServer();
-        if(server==null) return;
-        modifyPlayerState(server,other,state->{
-            switch (operatorState){
-                case NEKO -> state.removeOwner(other);
-                case OWNER -> state.removeNeko(other);
-            }
-        });
-    }
-
-    public enum OperatorState{
-        NEKO,OWNER;
-    }
 }

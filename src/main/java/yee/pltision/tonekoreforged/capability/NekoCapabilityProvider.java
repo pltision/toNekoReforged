@@ -8,15 +8,21 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.api.NekoState;
+import yee.pltision.tonekoreforged.interfaces.NekoState;
 import yee.pltision.tonekoreforged.object.NekoStateObject;
 
+@Mod.EventBusSubscriber
 public class NekoCapabilityProvider implements ICapabilityProvider {
     public static final Capability<NekoState> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
-    public static final LazyOptional<NekoState> optional =LazyOptional.of(NekoStateObject::new);
+    public final LazyOptional<NekoState> optional;
+
+    public NekoCapabilityProvider(){
+        optional=LazyOptional.of(NekoStateObject::new);
+    }
 
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
@@ -24,6 +30,7 @@ public class NekoCapabilityProvider implements ICapabilityProvider {
             event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapabilityProvider());
         }
     }
+
     @SubscribeEvent
     public void registerCaps(RegisterCapabilitiesEvent event) {
         event.register(NekoState.class);
@@ -31,6 +38,6 @@ public class NekoCapabilityProvider implements ICapabilityProvider {
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return optional.cast();
+        return cap == NEKO_STATE ? optional.cast():LazyOptional.empty();
     }
 }
