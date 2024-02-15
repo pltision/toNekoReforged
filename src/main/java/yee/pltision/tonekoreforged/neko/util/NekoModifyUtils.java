@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.neko.command;
+package yee.pltision.tonekoreforged.neko.util;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
@@ -6,19 +6,19 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
 import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
 import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
-import yee.pltision.tonekoreforged.neko.capability.NekoCapabilityProvider;
+import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class PlayerNekoUtils {
+public class NekoModifyUtils {
     /**
      * 此方法可以读取已离线的玩家数据（暂未实现）
      */
     public static  void modifyPlayerState(MinecraftServer server, UUID uuid, NonNullConsumer<NekoState> consumer){
         Player player =server.getPlayerList().getPlayer(uuid);
         if(player!=null){
-            LazyOptional<NekoState> state= player.getCapability(NekoCapabilityProvider.NEKO_STATE);
+            LazyOptional<NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
             if(state.isPresent())
                 state.ifPresent(consumer);
             else throw new RuntimeException("玩家"+player+"没有NekoState能力");
@@ -28,7 +28,7 @@ public class PlayerNekoUtils {
     }
 
     public static void connect(Player player ,OperatorState operatorState,Player other){
-        LazyOptional<NekoState> stateOptional= other.getCapability(NekoCapabilityProvider.NEKO_STATE);
+        LazyOptional<NekoState> stateOptional= other.getCapability(NekoCapability.NEKO_STATE);
         if(stateOptional.isPresent())
             stateOptional.ifPresent(otherState->{
                 switch (operatorState){
@@ -66,7 +66,7 @@ public class PlayerNekoUtils {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean modifyStateRecord(Player player, UUID get, NonNullConsumer<NekoRecord> consumer){
-        LazyOptional<NekoState> state= player.getCapability(NekoCapabilityProvider.NEKO_STATE);
+        LazyOptional<NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
         AtomicBoolean success=new AtomicBoolean(false);
         if(state.isPresent())
             state.ifPresent(cap->{

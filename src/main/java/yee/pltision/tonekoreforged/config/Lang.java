@@ -22,8 +22,8 @@ public class Lang {
             GET_EXP_NOT_FOUND=new ConfigLang("commands.toneko.get_exp.not_found", "You are not a neko or owner whit this player","你不是这个玩家的猫娘或主人"),
             GET_EXP_INFO=new ConfigLang("commands.toneko.get_exp.info", "Your exp is ","你们的好感经验值是"),
 
-            SET_EXP_NOT_CONNECTED=new ConfigLang("commands.toneko.get_exp.not_found", "These tow players (or same player) is not connected","这两个（或同个）玩家没有建立关系"),
-            SET_EXP_INFO=new ConfigLang("commands.toneko.get_exp.info", "Set exp to ","已将好感经验值设为");
+            SET_EXP_NOT_CONNECTED=new ConfigLang("commands.toneko.set_exp.not_connected", "These tow players (or same player) is not connected","这两个（或同个）玩家没有建立关系"),
+            SET_EXP_INFO=new ConfigLang("commands.toneko.set_exp.info", "Set exp to ","已将好感经验值设为");
 
-    public static void intiClass(){}
+    public static void inti(){}
 }

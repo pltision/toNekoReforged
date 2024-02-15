@@ -51,7 +51,7 @@ public interface NekoRecord {
      * 让程序增长（或减少）对主人的好感度
      * @return 实际增长的好感度
      */
-    int growExp(int exp);
+    float growExp(float exp);
 
     /**
      * 用于处理因数等动态信息。

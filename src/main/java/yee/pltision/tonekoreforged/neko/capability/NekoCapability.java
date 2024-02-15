@@ -16,18 +16,18 @@ import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 @Mod.EventBusSubscriber
-public class NekoCapabilityProvider implements ICapabilityProvider {
+public class NekoCapability implements ICapabilityProvider {
     public static final Capability<NekoState> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
     public final LazyOptional<NekoState> optional;
 
-    public NekoCapabilityProvider(){
+    public NekoCapability(){
         optional=LazyOptional.of(NekoStateObject::new);
     }
 
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject()instanceof Player){
-            event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapabilityProvider());
+            event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapability());
         }
     }
 
@@ -40,4 +40,5 @@ public class NekoCapabilityProvider implements ICapabilityProvider {
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == NEKO_STATE ? optional.cast():LazyOptional.empty();
     }
+
 }

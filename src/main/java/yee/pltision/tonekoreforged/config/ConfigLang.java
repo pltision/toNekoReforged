@@ -1,14 +1,10 @@
 package yee.pltision.tonekoreforged.config;
 
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.command.CommandException;
 
 import java.util.ArrayList;
@@ -18,7 +14,6 @@ import java.util.List;
 /**
  * 这是一坨史
  */
-@Mod.EventBusSubscriber(modid = ToNeko.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ConfigLang {
     private static final ArrayList<String> KEYS =new ArrayList<>(), DEFAULTS =new ArrayList<>(), CHINESE=new ArrayList<>();
     private static final HashMap<String,ConfigLang> WAIT_FOR_INTI =new HashMap<>();
@@ -42,24 +37,21 @@ public class ConfigLang {
     }
 
 
-
-
-
-    //主打一个随心所欲写答辩
-    @SubscribeEvent
-    static void onLoad(final ModConfigEvent event)
-    {
-        Lang.intiClass();
+    public static ForgeConfigSpec.ConfigValue<List<? extends String>> langInti(){
+        Lang.inti();
 
         ArrayList<String> buildList=new ArrayList<>(KEYS.size()),zhList=new ArrayList<>(KEYS.size());
         for(int i=0;i<KEYS.size();i++){
             buildList.add(KEYS.get(i)+":"+DEFAULTS.get(i));
             zhList.add(KEYS.get(i)+":"+CHINESE.get(i));
         }
-        Config.BUILDER.comment("这是一个中文的示例，将其替换掉lang就可以把默认翻译改成中文了。").defineList("chinese_example_lang",zhList,v->true);
-        ForgeConfigSpec.ConfigValue<List<? extends String>> configLangs= Config.BUILDER.defineList("lang",buildList, v->true);
+        Config.BUILDER.comment("这是一个中文的示例，将其替换掉lang就可以把默认翻译改成中文了。").defineList("chinese_example_lang",zhList,t->t instanceof String);
+        return Config.BUILDER.defineList("lang",buildList, t->t instanceof String);
+    }
 
-        for (String configLang : configLangs.get()) {
+    static void load(List<? extends String> configLangs)
+    {
+        for (String configLang : configLangs) {
             try{
                 int index = configLang.indexOf(':');
                 String key=configLang.substring(0,index);

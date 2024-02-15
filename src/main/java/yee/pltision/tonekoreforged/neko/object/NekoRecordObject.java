@@ -51,11 +51,11 @@ public class NekoRecordObject implements NekoRecord {
     }
 
     @Override
-    public int growExp(int exp) {
+    public float growExp(float exp) {
         if(factor<=0){
             throw new IllegalArgumentException("factor<0");
         }
-        int muled=(int)(exp>0?exp*factor:exp/factor);
+        float muled=exp>0 ? exp*factor: exp/factor;
         this.exp+=muled;
         return muled;
     }

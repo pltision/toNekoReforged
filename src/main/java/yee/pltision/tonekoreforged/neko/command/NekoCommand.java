@@ -3,7 +3,6 @@ package yee.pltision.tonekoreforged.neko.command;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -19,7 +18,9 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Config;
-import yee.pltision.tonekoreforged.neko.capability.NekoCapabilityProvider;
+import yee.pltision.tonekoreforged.config.Lang;
+import yee.pltision.tonekoreforged.neko.util.NekoModifyUtils;
+import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
 import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
 
@@ -72,10 +73,7 @@ public class NekoCommand {
         );
     }
 
-    public static final SimpleCommandExceptionType LIST_NEKO_NOT_PLAYER = new SimpleCommandExceptionType(Component.translatable("commands.toneko.list_neko.not_player"));
-    public static final SimpleCommandExceptionType PLAYER_NOT_NEKO = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.entity_not_neko","This player is not a neko"));
-
-    //⟳∅
+    //⟳∅Ø
 
     /**
      * 用于列出玩家的所有猫猫。当尝试列出的uuid的玩家离线时，会尝试从GameProfileCache中获取。若仍未找点直接输出uuid。
@@ -84,8 +82,8 @@ public class NekoCommand {
         Player player=context.getPlayerOrException();
 
         context.sendSuccess(()->{
-            MutableComponent component=Component.translatableWithFallback("commands.toneko.list_neko.info","Your nekos include: ");
-            player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(cap->{
+            MutableComponent component= Lang.LIST_NEKO_INFO.component();
+            player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
                 Iterator<UUID> it=cap.getNekos().iterator();
                 listPlayers(component,it,context.getServer());
             });
@@ -120,22 +118,21 @@ public class NekoCommand {
         component.append("]");
     }
 
-    public static final SimpleCommandExceptionType GET_NEKO_ALREADY = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.get_neko.already","This player is already your neko"));
     public static int getNeko(CommandSourceStack context, ServerPlayer neko) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
-        PlayerNekoUtils.connect(player, PlayerNekoUtils.OperatorState.OWNER,neko);  //将player添加为neko的主人
+        NekoModifyUtils.connect(player, NekoModifyUtils.OperatorState.OWNER,neko);  //将player添加为neko的主人
 
         AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(cap->{
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             isSuccess.set(cap.addNeko(neko.getUUID()));     //将neko添加为player的猫猫
         });
 
         if(isSuccess.get()) {
-            context.sendSuccess(() -> Component.empty().append(neko.getName()).append(Component.translatableWithFallback("commands.toneko.get_neko.info"," is your neko now")), false);
+            context.sendSuccess(() -> Component.empty().append(neko.getName()).append(Lang.GET_NEKO_INFO.component()), false);
         }
         else {
-            throw GET_NEKO_ALREADY.create();
+            throw CommandException.GET_NEKO_ALREADY.create();
         }
 
         return 0;
@@ -144,14 +141,14 @@ public class NekoCommand {
         Player player=context.getPlayerOrException();
 
         AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(state::set);
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
             Set<? extends NekoRecord> owners = state.get().getOwners();
             if (owners == null) {
-                throw PLAYER_NOT_NEKO.create();
+                throw CommandException.PLAYER_NOT_NEKO.create();
             } else {
                 context.sendSuccess(() -> {
-                    MutableComponent component = Component.translatableWithFallback("commands.toneko.list_owner.info","Your owners include: ");
+                    MutableComponent component = Lang.LIST_OWNER_INFO.component();
                     Iterator<UUID> it = new NekoRecord.UUIDIterator(owners.iterator());
                     listPlayers(component, it, context.getServer());
                     return component;
@@ -161,91 +158,87 @@ public class NekoCommand {
         return 0;
     }
 
-    public static final SimpleCommandExceptionType GET_OWNER_ALREADY = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.get_owner.already","This player is already your owner"));
     public static int getOwner(CommandSourceStack context, ServerPlayer owner) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
-        PlayerNekoUtils.connect(player, PlayerNekoUtils.OperatorState.NEKO,owner);  //将player添加为over的猫猫
+        NekoModifyUtils.connect(player, NekoModifyUtils.OperatorState.NEKO,owner);  //将player添加为over的猫猫
 
         AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(cap->{
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             isSuccess.set(cap.addOwner(owner.getUUID()));     //将owner添加为player的主人
         });
 
         if(isSuccess.get()) {
-            context.sendSuccess(() -> Component.empty().append(owner.getName()).append(Component.translatableWithFallback("commands.toneko.get_owner.info"," is your owner now")), true);
+            context.sendSuccess(() -> Component.empty().append(owner.getName()).append(Lang.GET_OWNER_INFO.component()), true);
         }
         else {
-            throw GET_OWNER_ALREADY.create();
+            throw CommandException.GET_OWNER_ALREADY.create();
         }
 
         return 0;
     }
 
-    public static final SimpleCommandExceptionType REMOVE_NEKO_NOT_FOUND = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.remove_neko.not_found","Cannot found your neko whit this uuid"));
     public static int removeNeko(CommandSourceStack context, UUID neko,String input) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
-        PlayerNekoUtils.remove(player, PlayerNekoUtils.OperatorState.OWNER,neko, Config.removeStateWhenRemovedAllOwner);  //为player移除主人
+        NekoModifyUtils.remove(player, NekoModifyUtils.OperatorState.OWNER,neko, Config.removeStateWhenRemovedAllOwner);  //为player移除主人
         //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
 
         AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(cap-> isSuccess.set(cap.removeNeko(neko)));
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> isSuccess.set(cap.removeNeko(neko)));
 
         if(isSuccess.get()) {
-            context.sendSuccess(() ->Component.empty().append(input).append(Component.translatableWithFallback("commands.toneko.remove_neko.info"," is not your neko now")), false);
+            context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_NEKO_INFO.component()), false);
         }
         else {
-            throw REMOVE_NEKO_NOT_FOUND.create();
+            throw CommandException.REMOVE_NEKO_NOT_FOUND.create();
         }
 
         return 0;
     }
 
-    public static final SimpleCommandExceptionType REMOVE_OWNER_NOT_FOUND = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.remove_owner.not_found","Cannot found your owner whit this uuid"));
     public static int removeOwner(CommandSourceStack context, UUID owner, String input) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
         AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapabilityProvider.NEKO_STATE).ifPresent(state::set);
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
             Set<? extends NekoRecord> owners = state.get().getOwners();
             if (owners != null) {
                 if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
-                    PlayerNekoUtils.remove(player, PlayerNekoUtils.OperatorState.NEKO,owner,false/*主人移除猫猫不需要移除集合，此值形参无效*/);
+                    NekoModifyUtils.remove(player, NekoModifyUtils.OperatorState.NEKO,owner,false/*主人移除猫猫不需要移除集合，此值形参无效*/);
                     if(state.get().getOwners()==null){
-                        context.sendSuccess(() -> Component.empty().append(input).append(Component.translatableWithFallback("commands.toneko.remove_neko.info"," is not your neko now")), false);
+                        context.sendSuccess(() -> Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);
                     }
                 }
-                else throw REMOVE_OWNER_NOT_FOUND.create();
+                else throw CommandException.REMOVE_OWNER_NOT_FOUND.create();
 
-            } else throw PLAYER_NOT_NEKO.create();
+            } else throw CommandException.PLAYER_NOT_NEKO.create();
 
         }
 
         return 0;
     }
 
-    public static final SimpleCommandExceptionType GET_EXP_NOT_FOUND = new SimpleCommandExceptionType(Component.translatableWithFallback("commands.toneko.get_exp.not_found","Cannot found your neko or owner whit this uuid"));
     public static int getExp(CommandSourceStack context, ServerPlayer get) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
-        if(!PlayerNekoUtils.modifyStateRecord(player,get.getUUID(),
-                nekoRecord -> context.sendSuccess(() -> Component.translatableWithFallback("commands.toneko.get_exp.info","Your exp is").append(String.valueOf(nekoRecord.getExp())), false)))
+        if(!NekoModifyUtils.modifyStateRecord(player,get.getUUID(),
+                nekoRecord -> context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(nekoRecord.getExp())), false)))
         {
-            throw GET_EXP_NOT_FOUND.create();
+            throw CommandException.GET_EXP_NOT_FOUND.create();
         }
 
         return 0;
     }
 
     public static int setExp(CommandSourceStack context,ServerPlayer neko, ServerPlayer owner,float set) throws CommandSyntaxException {
-        if(!PlayerNekoUtils.modifyStateRecord(neko,owner.getUUID(), nekoRecord -> {
+        if(!NekoModifyUtils.modifyStateRecord(neko,owner.getUUID(), nekoRecord -> {
                     nekoRecord.setExp(set);
-                    context.sendSuccess(() -> Component.translatableWithFallback("commands.toneko.set_exp.info","Set exp to ").append(String.valueOf(set)), true);
+                    context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
                 }))
         {
-            throw GET_EXP_NOT_FOUND.create();
+            throw CommandException.SET_EXP_NOT_CONNECTED.create();
         }
 
         return 0;
