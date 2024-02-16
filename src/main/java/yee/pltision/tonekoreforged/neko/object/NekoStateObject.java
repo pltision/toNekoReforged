@@ -78,7 +78,7 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
             return false;
         }
         else {
-            if(ownerMap.size()==0) ownerMap=null;
+            if(ownerMap.isEmpty()) ownerMap=null;
             return true;
         }
     }

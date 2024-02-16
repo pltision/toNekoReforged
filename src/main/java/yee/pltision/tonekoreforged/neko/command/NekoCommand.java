@@ -179,7 +179,7 @@ public class NekoCommand {
     public static int removeOwner(CommandSourceStack context, UUID owner, String input) throws CommandSyntaxException {
         ServerPlayer player=context.getPlayerOrException();
 
-        if(NekoConnectUtil.removeNeko(player,owner)) {
+        if(NekoConnectUtil.removeOwner(player,owner)) {
             context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);
         }
         else {

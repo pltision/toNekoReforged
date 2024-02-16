@@ -30,7 +30,7 @@ public class NekoConnectUtil {
         return isSuccess.get();
     }
 
-    public static boolean getOwner(ServerPlayer player, ServerPlayer owner) throws CommandSyntaxException {
+    public static boolean getOwner(ServerPlayer player, ServerPlayer owner) {
         NekoModifyUtil.connect(player, NekoModifyUtil.OperatorState.NEKO,owner);  //将player添加为over的猫猫
 
         AtomicBoolean isSuccess = new AtomicBoolean(false);

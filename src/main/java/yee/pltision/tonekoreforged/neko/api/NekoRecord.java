@@ -8,7 +8,6 @@ import java.util.UUID;
 /**
  * 记录一个猫猫对主人的UUID等信息。
  * 包含好感度等信息方便快速读取。
- *
  * 如果真的有需要的话，可以将UUID换成任意的句柄喵~
  */
 public interface NekoRecord {

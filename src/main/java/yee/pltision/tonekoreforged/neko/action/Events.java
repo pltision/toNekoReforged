@@ -1,6 +1,7 @@
 package yee.pltision.tonekoreforged.neko.action;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +25,7 @@ public class Events {
 //        event.setCanceled(true);
 /*        event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             event.setMessage(cap.prefix().append(event.getMessage()));
-        })*/;
+        })*/
         event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             PetPhrase petPhrase=cap.getPetPhrase();
             if(petPhrase!=null){
@@ -42,7 +43,7 @@ public class Events {
 
     @SubscribeEvent
     public static void interact(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget()instanceof Player otherPlayer){
+        if(event.getTarget()instanceof ServerPlayer otherPlayer){
 //            catStick(event.getLevel(),event.getEntity(),otherPlayer,event.getItemStack());
 
         }
