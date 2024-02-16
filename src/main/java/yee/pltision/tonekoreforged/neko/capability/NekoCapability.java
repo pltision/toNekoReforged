@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
+import yee.pltision.tonekoreforged.neko.api.NekoState;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 @Mod.EventBusSubscriber

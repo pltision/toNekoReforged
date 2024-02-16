@@ -7,16 +7,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
+import yee.pltision.tonekoreforged.config.Config;
+import yee.pltision.tonekoreforged.neko.api.NekoRecord;
+import yee.pltision.tonekoreforged.neko.api.NekoState;
+import yee.pltision.tonekoreforged.neko.api.PetPhrase;
 
 import java.util.*;
 
 public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag> {
     public static int DEFAULT_EXP=10;
-
     public Set<UUID> nekoSet;
     public @Nullable BiMap<UUID,NekoRecordObject> ownerMap;
+
+    public PetPhrase phrase=null;
 
     public NekoStateObject(){
         nekoSet =new HashSet<>();
@@ -30,6 +33,8 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
 
     @Override
     public boolean addOwner(UUID owner){
+        beNeko();
+
         if(ownerMap==null) ownerMap=HashBiMap.create();
         if(ownerMap.containsKey(owner)) return false;
         ownerMap.put(owner,new NekoRecordObject(owner,DEFAULT_EXP));
@@ -103,6 +108,11 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
     public void tick(Player player) {}
 
     @Override
+    public @Nullable PetPhrase getPetPhrase() {
+        return phrase;
+    }
+
+    @Override
     public CompoundTag serializeNBT() {
         return new CompoundTag();
     }
@@ -112,5 +122,12 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
 
     }
 
+    public void beNeko(){
+        if(Config.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase) phrase=defaultPhrase();
+    }
+
+    public static PetPhrase defaultPhrase(){
+        return new PetPhrase(Config.defaultPetPhrase,Config.defaultPetPhraseIgnoreEnglishText,Config.petPhraseIgnoreAfter);
+    }
 
 }

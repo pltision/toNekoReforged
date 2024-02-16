@@ -23,7 +23,9 @@ public class Lang {
             GET_EXP_INFO=new ConfigLang("commands.toneko.get_exp.info", "Your exp is ","你们的好感经验值是"),
 
             SET_EXP_NOT_CONNECTED=new ConfigLang("commands.toneko.set_exp.not_connected", "These tow players (or same player) is not connected","这两个（或同个）玩家没有建立关系"),
-            SET_EXP_INFO=new ConfigLang("commands.toneko.set_exp.info", "Set exp to ","已将好感经验值设为");
+            SET_EXP_INFO=new ConfigLang("commands.toneko.set_exp.info", "Set exp to ","已将好感经验值设为"),
+
+            NEKO_PREFIX=new ConfigLang("tone_ko.neko_prefix", "[Neko] ","[猫娘] ");
 
     public static void inti(){}
 }

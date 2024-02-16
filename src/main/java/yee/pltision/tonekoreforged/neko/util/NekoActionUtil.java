@@ -4,20 +4,17 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
+import yee.pltision.tonekoreforged.neko.api.NekoRecord;
 
-import java.util.Collection;
-
-public class NekoActionUtils {
+public class NekoActionUtil {
 
     /**
      * 用于检测是否为撅猫棍。
-     * stick{ToNeko:{catStick:true},display:{Name:'{"type":"translatable","translate":"display.to_neko.cat_stick","fallback":"Cat Stick","color":"blue"}'},}
+     * stick{ToNeko:{catStick:true},display:{Name:'{"type":"translatable","translate":"to_neko.cat_stick","fallback":"Cat Stick","color":"blue"}'},}
      */
     public static boolean isCatStick(ItemStack test){
         if(test.getItem()!= Items.STICK)return false;

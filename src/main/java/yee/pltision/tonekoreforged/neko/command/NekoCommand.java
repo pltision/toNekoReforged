@@ -17,17 +17,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.util.NekoModifyUtils;
+import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
+import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoRecord;
-import yee.pltision.tonekoreforged.neko.interfaces.NekoState;
+import yee.pltision.tonekoreforged.neko.api.NekoRecord;
+import yee.pltision.tonekoreforged.neko.api.NekoState;
 
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Mod.EventBusSubscriber
@@ -119,16 +118,9 @@ public class NekoCommand {
     }
 
     public static int getNeko(CommandSourceStack context, ServerPlayer neko) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
+        ServerPlayer player=context.getPlayerOrException();
 
-        NekoModifyUtils.connect(player, NekoModifyUtils.OperatorState.OWNER,neko);  //将player添加为neko的主人
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            isSuccess.set(cap.addNeko(neko.getUUID()));     //将neko添加为player的猫猫
-        });
-
-        if(isSuccess.get()) {
+        if(NekoConnectUtil.getNeko(player,neko)) {
             context.sendSuccess(() -> Component.empty().append(neko.getName()).append(Lang.GET_NEKO_INFO.component()), false);
         }
         else {
@@ -159,16 +151,9 @@ public class NekoCommand {
     }
 
     public static int getOwner(CommandSourceStack context, ServerPlayer owner) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
+        ServerPlayer player=context.getPlayerOrException();
 
-        NekoModifyUtils.connect(player, NekoModifyUtils.OperatorState.NEKO,owner);  //将player添加为over的猫猫
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            isSuccess.set(cap.addOwner(owner.getUUID()));     //将owner添加为player的主人
-        });
-
-        if(isSuccess.get()) {
+        if(NekoConnectUtil.getOwner(player,owner)) {
             context.sendSuccess(() -> Component.empty().append(owner.getName()).append(Lang.GET_OWNER_INFO.component()), true);
         }
         else {
@@ -179,15 +164,9 @@ public class NekoCommand {
     }
 
     public static int removeNeko(CommandSourceStack context, UUID neko,String input) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
+        ServerPlayer player=context.getPlayerOrException();
 
-        NekoModifyUtils.remove(player, NekoModifyUtils.OperatorState.OWNER,neko, Config.removeStateWhenRemovedAllOwner);  //为player移除主人
-        //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> isSuccess.set(cap.removeNeko(neko)));
-
-        if(isSuccess.get()) {
+        if(NekoConnectUtil.removeNeko(player,neko)) {
             context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_NEKO_INFO.component()), false);
         }
         else {
@@ -198,23 +177,13 @@ public class NekoCommand {
     }
 
     public static int removeOwner(CommandSourceStack context, UUID owner, String input) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
+        ServerPlayer player=context.getPlayerOrException();
 
-        AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
-        if (state.get() != null) {
-            Set<? extends NekoRecord> owners = state.get().getOwners();
-            if (owners != null) {
-                if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
-                    NekoModifyUtils.remove(player, NekoModifyUtils.OperatorState.NEKO,owner,false/*主人移除猫猫不需要移除集合，此值形参无效*/);
-                    if(state.get().getOwners()==null){
-                        context.sendSuccess(() -> Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);
-                    }
-                }
-                else throw CommandException.REMOVE_OWNER_NOT_FOUND.create();
-
-            } else throw CommandException.PLAYER_NOT_NEKO.create();
-
+        if(NekoConnectUtil.removeNeko(player,owner)) {
+            context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);
+        }
+        else {
+            throw CommandException.REMOVE_OWNER_NOT_FOUND.create();
         }
 
         return 0;
@@ -223,7 +192,7 @@ public class NekoCommand {
     public static int getExp(CommandSourceStack context, ServerPlayer get) throws CommandSyntaxException {
         Player player=context.getPlayerOrException();
 
-        if(!NekoModifyUtils.modifyStateRecord(player,get.getUUID(),
+        if(!NekoModifyUtil.modifyStateRecord(player,get.getUUID(),
                 nekoRecord -> context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(nekoRecord.getExp())), false)))
         {
             throw CommandException.GET_EXP_NOT_FOUND.create();
@@ -233,7 +202,7 @@ public class NekoCommand {
     }
 
     public static int setExp(CommandSourceStack context,ServerPlayer neko, ServerPlayer owner,float set) throws CommandSyntaxException {
-        if(!NekoModifyUtils.modifyStateRecord(neko,owner.getUUID(), nekoRecord -> {
+        if(!NekoModifyUtil.modifyStateRecord(neko,owner.getUUID(), nekoRecord -> {
                     nekoRecord.setExp(set);
                     context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
                 }))

@@ -5,6 +5,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.command.CommandException;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class ConfigLang {
                 WAIT_FOR_INTI.get(key).component=Component.translatableWithFallback(key,lang);
             }
             catch (Exception e){
-                e.printStackTrace();
+                ToNeko.LOGGER.error(e.toString());
             }
         }
 

@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.neko.interfaces;
+package yee.pltision.tonekoreforged.neko.api;
 
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
@@ -79,4 +79,9 @@ public interface NekoState {
      * 用于处理因数等动态信息。
      */
     void tick(Player player);
+
+    /**
+     * 获取后缀。
+     */
+    @Nullable PetPhrase getPetPhrase();
 }
