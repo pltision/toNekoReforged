@@ -8,7 +8,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.command.CommandExceptions;
 
+import java.io.FileWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -47,6 +50,9 @@ public class ConfigLang {
             buildList.add(KEYS.get(i)+":"+DEFAULTS.get(i));
             zhList.add(KEYS.get(i)+":"+CHINESE.get(i));
         }
+
+//        outLang(WAIT_FOR_INTI.values());
+
         Config.BUILDER.comment("这是一个中文的示例，将其替换掉lang就可以把默认翻译改成中文了。").defineList("chinese_example_lang",zhList,t->t instanceof String);
         return Config.BUILDER.defineList("lang",buildList, t->t instanceof String);
     }
@@ -70,11 +76,32 @@ public class ConfigLang {
         CommandExceptions.intiExceptions();
     }
 
+    @SuppressWarnings("all")
+    @Deprecated
+    static void outLang(Collection<ConfigLang>  langs){
+        try{
+            FileWriter writer=new FileWriter("zh_cn.json");
 
-    @SubscribeEvent
-    static void commonSetup(FMLCommonSetupEvent event){
+            writer.append("{\n");
+            for (ConfigLang lang : langs) {
+                writer.append("\t\""+lang.key+"\": \""+lang.chinese+"\",\n");
+            }
+            writer.append("}");
+            writer.close();
 
+            writer=new FileWriter("en_us.json");
+            writer.append("{\n");
+            for (ConfigLang lang : langs) {
+                writer.append("\t\""+lang.key+"\": \""+lang.def+"\",\n");
+            }
+            writer.append("}");
+            writer.close();
+        }
+        catch (Exception e){
+            ToNeko.LOGGER.error(e.toString());
+        }
     }
+
 
 
 }
