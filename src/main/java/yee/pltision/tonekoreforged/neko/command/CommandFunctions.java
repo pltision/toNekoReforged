@@ -35,7 +35,7 @@ public class CommandFunctions {
     }
 
     public static void removeNeko(CommandSourceStack source, ServerPlayer player, UUID nekoUuid, String input){
-        if(NekoConnectUtil.removeNeko(player,nekoUuid)){
+        if(removeNeko(player,nekoUuid)){
             source.sendSuccess(() -> Component.empty().append(input).append(Lang.REMOVE_NEKO_INFO.component()), false);   //向命令发送者（主人）发送
             ServerPlayer neko=source.getServer().getPlayerList().getPlayer(nekoUuid);
             if(neko!=null) neko.sendSystemMessage(Component.empty().append(player.getName()).append(Lang.REMOVE_OWNER_INFO.component())); //向猫娘发送
@@ -43,7 +43,7 @@ public class CommandFunctions {
     }
 
     public static void removeOwner(CommandSourceStack source, ServerPlayer player, UUID ownerUuid, String input) throws CommandSyntaxException {
-        if(NekoConnectUtil.removeOwner(player,ownerUuid)){
+        if(removeOwner(player,ownerUuid)){
             source.sendSuccess(() -> Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);   //向命令发送者（主人）发送
             ServerPlayer owner=source.getServer().getPlayerList().getPlayer(ownerUuid);
             if(owner!=null) owner.sendSystemMessage(Component.empty().append(player.getName()).append(Lang.REMOVE_NEKO_INFO.component())); //向猫娘发送

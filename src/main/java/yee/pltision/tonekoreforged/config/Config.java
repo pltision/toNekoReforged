@@ -37,7 +37,7 @@ public class Config {
             .comment("如果为true，当玩家变成猫娘后且没有口癖时为其添加默认口癖。")
             .define("command.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase", true);
     private static final ForgeConfigSpec.ConfigValue<Integer> MAX_ACCEPT_TIME = BUILDER
-            .comment("Request can be accept within this ticks.")
+            .comment("Request can be accepted within these ticks.")
             .comment("请求可以在这个tick内被接受。")
             .define("command.maxAcceptTime", 1200);
 
@@ -60,11 +60,11 @@ public class Config {
 
     private static final ForgeConfigSpec.ConfigValue<String> DEFAULT_PET_PHRASE = BUILDER
             .comment("The default pet phrase.")
-            .comment("默认的口癖。")
+            .comment("默认的口癖。中文可填写\"喵~\"。")
             .define("petPhrase.defaultPetPhrase", ", nya~");
     private static final ForgeConfigSpec.BooleanValue DEFAULT_PET_PHRASE_IGNORE_ENGLISH_TEXT = BUILDER
             .comment("If true, default pet phrase will not append to text that all character's value <= 255.")
-            .comment("如果为true，默认的口癖不会添加到所有字符的值<=255（可以认为都是英文）的文本中。")
+            .comment("如果为true，默认的口癖不会添加到所有字符的值<=255（可以认为都是英文）的文本中。中文可填写true。")
             .define("petPhrase.defaultPetPhraseIgnoreEnglishText", false);
     private static final ForgeConfigSpec.ConfigValue<String> PET_PHRASE_IGNORE_CHARACTER = BUILDER
             .comment("Pet phrase will insert before the last character that not in this string.")
@@ -75,7 +75,7 @@ public class Config {
             .comment("Ignore the first of X characters.")
             .comment("When program try to append pet phrase to a text, it will ignore first X characters of pet phrase, like ',' and ' ' and ignore character in above string like '~' then we will leave \"nya\".")
             .comment("Program will use this word to test is the last world in the text is equals to that word you leave. If true, program will not append pet phrase to the text.")
-            .comment("忽略前x个字符。")
+            .comment("忽略前x个字符。中文可填写0。")
             .comment("当程序尝试将口癖加到文本中时，它会忽略前x字符（例如','和' '）以及上面的字符串中的字符（例如'~'），之后你会剩下\"nya\"。")
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
             .define("petPhrase.petPhraseIgnoreAfter", 2);

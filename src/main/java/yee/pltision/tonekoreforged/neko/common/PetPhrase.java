@@ -9,10 +9,10 @@ public class PetPhrase {
     //有可能需要将它和后缀一起合并到PetPhrase里面
     public static HashSet<Character> IGNORE_CHARACTER;
 
-    String phrase;
+    public final String phrase;
 
-    int ignoreCharacterStart,ignoreAfter;
-    boolean ignoreEnglish;
+    public final int ignoreCharacterStart,ignoreAfter;
+    public final boolean ignoreEnglish;
 
     public PetPhrase(String phrase, boolean ignoreEnglish,int ignoreAfter)throws IllegalArgumentException{
         this.phrase=phrase;

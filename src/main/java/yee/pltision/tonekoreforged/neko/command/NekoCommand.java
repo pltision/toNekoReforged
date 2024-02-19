@@ -54,14 +54,14 @@ public class NekoCommand {
                         )
                         .then(Commands.literal("removeNeko")
                                 .requires(source->Config.enableRemoveNeko||source.hasPermission(2))
-                                .then(Commands.argument("player", StringArgumentType.string())
-                                        .executes(context ->  removeNeko(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context ->  removeNeko(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context,"player").getStringUUID()),EntityArgument.getPlayer(context,"player").getName().getString()))    //暂时改为Entity
                                 )
                         )
                         .then(Commands.literal("removeOwner")
                                 .requires(source->Config.enableRemoveOwner||source.hasPermission(2))
-                                .then(Commands.argument("player", StringArgumentType.string())
-                                        .executes(context ->  removeOwner(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context ->  removeOwner(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context,"player").getStringUUID()),EntityArgument.getPlayer(context,"player").getName().getString()))   //暂时改为Entity
                                 )
                         )
                         .then(Commands.literal("getExp").then(Commands.argument("player", EntityArgument.player())
@@ -158,7 +158,7 @@ public class NekoCommand {
                 exception.set(CommandExceptions.GET_NEKO_ALREADY.create());
             }
             else{
-                if(Config.addOrRemoveNeedRequest&&context.hasPermission(2)) {
+                if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)) {
                     try {
                         NekoRequest.trySendAndReturn(context,player,neko, CommandFunctions::getNeko,Lang.GET_NEKO_REQUEST.component());
                         context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
@@ -205,7 +205,7 @@ public class NekoCommand {
                 exception.set(CommandExceptions.GET_OWNER_ALREADY.create());
             }
             else{
-                if(Config.addOrRemoveNeedRequest&&context.hasPermission(2)) {
+                if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)) {
                     try {
                         NekoRequest.trySendAndReturn(context,player,owner, CommandFunctions::getOwner,Lang.GET_OWNER_REQUEST.component());
                         context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
@@ -243,7 +243,7 @@ public class NekoCommand {
                     }
                 } catch (CommandSyntaxException e) {
                     exception.set(e);
-                }catch (Exception e){e.printStackTrace();}
+                }
             }
         });
         if(exception.get()!=null)throw exception.get();

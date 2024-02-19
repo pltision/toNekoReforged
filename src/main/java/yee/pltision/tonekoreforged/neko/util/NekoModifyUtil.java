@@ -18,7 +18,7 @@ public class NekoModifyUtil {
     public static  void modifyPlayerState(MinecraftServer server, UUID uuid, NonNullConsumer<NekoState> consumer){
         Player player =server.getPlayerList().getPlayer(uuid);
         if(player!=null){
-            LazyOptional<NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
+            LazyOptional<?extends NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
             if(state.isPresent())
                 state.ifPresent(consumer);
             else throw new RuntimeException("玩家"+player+"没有NekoState能力");
@@ -28,7 +28,7 @@ public class NekoModifyUtil {
     }
 
     public static void connect(Player player ,OperatorState operatorState,Player other){
-        LazyOptional<NekoState> stateOptional= other.getCapability(NekoCapability.NEKO_STATE);
+        LazyOptional<?extends NekoState> stateOptional= other.getCapability(NekoCapability.NEKO_STATE);
         if(stateOptional.isPresent())
             stateOptional.ifPresent(otherState->{
                 switch (operatorState){
@@ -66,7 +66,7 @@ public class NekoModifyUtil {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean modifyStateRecord(Player player, UUID get, NonNullConsumer<NekoRecord> consumer){
-        LazyOptional<NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
+        LazyOptional<?extends NekoState> state= player.getCapability(NekoCapability.NEKO_STATE);
         AtomicBoolean success=new AtomicBoolean(false);
         if(state.isPresent())
             state.ifPresent(cap->{
