@@ -51,7 +51,7 @@ public class Lang {
         ACCEPT_INFO =new ConfigLang("commands.toneko.accept.info","You accept the request","你接受了请求"),
         DENY_INFO =new ConfigLang("commands.toneko.deny.info","You deny the request","你拒绝了请求"),
 
-        CAT_STICK=new ConfigLang("toneko.cat_stick","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"撅猫棒\",\"color\":\"blue\"}");
+        CAT_STICK=new ConfigLang("to_neko.cat_stick","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"撅猫棒\",\"color\":\"blue\"}");
 
 
 
