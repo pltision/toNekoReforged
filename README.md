@@ -49,4 +49,6 @@ toneko accept <player>
 
 #拒绝<player>发出的请求
 toneko deny <player>
+
+#你还可以使用execute来指定执行者喵~
 ```
