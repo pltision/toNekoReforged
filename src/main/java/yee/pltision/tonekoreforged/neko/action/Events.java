@@ -15,12 +15,10 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
-
-import static javax.swing.text.html.HTML.getTag;
 
 @Mod.EventBusSubscriber
 public class Events {

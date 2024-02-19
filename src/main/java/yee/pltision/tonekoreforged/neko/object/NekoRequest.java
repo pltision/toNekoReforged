@@ -1,7 +1,6 @@
 package yee.pltision.tonekoreforged.neko.object;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.*;
 import net.minecraft.server.MinecraftServer;
@@ -9,7 +8,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.apache.logging.log4j.core.jmx.Server;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.command.CommandExceptions;

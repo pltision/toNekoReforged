@@ -21,9 +21,6 @@ public class PetPhrase {
         if(ignoreAfter>ignoreCharacterStart) throw new IllegalArgumentException("ignoreAfter>=phrase.length()-ignoreCharacterStart");
         this.ignoreAfter=ignoreAfter;
     }
-    public PetPhrase(String phrase){
-        this(phrase,isTextEnglish(phrase), Config.petPhraseIgnoreAfter);
-    }
 
     public String addPhrase(String text){
         if(ignoreEnglish&&isTextEnglish(text))return text;

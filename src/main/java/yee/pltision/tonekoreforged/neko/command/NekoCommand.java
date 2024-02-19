@@ -21,13 +21,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.common.PetPhrase;
-import yee.pltision.tonekoreforged.neko.object.NekoRequest;
-import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
-import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
+import yee.pltision.tonekoreforged.neko.common.PetPhrase;
+import yee.pltision.tonekoreforged.neko.object.NekoRequest;
+import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -36,7 +35,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Mod.EventBusSubscriber
 public class NekoCommand {
-    private static final int DEFAULT_TIME = -1;
 
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {
@@ -160,7 +158,7 @@ public class NekoCommand {
                 exception.set(CommandExceptions.GET_NEKO_ALREADY.create());
             }
             else{
-                if(Config.addOrRemoveNeedRequest||context.hasPermission(2)) {
+                if(Config.addOrRemoveNeedRequest&&context.hasPermission(2)) {
                     try {
                         NekoRequest.trySendAndReturn(context,player,neko, CommandFunctions::getNeko,Lang.GET_NEKO_REQUEST.component());
                         context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
@@ -207,7 +205,7 @@ public class NekoCommand {
                 exception.set(CommandExceptions.GET_OWNER_ALREADY.create());
             }
             else{
-                if(Config.addOrRemoveNeedRequest||context.hasPermission(2)) {
+                if(Config.addOrRemoveNeedRequest&&context.hasPermission(2)) {
                     try {
                         NekoRequest.trySendAndReturn(context,player,owner, CommandFunctions::getOwner,Lang.GET_OWNER_REQUEST.component());
                         context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
@@ -235,7 +233,7 @@ public class NekoCommand {
             }
             else{
                 try {
-                    if(Config.addOrRemoveNeedRequest||context.getSource().hasPermission(2)) {
+                    if(Config.addOrRemoveNeedRequest&&!context.getSource().hasPermission(2)) {
                         ServerPlayer nekoPlayer=context.getSource().getServer().getPlayerList().getPlayer(neko);
                         if(nekoPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
                         NekoRequest.trySendAndReturn(context.getSource(),player,nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
@@ -263,7 +261,7 @@ public class NekoCommand {
             }
             else{
                 try {
-                    if(Config.addOrRemoveNeedRequest||context.getSource().hasPermission(2)) {
+                    if(Config.addOrRemoveNeedRequest&&!context.getSource().hasPermission(2)) {
                         ServerPlayer ownerPlayer=context.getSource().getServer().getPlayerList().getPlayer(owner);
                         if(ownerPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
                         NekoRequest.trySendAndReturn(context.getSource(),player,ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
