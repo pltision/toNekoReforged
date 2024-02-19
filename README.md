@@ -16,7 +16,7 @@
 - 较丰富的配置文件和命令。
 
 ## 命令
-```mcfunction
+```mcfunction none
 #获取玩家的全部猫娘
 /toneko getNeko
 #将<player>设为执行者的猫娘或发送请求
@@ -49,4 +49,4 @@
 
 #拒绝<player>发出的请求
 /toneko deny <player>
-```none
+```
