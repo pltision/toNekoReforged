@@ -49,4 +49,4 @@
 
 #拒绝<player>发出的请求
 /toneko deny <player>
-```
+```none
