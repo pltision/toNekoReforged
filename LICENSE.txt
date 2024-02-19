@@ -124,9 +124,11 @@ express Statement of Purpose.
 
 原作在 MIT License 下提供。
 
-版权所有 (c) 2024 CrystalNeko
-
 以下是原作许可证的完整内容:
+
+MIT License
+
+Copyright (c) 2024 CrystalNeko
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
