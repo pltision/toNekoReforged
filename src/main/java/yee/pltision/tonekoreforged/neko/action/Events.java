@@ -1,5 +1,6 @@
 package yee.pltision.tonekoreforged.neko.action;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,16 +10,33 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import yee.pltision.tonekoreforged.neko.api.PetPhrase;
+import yee.pltision.tonekoreforged.config.Lang;
+import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
-import yee.pltision.tonekoreforged.neko.api.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
+
+import static javax.swing.text.html.HTML.getTag;
 
 @Mod.EventBusSubscriber
 public class Events {
+
+    @SubscribeEvent
+    public static void modifyRecipe(PlayerEvent.ItemCraftedEvent event){
+        if(NekoActionUtil.isCatStick(event.getCrafting())){
+            ItemStack item=event.getCrafting();
+            CompoundTag tag= item.getTag();
+            if (tag != null) {
+                CompoundTag display=tag.getCompound("display");
+                display.putString("Name", Lang.CAT_STICK.config);
+                item.setTag(tag);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void modifyChatMessage(ServerChatEvent event){
@@ -56,25 +74,26 @@ public class Events {
             NekoRecord otherRecord=other.getOwner(player.getUUID());
             if(otherRecord!=null&& NekoActionUtil.isCatStick(item)){
                 NekoActionUtil.growExpAndParticle(level,otherPlayer.getEyePosition(),otherRecord, 0.1f/( (float) Math.log(Math.max(2,otherRecord.getExp()*2+1))/LN21 ));
-                catStickEffects(otherPlayer,3);
+                catStickEffects(otherPlayer);
             }
         });
     }
 
-    /**
-     * 给被撅的玩家添加效果。
-     * <ul>
-     *      <li>缓慢II</li>
-     *      <li>挖掘疲劳II</li>
-     *      <li>虚弱II</li>
-     *      每个效果均为5秒，如果是重撅除跳跃提升等级各+1。
-     * </ul>
-     */
-    public static void catStickEffects(final Player player,final int level){
-//        player.addEffect(new MobEffectInstance(MobEffects.JUMP,5*20,254,true,true));
-        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,6*20,level,true,true));
-        player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,6*20,level,true,true));
-        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,6*20,level,true,true));
+        /**
+         * 给被撅的玩家添加效果。
+         * <ul>
+         *      <li>缓慢IV</li>
+         *      <li>挖掘疲劳III</li>
+         *      <li>虚弱III</li>
+         *      每个效果均为6秒，外加12秒的缓慢II
+         * </ul>
+         */
+        public static void catStickEffects(final Player player){
+//        player.addEffect(new MobEffectInstance(MobEffects.JUMP,5*20,128,true,true));
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,12*20,2,true,true));
+        player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,6*20,4,true,true));
+        player.addEffect(new MobEffectInstance(MobEffects.DIG_SLOWDOWN,6*20,3,true,true));
+        player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS,6*20,3,true,true));
 
     }
 }

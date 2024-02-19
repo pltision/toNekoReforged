@@ -1,7 +1,9 @@
 package yee.pltision.tonekoreforged.neko.command;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -17,12 +19,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
+import yee.pltision.tonekoreforged.neko.common.PetPhrase;
+import yee.pltision.tonekoreforged.neko.object.NekoRequest;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
-import yee.pltision.tonekoreforged.neko.api.NekoRecord;
-import yee.pltision.tonekoreforged.neko.api.NekoState;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoState;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -39,22 +44,26 @@ public class NekoCommand {
                 Commands.literal("toneko")
                         .then(Commands.literal("getNeko").executes(context ->  listNekos(context.getSource()))
                                 .then(Commands.argument("player", EntityArgument.player())
+                                        .requires(source->Config.enableGetNekoOrOwner||source.hasPermission(2))
                                         .executes(context ->  getNeko(context.getSource(),EntityArgument.getPlayer(context,"player")))
                                 )
                         )
                         .then(Commands.literal("getOwner").executes(context ->  listOwners(context.getSource()))
                                 .then(Commands.argument("player", EntityArgument.player())
+                                        .requires(source->Config.enableGetNekoOrOwner||source.hasPermission(2))
                                         .executes(context ->  getOwner(context.getSource(),EntityArgument.getPlayer(context,"player")))
                                 )
                         )
                         .then(Commands.literal("removeNeko")
+                                .requires(source->Config.enableRemoveNeko||source.hasPermission(2))
                                 .then(Commands.argument("player", StringArgumentType.string())
-                                        .executes(context ->  removeNeko(context.getSource(), OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
+                                        .executes(context ->  removeNeko(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
                                 )
                         )
                         .then(Commands.literal("removeOwner")
+                                .requires(source->Config.enableRemoveOwner||source.hasPermission(2))
                                 .then(Commands.argument("player", StringArgumentType.string())
-                                        .executes(context ->  removeOwner(context.getSource(), OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
+                                        .executes(context ->  removeOwner(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), StringArgumentType.getString(context,"player")),StringArgumentType.getString(context,"player")))
                                 )
                         )
                         .then(Commands.literal("getExp").then(Commands.argument("player", EntityArgument.player())
@@ -62,12 +71,37 @@ public class NekoCommand {
                                 )
                         )
                         .then(Commands.literal("setExp").requires((p_139171_) -> p_139171_.hasPermission(2))
-                                .then(Commands.argument("neko", EntityArgument.player()).then(Commands.argument("owner", EntityArgument.player()).then(Commands.argument("value", IntegerArgumentType.integer())
-                                        .executes(context ->  setExp(context.getSource(),EntityArgument.getPlayer(context,"neko"),EntityArgument.getPlayer(context,"owner"),IntegerArgumentType.getInteger(context,"value")))
+                                .then(Commands.argument("player1", EntityArgument.player()).then(Commands.argument("player2", EntityArgument.player()).then(Commands.argument("value", IntegerArgumentType.integer())
+                                        .executes(context ->  setExp(context.getSource(),EntityArgument.getPlayer(context,"player1"),EntityArgument.getPlayer(context,"player2"),IntegerArgumentType.getInteger(context,"value")))
                                 )))
                         )
+                        .then(Commands.literal("petPhrase")
+                                .executes(context ->  getPetPhrase(context.getSource(),context.getSource().getPlayerOrException()))
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context ->  getPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .then(Commands.argument("phrase", StringArgumentType.string())
+                                                .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),!PetPhrase.isTextEnglish(StringArgumentType.getString(context,"phrase")),0))
+                                                .then(Commands.argument("ignore_english", BoolArgumentType.bool())
+                                                        .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),BoolArgumentType.getBool(context,"ignore_english"),0))
+                                                        .then(Commands.argument("ignore_after",IntegerArgumentType.integer(0))
+                                                                .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),BoolArgumentType.getBool(context,"ignore_english"),IntegerArgumentType.getInteger(context,"ignore_after")))
+                                                        )
+                                                )
+                                        )
 
+                                )
 
+                        )
+                        .then(Commands.literal("accept")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context ->  acceptPlayer(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                )
+                        )
+                        .then(Commands.literal("deny")
+                                .then(Commands.argument("player", EntityArgument.player())
+                                        .executes(context ->  denyPlayer(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                )
+                        )
 
         );
     }
@@ -120,12 +154,26 @@ public class NekoCommand {
     public static int getNeko(CommandSourceStack context, ServerPlayer neko) throws CommandSyntaxException {
         ServerPlayer player=context.getPlayerOrException();
 
-        if(NekoConnectUtil.getNeko(player,neko)) {
-            context.sendSuccess(() -> Component.empty().append(neko.getName()).append(Lang.GET_NEKO_INFO.component()), false);
-        }
-        else {
-            throw CommandException.GET_NEKO_ALREADY.create();
-        }
+        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            if(cap.checkNeko(neko.getUUID())){
+                exception.set(CommandExceptions.GET_NEKO_ALREADY.create());
+            }
+            else{
+                if(Config.addOrRemoveNeedRequest||context.hasPermission(2)) {
+                    try {
+                        NekoRequest.trySendAndReturn(context,player,neko, CommandFunctions::getNeko,Lang.GET_NEKO_REQUEST.component());
+                        context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
+                    } catch (CommandSyntaxException e) {
+                        exception.set(e);
+                    }
+                }
+                else {  //若不需要请求直接添加
+                    CommandFunctions.getNeko(context,player,neko);
+                }
+            }
+        });
+        if(exception.get()!=null)throw exception.get();
 
         return 0;
     }
@@ -137,7 +185,7 @@ public class NekoCommand {
         if (state.get() != null) {
             Set<? extends NekoRecord> owners = state.get().getOwners();
             if (owners == null) {
-                throw CommandException.PLAYER_NOT_NEKO.create();
+                throw CommandExceptions.PLAYER_NOT_NEKO.create();
             } else {
                 context.sendSuccess(() -> {
                     MutableComponent component = Lang.LIST_OWNER_INFO.component();
@@ -153,38 +201,82 @@ public class NekoCommand {
     public static int getOwner(CommandSourceStack context, ServerPlayer owner) throws CommandSyntaxException {
         ServerPlayer player=context.getPlayerOrException();
 
-        if(NekoConnectUtil.getOwner(player,owner)) {
-            context.sendSuccess(() -> Component.empty().append(owner.getName()).append(Lang.GET_OWNER_INFO.component()), true);
-        }
-        else {
-            throw CommandException.GET_OWNER_ALREADY.create();
-        }
+        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            if(cap.getOwner(owner.getUUID())!=null){
+                exception.set(CommandExceptions.GET_OWNER_ALREADY.create());
+            }
+            else{
+                if(Config.addOrRemoveNeedRequest||context.hasPermission(2)) {
+                    try {
+                        NekoRequest.trySendAndReturn(context,player,owner, CommandFunctions::getOwner,Lang.GET_OWNER_REQUEST.component());
+                        context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
+                    } catch (CommandSyntaxException e) {
+                        exception.set(e);
+                    }
+                }
+                else {
+                    CommandFunctions.getOwner(context,player,owner);
+                }
+            }
+        });
+        if(exception.get()!=null)throw exception.get();
 
         return 0;
     }
 
-    public static int removeNeko(CommandSourceStack context, UUID neko,String input) throws CommandSyntaxException {
-        ServerPlayer player=context.getPlayerOrException();
+    public static int removeNeko(CommandContext<CommandSourceStack> context, UUID neko, String input) throws CommandSyntaxException {
+        ServerPlayer player=context.getSource().getPlayerOrException();
 
-        if(NekoConnectUtil.removeNeko(player,neko)) {
-            context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_NEKO_INFO.component()), false);
-        }
-        else {
-            throw CommandException.REMOVE_NEKO_NOT_FOUND.create();
-        }
+        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            if(!cap.checkNeko(neko)){
+                exception.set(CommandExceptions.REMOVE_NEKO_NOT_FOUND.create());
+            }
+            else{
+                try {
+                    if(Config.addOrRemoveNeedRequest||context.getSource().hasPermission(2)) {
+                        ServerPlayer nekoPlayer=context.getSource().getServer().getPlayerList().getPlayer(neko);
+                        if(nekoPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
+                        NekoRequest.trySendAndReturn(context.getSource(),player,nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
+                    }
+                    else{
+                        CommandFunctions.removeNeko(context.getSource(),player,neko,input);
+                    }
+                } catch (CommandSyntaxException e) {
+                    exception.set(e);
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
+        if(exception.get()!=null)throw exception.get();
 
         return 0;
     }
 
-    public static int removeOwner(CommandSourceStack context, UUID owner, String input) throws CommandSyntaxException {
-        ServerPlayer player=context.getPlayerOrException();
+    public static int removeOwner(CommandContext<CommandSourceStack> context, UUID owner, String input) throws CommandSyntaxException {
+        ServerPlayer player=context.getSource().getPlayerOrException();
 
-        if(NekoConnectUtil.removeOwner(player,owner)) {
-            context.sendSuccess(() ->Component.empty().append(input).append(Lang.REMOVE_OWNER_INFO.component()), false);
-        }
-        else {
-            throw CommandException.REMOVE_OWNER_NOT_FOUND.create();
-        }
+        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            if(!cap.checkNeko(owner)){
+                exception.set(CommandExceptions.REMOVE_NEKO_NOT_FOUND.create());
+            }
+            else{
+                try {
+                    if(Config.addOrRemoveNeedRequest||context.getSource().hasPermission(2)) {
+                        ServerPlayer ownerPlayer=context.getSource().getServer().getPlayerList().getPlayer(owner);
+                        if(ownerPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
+                        NekoRequest.trySendAndReturn(context.getSource(),player,ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
+                    }
+                    else{
+                        CommandFunctions.removeOwner(context.getSource(),player,owner,input);
+                    }
+                } catch (CommandSyntaxException e) {
+                    exception.set(e);
+                }
+            }
+        });
+        if(exception.get()!=null)throw exception.get();
 
         return 0;
     }
@@ -195,7 +287,7 @@ public class NekoCommand {
         if(!NekoModifyUtil.modifyStateRecord(player,get.getUUID(),
                 nekoRecord -> context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(nekoRecord.getExp())), false)))
         {
-            throw CommandException.GET_EXP_NOT_FOUND.create();
+            throw CommandExceptions.GET_EXP_NOT_FOUND.create();
         }
 
         return 0;
@@ -207,9 +299,80 @@ public class NekoCommand {
                     context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
                 }))
         {
-            throw CommandException.SET_EXP_NOT_CONNECTED.create();
+            throw CommandExceptions.SET_EXP_NOT_CONNECTED.create();
         }
 
         return 0;
+    }
+
+    public static int getPetPhrase(CommandSourceStack context, ServerPlayer player) {
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(cap.getPetPhrase())), false));
+
+        return 0;
+    }
+    public static int setPetPhrase(CommandSourceStack context, ServerPlayer set,String phrase,boolean ignoreEnglish,int ignoreAfter) throws CommandSyntaxException {
+        ServerPlayer player=context.getPlayerOrException();
+
+        AtomicReference<NekoState> stateAtomicReference=new AtomicReference<>();
+        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(stateAtomicReference::set);
+        NekoState state=stateAtomicReference.get();
+        if(state!=null){
+            if(!context.hasPermission(2)){
+                if(player==set){
+                    if((!Config.everyoneCanModifyTheirPetPhrase)&&!Config.nekoCanModifyTheirPetPhrase) throw CommandExceptions.SET_PET_PHRASE_EVERYONE_CANNOT.create();
+                    if( (state.getOwners()!=null && !Config.nekoCanModifyTheirPetPhrase) &&
+                            !( Config.ownerCanModifyTheirNekoPetPhrase && state.checkNeko(player.getUUID()) ) )
+                        throw CommandExceptions.SET_PET_PHRASE_EVERYONE_EXCEPT_NEKO.create();
+                    if(!Config.everyoneCanModifyTheirPetPhrase)throw CommandExceptions.SET_PET_PHRASE_ONLY_NEKO.create();
+                }
+                else{
+                    if(Config.ownerCanModifyTheirNekoPetPhrase){
+                        if(!state.checkNeko(set.getUUID())) throw CommandExceptions.SET_PET_PHRASE_NOT_OWNER.create();
+                    }
+                    else throw CommandExceptions.SET_PET_PHRASE_CANNOT_MODIFY_OTHER.create();
+                }
+
+
+            }
+
+            AtomicReference<CommandSyntaxException> throwException=new AtomicReference<>();
+            set.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+                if(phrase==null){
+                    cap.setPetPhrase(null);
+                    context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append("null"), false);
+                }
+                else{
+                    int ignoreAfterMax= PetPhrase.getLastIndexOfNotIgnoreCharacter(phrase)+1;
+                    if(ignoreAfter>ignoreAfterMax)throwException.set(CommandExceptions.SET_PET_PHRASE_AFTER_IGNORE_ILLEGAL.create());
+                    PetPhrase petPhrase=new PetPhrase(phrase,ignoreEnglish,ignoreAfter);
+                    cap.setPetPhrase(petPhrase);
+                    context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append(petPhrase.toString()), false);
+
+                }
+            });
+            if(throwException.get()!=null)throw throwException.get();
+        }
+
+        return 0;
+    }
+
+    public static int acceptPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
+        ServerPlayer player= source.getPlayerOrException();
+
+        if(NekoRequest.tryAccept(source,player,sender)){
+            source.sendSuccess(Lang.ACCEPT_INFO::component,false);
+            return 0;
+        }
+        else throw CommandExceptions.ACCEPT_FAIL.create();
+    }
+
+    public static int denyPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
+        ServerPlayer player= source.getPlayerOrException();
+
+        if(NekoRequest.deny(source.getServer(),player,sender)){
+            source.sendSuccess(Lang.DENY_INFO::component,false);
+            return 0;
+        }
+        else throw CommandExceptions.ACCEPT_FAIL.create();
     }
 }

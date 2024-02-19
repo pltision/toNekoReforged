@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.neko.command.CommandException;
+import yee.pltision.tonekoreforged.neko.command.CommandExceptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +20,12 @@ public class ConfigLang {
     private static final HashMap<String,ConfigLang> WAIT_FOR_INTI =new HashMap<>();
 
     final public String key,def,chinese;
+    public String config;
     private MutableComponent component;
 
     public ConfigLang(String key, String def, String chinese) {
         KEYS.add(this.key = key);
-        DEFAULTS.add(this.def = def);
+        DEFAULTS.add(config= this.def = def);
         CHINESE.add(this.chinese = chinese);
         WAIT_FOR_INTI.put(key,this);
         component= Component.translatableWithFallback(key,def);
@@ -57,14 +58,16 @@ public class ConfigLang {
                 int index = configLang.indexOf(':');
                 String key=configLang.substring(0,index);
                 String lang=configLang.substring(index+1);
-                WAIT_FOR_INTI.get(key).component=Component.translatableWithFallback(key,lang);
+                ConfigLang configLang1= WAIT_FOR_INTI.get(key);
+                configLang1.component=Component.translatableWithFallback(key,lang);
+                configLang1.config=lang;
             }
             catch (Exception e){
                 ToNeko.LOGGER.error(e.toString());
             }
         }
 
-        CommandException.intiExceptions();
+        CommandExceptions.intiExceptions();
     }
 
 

@@ -3,7 +3,7 @@ package yee.pltision.tonekoreforged.neko.object;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
-import yee.pltision.tonekoreforged.neko.api.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 
 import java.util.UUID;
 

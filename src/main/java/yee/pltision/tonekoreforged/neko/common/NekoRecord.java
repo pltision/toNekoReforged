@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.neko.api;
+package yee.pltision.tonekoreforged.neko.common;
 
 import net.minecraft.world.entity.player.Player;
 

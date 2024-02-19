@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.neko.api;
+package yee.pltision.tonekoreforged.neko.common;
 
 import yee.pltision.tonekoreforged.config.Config;
 
@@ -44,7 +44,7 @@ public class PetPhrase {
      *
      * @return 最后一个不是忽略字符的字符的索引。可能返回-1
      */
-    public int getLastIndexOfNotIgnoreCharacter(String text){
+    public static int getLastIndexOfNotIgnoreCharacter(String text){
         int check=text.length();
         do {
             check--;
@@ -63,6 +63,13 @@ public class PetPhrase {
     }
 
 
-
-
+    @Override
+    public String toString() {
+        return "PetPhrase{" +
+                "phrase='" + phrase + '\'' +
+                ", ignoreCharacterStart=" + ignoreCharacterStart +
+                ", ignoreAfter=" + ignoreAfter +
+                ", ignoreEnglish=" + ignoreEnglish +
+                '}';
+    }
 }

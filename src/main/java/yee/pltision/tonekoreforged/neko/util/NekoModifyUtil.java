@@ -4,8 +4,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.NonNullConsumer;
-import yee.pltision.tonekoreforged.neko.api.NekoRecord;
-import yee.pltision.tonekoreforged.neko.api.NekoState;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 
 import java.util.UUID;

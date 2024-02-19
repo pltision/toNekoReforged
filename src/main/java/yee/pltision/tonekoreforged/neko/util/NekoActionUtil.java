@@ -8,13 +8,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import yee.pltision.tonekoreforged.neko.api.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 
 public class NekoActionUtil {
 
     /**
      * 用于检测是否为撅猫棍。
-     * stick{ToNeko:{catStick:true},display:{Name:'{"type":"translatable","translate":"to_neko.cat_stick","fallback":"Cat Stick","color":"blue"}'},}
+     * stick{ToNeko:{catStick:true},display:{Name:'{"type":"translatable","translate":"to_neko.cat_stick","fallback":"Cat Stick","color":"blue"}'},Enchantments:[{}]}
      */
     public static boolean isCatStick(ItemStack test){
         if(test.getItem()!= Items.STICK)return false;
@@ -32,5 +32,6 @@ public class NekoActionUtil {
             }
         }
     }
+
 
 }

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "stick"
+    },
+    {
+      "item": "minecraft:lightning_rod"
+    }
+  ],
+  "result": {
+    "item": "stick",
+    "nbt": {
+      "ToNeko":{
+        "catStick":true},
+      "display":
+      {
+        "Name":"{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}"
+      },
+      "Enchantments":[{}]
+    }
+  }
+}
