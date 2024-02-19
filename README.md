@@ -18,35 +18,35 @@
 ## 命令
 ```mcfunction none
 #获取玩家的全部猫娘
-/toneko getNeko
+toneko getNeko
 #将<player>设为执行者的猫娘或发送请求
-/toneko getNeko <player>
+toneko getNeko <player>
 
 #获取玩家的全部主人
-/toneko getOwner
+toneko getOwner
 #将<player>设为执行者的主人或发送请求
-/toneko getOwner <player>
+toneko getOwner <player>
 
 #为执行者移除名称或UUID为<player>的猫娘或发送请求
-/toneko removeNeko <player>
+toneko removeNeko <player>
 #为执行者移除名称或UUID为<player>的主人或发送请求
-/toneko removeOwner <player>
+toneko removeOwner <player>
 
 #获取执行者或<player>的口癖
-/toneko petPhrase [<player>]
+toneko petPhrase [<player>]
 #设置<player>的口癖，当执行者是<player>或其主人时方可设置
 #当<ignore_english>为true时，在对话中若所有字符的值<=255则不会添加口癖。若不填写则默认为若<phrase>所有字符的值<=255为false，否则为true
 #<ignore_after>为检查是否添加口癖时可以忽略口癖前的几个字符
-/toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
 
 #获取执行者与<player>之间的好感经验值
-/toneko getExp <player>
+toneko getExp <player>
 #设置<player1>与<player2>之间的好感经验值，需要命令权限
-/toneko setExp <player1> <player2> <value>
+toneko setExp <player1> <player2> <value>
 
 #同意<player>发出的请求
-/toneko accept <player>
+toneko accept <player>
 
 #拒绝<player>发出的请求
-/toneko deny <player>
+toneko deny <player>
 ```
