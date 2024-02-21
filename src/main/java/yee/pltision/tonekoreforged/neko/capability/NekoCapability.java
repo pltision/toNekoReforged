@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 import java.io.IOException;
@@ -48,25 +49,30 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void save(PlayerEvent.SaveToFile event){
-        event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
-            try {
-                NbtIo.write(StateSerializeUtil.nekoState(cap),event.getPlayerFile("to_neko.dat"));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        if(Config.doSave){
+            event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
+                try {
+                    NbtIo.write(StateSerializeUtil.nekoState(cap),event.getPlayerFile("to_neko.dat"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
     }
     @SubscribeEvent
     public static void load(PlayerEvent.LoadFromFile event){
-        event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
-            try {
-                StateSerializeUtil.nekoState(cap, Objects.requireNonNull(NbtIo.read(event.getPlayerFile("to_neko.dat"))));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (NullPointerException e){
-                ToNeko.LOGGER.info("Try read "+event.getPlayerFile("to_neko.dat")+" return null. Maybe data have not been created.");
-            }
-        });
+        if(Config.doSave){
+            event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
+                try {
+                    StateSerializeUtil.nekoState(cap, Objects.requireNonNull(NbtIo.read(event.getPlayerFile("to_neko.dat"))));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (NullPointerException e){
+                    ToNeko.LOGGER.info("Try read "+event.getPlayerFile("to_neko.dat")+" return null. Maybe data have not been created.");
+                }
+            });
+        }
     }
 
     @SubscribeEvent

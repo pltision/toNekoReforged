@@ -3,13 +3,10 @@ package yee.pltision.tonekoreforged.config;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.command.CommandExceptions;
 
 import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,7 +48,7 @@ public class ConfigLang {
             zhList.add(KEYS.get(i)+":"+CHINESE.get(i));
         }
 
-//        outLang(WAIT_FOR_INTI.values());
+        outLang(WAIT_FOR_INTI.values());
 
         Config.BUILDER.comment("这是一个中文的示例，将其替换掉lang就可以把默认翻译改成中文了。").defineList("chinese_example_lang",zhList,t->t instanceof String);
         return Config.BUILDER.defineList("lang",buildList, t->t instanceof String);

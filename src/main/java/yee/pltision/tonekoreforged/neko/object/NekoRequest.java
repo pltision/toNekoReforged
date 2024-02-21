@@ -21,7 +21,7 @@ public class NekoRequest {
     /**
      * key为owner，value为neko
      */
-    public static Map<UUID,NekoRequest> REQUESTS = new HashMap<>();
+    public static final Map<UUID,NekoRequest> REQUESTS = new HashMap<>();
 
     public UUID sendTo;
     public int requestTick;
@@ -46,7 +46,7 @@ public class NekoRequest {
         if(request==null) return false;
         if(request.denied)return false;
         if(request.requestTick+ Config.maxAcceptTime<source.getServer().getTickCount()) return false;
-        if(!request.sendTo.equals(sender.getUUID()))return false;
+        if(!request.sendTo.equals(accept.getUUID()))return false;
         request.whenAccept.accept(source,sender,accept);
         REQUESTS.remove(sender.getUUID());
         return true;
@@ -80,6 +80,7 @@ public class NekoRequest {
                                     .withColor(TextColor.parseColor("#ff0000")).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Lang.REQUEST_COMMAND_INFO.component().append("/toneko deny "+sender.getName().getString())))
                             ))
             );
+            source.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(to.getName()), false);
         }
         else{
             throw CommandExceptions.SEND_REQUEST_COOLING.create();
@@ -87,10 +88,10 @@ public class NekoRequest {
 
     }
 
-    public static boolean deny(MinecraftServer server,ServerPlayer player,ServerPlayer deny){
-        NekoRequest request=REQUESTS.get(deny.getUUID());
+    public static boolean deny(MinecraftServer server,ServerPlayer sender,ServerPlayer deny){
+        NekoRequest request=REQUESTS.get(sender.getUUID());
         if(request==null)return false;
-        if(!request.sendTo.equals(player.getUUID()))return false;
+        if(!request.sendTo.equals(deny.getUUID()))return false;
         if(request.denied)return false;
         if(request.requestTick+ request.requestClod<=server.getTickCount()) return false;
         request.denied=true;

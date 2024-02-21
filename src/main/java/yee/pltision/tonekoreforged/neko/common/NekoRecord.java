@@ -61,7 +61,7 @@ public interface NekoRecord {
      * 封装Iterator，用于仅遍历uuid
      */
     class UUIDIterator implements Iterator<UUID>{
-        Iterator<?extends NekoRecord> recordIterator;
+        final Iterator<?extends NekoRecord> recordIterator;
         public UUIDIterator(Iterator<?extends NekoRecord> recordIterator){
             this.recordIterator=recordIterator;
         }

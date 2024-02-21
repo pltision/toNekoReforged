@@ -27,7 +27,7 @@ public class StateSerializeUtil {
     public static CompoundTag nekoRecord(NekoRecordObject record){
         CompoundTag tag=new CompoundTag();
         tag.putUUID("uuid",record.uuid);
-        tag.putFloat("exp",record.exp);;
+        tag.putFloat("exp",record.exp);
         return tag;
     }
 
@@ -59,7 +59,7 @@ public class StateSerializeUtil {
 
     public static PetPhrase petPhrase(CompoundTag tag){
         if(tag.getBoolean("hasPhrase"))
-            return new PetPhrase(tag.getString("phrase"),tag.getBoolean("ingoreEnglish"),tag.getInt("ignoreAfter"));
+            return new PetPhrase(tag.getString("phrase"),tag.getBoolean("ignoreEnglish"),tag.getInt("ignoreAfter"));
         return null;
     }
 

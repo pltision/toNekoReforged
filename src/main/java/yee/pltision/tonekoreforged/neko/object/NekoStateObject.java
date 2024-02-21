@@ -16,7 +16,7 @@ import java.util.*;
 
 public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag> {
     public static int DEFAULT_EXP=10;
-    public Set<UUID> nekoSet;
+    public final Set<UUID> nekoSet;
     public BiMap<UUID,NekoRecordObject> ownerMap;
 
     public PetPhrase phrase=null;

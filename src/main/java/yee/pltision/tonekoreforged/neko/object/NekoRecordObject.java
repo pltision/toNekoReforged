@@ -1,8 +1,6 @@
 package yee.pltision.tonekoreforged.neko.object;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 
@@ -63,14 +61,5 @@ public class NekoRecordObject implements NekoRecord  {
 
     @Override
     public void tick(Player player) {}
-
-    public CompoundTag serializeNBT() {
-        CompoundTag tag= new CompoundTag();
-        tag.putUUID("uuid",uuid);
-        tag.putFloat("exp",exp);
-        tag.putFloat("factor",factor);
-        return tag;
-    }
-
 
 }

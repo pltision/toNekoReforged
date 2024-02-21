@@ -16,12 +16,20 @@ public class Lang {
         GET_NEKO_ALREADY=new ConfigLang("commands.toneko.get_neko.already", "This player is already your neko","这个玩家已经是你的猫娘了"),
         GET_NEKO_INFO=new ConfigLang("commands.toneko.get_neko.info", " is your neko now","现在是你的猫娘了"),
         GET_NEKO_REQUEST=new ConfigLang("commands.toneko.get_neko.request_info", " want let you be their neko","想让你成为他的猫娘"),
-        REMOVE_REQUEST=new ConfigLang("commands.toneko.remove_request", " want remove your connect","想与你断开联系"),
+        GET_NEKO_NEKO_CANNOT_HAVE_OTHER_NEKO=new ConfigLang("commands.toneko.get_neko.neko_cannot_have", "A neko cannot have other neko","猫娘不能拥有其他猫娘"),
+        GET_NEKO_CANNOT_MULTIPLE =new ConfigLang("commands.toneko.get_neko.cannot_multiple", "You cannot have multiple neko","你不能拥有多个猫娘"),
+        GET_NEKO_OTHER_ALREADY=new ConfigLang("commands.toneko.get_neko.other_already", "This player is already have a owner","这个玩家已经有一个主人了"),
+        CANNOT_BE_OWN_NEKO_OR_OWNER=new ConfigLang("commands.toneko.cannot_be_own_neko_or_owner","Cannot be own neko or owner","不能成为自己的主人或猫娘"),
 
+        REMOVE_REQUEST=new ConfigLang("commands.toneko.remove_request", " want remove your connect","想与你断开联系"),
         LIST_OWNER_INFO=new ConfigLang("commands.toneko.list_owner.info", "Your owners include: ","你的主人包括: "),
+
         GET_OWNER_ALREADY=new ConfigLang("commands.toneko.get_owner.already", "This player is already your owner","这个玩家已经是你的主人了"),
         GET_OWNER_INFO=new ConfigLang("commands.toneko.get_owner.info", " is your owner now","现在是你的主人了"),
         GET_OWNER_REQUEST=new ConfigLang("commands.toneko.get_owner.request_info", " want let you be their owner","想让你成为他的主人"),
+        GET_OWNER_CANNOT_MULTIPLE =new ConfigLang("commands.toneko.get_owner.cannot_multiple", "You cannot have multiple owner","你不能拥有多个主人"),
+        GET_OWNER_OTHER_ALREADY=new ConfigLang("commands.toneko.get_owner.other_already", "This player is already have a neko","这个玩家已经有一只猫娘了"),
+
 
         REMOVE_NEKO_NOT_FOUND=new ConfigLang("commands.toneko.remove_neko.not_found", "You have no neko whit this UUID or name","你没有这个UUID或名称的猫娘"),
         REMOVE_NEKO_INFO=new ConfigLang("commands.toneko.remove_neko.info", " is not your neko now","现在不是你的猫娘了"),
@@ -51,7 +59,9 @@ public class Lang {
         ACCEPT_INFO =new ConfigLang("commands.toneko.accept.info","You accept the request","你接受了请求"),
         DENY_INFO =new ConfigLang("commands.toneko.deny.info","You deny the request","你拒绝了请求"),
 
-        CAT_STICK=new ConfigLang("to_neko.cat_stick","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"撅猫棒\",\"color\":\"blue\"}");
+        CAT_STICK=new ConfigLang("to_neko.cat_stick","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"撅猫棒\",\"color\":\"blue\"}"),
+
+        FAIL_TO_GET_CAPABILITY=new ConfigLang("commands.toneko.fail_to_get_capability","Fail to get capability! Player: ","无法获取能力！玩家：");
 
 
 

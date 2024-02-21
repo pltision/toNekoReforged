@@ -16,6 +16,11 @@ import java.util.List;
 public class Config {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
+    private static final ForgeConfigSpec.BooleanValue NO_DATA_MODE=BUILDER
+            .comment("If true, mod will not read or load data. Only for debug.")
+            .comment("如果为true，模组不会读取或保存数据。仅调试用。")
+            .define("noDataMode", false);
+
     private static final ForgeConfigSpec.BooleanValue REMOVE_STATE_WHEN_REMOVED_ALL_OWNER = BUILDER
             .comment("If true, when command removed a neko's all owner, the neko will be not a neko.")
             .comment("如果为true，当使用命令移除了一只猫娘的所有主人后，它就不是猫娘了。")
@@ -40,6 +45,23 @@ public class Config {
             .comment("Request can be accepted within these ticks.")
             .comment("请求可以在这个tick内被接受。")
             .define("command.maxAcceptTime", 1200);
+
+    private static final ForgeConfigSpec.BooleanValue NEKO_CAN_BE_ITS_OWNER = BUILDER
+            .comment("If true, neko can be its owner.")
+            .comment("如果为true，猫娘可以成为它自己的主人。")
+            .define("command.nekoCanBeItsOwner", true);
+    private static final ForgeConfigSpec.BooleanValue NEKO_CAN_HAVE_NEKO = BUILDER
+            .comment("If true, neko can have other nekos except itself.")
+            .comment("如果为true，猫娘可以有除了他自己的其他猫娘。")
+            .define("command.nekoCanHaveNeko", true);
+    private static final ForgeConfigSpec.BooleanValue PLAYER_CAN_HAVE_MULTIPLE_NEKOS = BUILDER
+            .comment("If true, a player can have multiple nekos.")
+            .comment("如果为true，一个玩家可以有多个猫娘。")
+            .define("command.playerCanHaveMultipleNekos", false);
+    private static final ForgeConfigSpec.BooleanValue PLAYER_CAN_HAVE_MULTIPLE_OWNERS = BUILDER
+            .comment("If true, a player can have multiple owners.")
+            .comment("如果为true，一个玩家可以有多个主人。")
+            .define("command.playerCanHaveMultipleOwners", false);
 
     private static final ForgeConfigSpec.BooleanValue ENABLE_GET_NEKO_OR_OWNER = BUILDER
             .comment("If true, player can use command to get their neko or owner.")
@@ -84,6 +106,8 @@ public class Config {
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
+    public static boolean doSave;
+
     public static boolean removeStateWhenRemovedAllOwner;
     public static boolean addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase;
     public static boolean everyoneCanModifyTheirPetPhrase;
@@ -91,6 +115,7 @@ public class Config {
     public static boolean ownerCanModifyTheirNekoPetPhrase;
     public static int maxAcceptTime;
 
+    public static boolean nekoCanBeItsOwner, nekoCanHaveNeko, playerCanHaveMultipleNekos, playerCanHaveMultipleOwners;
     public static boolean enableGetNekoOrOwner, enableRemoveNeko, enableRemoveOwner, addOrRemoveNeedRequest;
 
     public static String defaultPetPhrase;
@@ -100,12 +125,19 @@ public class Config {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        doSave =!NO_DATA_MODE.get();
+
         removeStateWhenRemovedAllOwner = REMOVE_STATE_WHEN_REMOVED_ALL_OWNER.get();
         addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase = ADD_PET_PHRASE_WHEN_PLAYER_BE_NEKO_AND_IT_HAVE_NO_PHRASE.get();
         everyoneCanModifyTheirPetPhrase=EVERYONE_CAN_MODIFY_THEIR_PET_PHRASE.get();
         nekoCanModifyTheirPetPhrase = NEKO_CAN_MODIFY_THEIR_PET_PHRASE.get();
         ownerCanModifyTheirNekoPetPhrase= OWNER_CAN_MODIFY_THEIR_NEKO_PET_PHRASE.get();
         maxAcceptTime=MAX_ACCEPT_TIME.get();
+
+        nekoCanBeItsOwner=NEKO_CAN_BE_ITS_OWNER.get();
+        nekoCanHaveNeko=NEKO_CAN_HAVE_NEKO.get();
+        playerCanHaveMultipleNekos=PLAYER_CAN_HAVE_MULTIPLE_NEKOS.get();
+        playerCanHaveMultipleOwners=PLAYER_CAN_HAVE_MULTIPLE_OWNERS.get();
 
         enableGetNekoOrOwner=ENABLE_GET_NEKO_OR_OWNER.get();
         enableRemoveNeko=ENABLE_REMOVE_NEKO.get();

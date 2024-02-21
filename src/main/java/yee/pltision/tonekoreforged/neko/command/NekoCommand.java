@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
@@ -32,6 +31,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
+
+import static yee.pltision.tonekoreforged.neko.capability.NekoCapability.NEKO_STATE;
 
 @Mod.EventBusSubscriber
 public class NekoCommand {
@@ -114,7 +115,7 @@ public class NekoCommand {
 
         context.sendSuccess(()->{
             MutableComponent component= Lang.LIST_NEKO_INFO.component();
-            player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            player.getCapability(NEKO_STATE).ifPresent(cap->{
                 Iterator<UUID> it=cap.getNekos().iterator();
                 listPlayers(component,it,context.getServer());
             });
@@ -152,26 +153,21 @@ public class NekoCommand {
     public static int getNeko(CommandSourceStack context, ServerPlayer neko) throws CommandSyntaxException {
         ServerPlayer player=context.getPlayerOrException();
 
-        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            if(cap.checkNeko(neko.getUUID())){
-                exception.set(CommandExceptions.GET_NEKO_ALREADY.create());
-            }
-            else{
-                if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)) {
-                    try {
-                        NekoRequest.trySendAndReturn(context,player,neko, CommandFunctions::getNeko,Lang.GET_NEKO_REQUEST.component());
-                        context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
-                    } catch (CommandSyntaxException e) {
-                        exception.set(e);
-                    }
-                }
-                else {  //若不需要请求直接添加
-                    CommandFunctions.getNeko(context,player,neko);
-                }
-            }
-        });
-        if(exception.get()!=null)throw exception.get();
+        CommandSyntaxException exception=CommandTester.canAddNeko(player,neko);
+
+        if(exception!=null&&!context.hasPermission(2)) throw exception;
+
+        if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)){
+            NekoRequest.trySendAndReturn(context,player,neko, (source, sender, accept) -> {
+                CommandSyntaxException e=CommandTester.canAddOwner(accept,sender);
+                if(e!=null) throw e;
+                CommandFunctions.getNeko(source,sender,accept);
+            },Lang.GET_NEKO_REQUEST.component());
+//            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
+        }
+        else {
+            CommandFunctions.getNeko(context,player,neko);
+        }
 
         return 0;
     }
@@ -179,7 +175,7 @@ public class NekoCommand {
         Player player=context.getPlayerOrException();
 
         AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
+        player.getCapability(NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
             Set<? extends NekoRecord> owners = state.get().getOwners();
             if (owners == null) {
@@ -199,26 +195,21 @@ public class NekoCommand {
     public static int getOwner(CommandSourceStack context, ServerPlayer owner) throws CommandSyntaxException {
         ServerPlayer player=context.getPlayerOrException();
 
-        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            if(cap.getOwner(owner.getUUID())!=null){
-                exception.set(CommandExceptions.GET_OWNER_ALREADY.create());
-            }
-            else{
-                if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)) {
-                    try {
-                        NekoRequest.trySendAndReturn(context,player,owner, CommandFunctions::getOwner,Lang.GET_OWNER_REQUEST.component());
-                        context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
-                    } catch (CommandSyntaxException e) {
-                        exception.set(e);
-                    }
-                }
-                else {
-                    CommandFunctions.getOwner(context,player,owner);
-                }
-            }
-        });
-        if(exception.get()!=null)throw exception.get();
+        CommandSyntaxException exception=CommandTester.canAddOwner(player,owner);
+
+        if(exception!=null&&context.hasPermission(2)) throw exception;
+
+        if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)){
+            NekoRequest.trySendAndReturn(context,player,owner, (source, sender, accept) -> {
+                CommandSyntaxException e=CommandTester.canAddNeko(accept,sender);
+                if(e!=null) throw e;
+                CommandFunctions.getOwner(source,sender,accept);
+            },Lang.GET_OWNER_REQUEST.component());
+//            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
+        }
+        else {
+            CommandFunctions.getOwner(context,player,owner);
+        }
 
         return 0;
     }
@@ -227,7 +218,7 @@ public class NekoCommand {
         ServerPlayer player=context.getSource().getPlayerOrException();
 
         AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+        player.getCapability(NEKO_STATE).ifPresent(cap->{
             if(!cap.checkNeko(neko)){
                 exception.set(CommandExceptions.REMOVE_NEKO_NOT_FOUND.create());
             }
@@ -255,9 +246,9 @@ public class NekoCommand {
         ServerPlayer player=context.getSource().getPlayerOrException();
 
         AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            if(!cap.checkNeko(owner)){
-                exception.set(CommandExceptions.REMOVE_NEKO_NOT_FOUND.create());
+        player.getCapability(NEKO_STATE).ifPresent(cap->{
+            if(cap.getOwner(owner)==null){
+                exception.set(CommandExceptions.REMOVE_OWNER_NOT_FOUND.create());
             }
             else{
                 try {
@@ -304,7 +295,7 @@ public class NekoCommand {
     }
 
     public static int getPetPhrase(CommandSourceStack context, ServerPlayer player) {
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(cap.getPetPhrase())), false));
+        player.getCapability(NEKO_STATE).ifPresent(cap-> context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(cap.getPetPhrase())), false));
 
         return 0;
     }
@@ -312,7 +303,7 @@ public class NekoCommand {
         ServerPlayer player=context.getPlayerOrException();
 
         AtomicReference<NekoState> stateAtomicReference=new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(stateAtomicReference::set);
+        player.getCapability(NEKO_STATE).ifPresent(stateAtomicReference::set);
         NekoState state=stateAtomicReference.get();
         if(state!=null){
             if(!context.hasPermission(2)){
@@ -334,7 +325,7 @@ public class NekoCommand {
             }
 
             AtomicReference<CommandSyntaxException> throwException=new AtomicReference<>();
-            set.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
+            set.getCapability(NEKO_STATE).ifPresent(cap->{
                 if(phrase==null){
                     cap.setPetPhrase(null);
                     context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append("null"), false);
@@ -357,7 +348,7 @@ public class NekoCommand {
     public static int acceptPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
         ServerPlayer player= source.getPlayerOrException();
 
-        if(NekoRequest.tryAccept(source,player,sender)){
+        if(NekoRequest.tryAccept(source,sender,player)){
             source.sendSuccess(Lang.ACCEPT_INFO::component,false);
             return 0;
         }
@@ -367,7 +358,7 @@ public class NekoCommand {
     public static int denyPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
         ServerPlayer player= source.getPlayerOrException();
 
-        if(NekoRequest.deny(source.getServer(),player,sender)){
+        if(NekoRequest.deny(source.getServer(),sender,player)){
             source.sendSuccess(Lang.DENY_INFO::component,false);
             return 0;
         }

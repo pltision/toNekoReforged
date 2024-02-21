@@ -1,7 +1,5 @@
 package yee.pltision.tonekoreforged.neko.common;
 
-import yee.pltision.tonekoreforged.config.Config;
-
 import java.util.HashSet;
 
 public class PetPhrase {
