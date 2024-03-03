@@ -14,9 +14,9 @@ import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 
 import java.util.*;
 
-public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag> {
+public class NekoStateObject implements NekoState {
     public static int DEFAULT_EXP=10;
-    public final Set<UUID> nekoSet;
+    public Set<UUID> nekoSet;
     public BiMap<UUID,NekoRecordObject> ownerMap;
 
     public PetPhrase phrase=null;
@@ -40,23 +40,6 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
         ownerMap.put(owner,new NekoRecordObject(owner,DEFAULT_EXP));
         return true;
     }
-
-    /*@Override
-    public void setOwners(@Nullable Collection<UUID> set) {
-        if(set==null) {
-            ownerMap=null;
-            return;
-        }
-
-        Map<UUID,NekoRecordObject> old=ownerMap==null?Map.of():ownerMap;
-        ownerMap=HashBiMap.create();
-
-        for(UUID uuid:set){
-            NekoRecordObject object=old.get(uuid);
-            object=object==null?new NekoRecordObject(uuid,DEFAULT_EXP):object;
-            ownerMap.put(uuid,object);
-        }
-    }*/
 
     @Override
     public @Nullable NekoRecordObject getOwner(UUID uuid) {
@@ -117,16 +100,6 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
         this.phrase=petPhrase;
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        return new CompoundTag();
-    }
-
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-
-    }
-
     public void beNeko(){
         if(Config.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase) phrase=defaultPhrase();
     }
@@ -139,5 +112,14 @@ public class NekoStateObject implements NekoState , INBTSerializable<CompoundTag
     public static PetPhrase defaultPhrase(){
         return new PetPhrase(Config.defaultPetPhrase,Config.defaultPetPhraseIgnoreEnglishText,Config.petPhraseIgnoreAfter);
     }
+
+    // NOT deep copy
+    public void copy(NekoStateObject clone){
+        ownerMap=clone.ownerMap;
+        nekoSet=clone.nekoSet;
+        phrase=clone.phrase;
+
+    }
+
 
 }

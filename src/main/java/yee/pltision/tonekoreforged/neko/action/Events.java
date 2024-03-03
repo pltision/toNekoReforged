@@ -1,13 +1,25 @@
 package yee.pltision.tonekoreforged.neko.action;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -16,9 +28,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
+import yee.pltision.tonekoreforged.neko.command.CommandTester;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
+import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber
 public class Events {
@@ -54,39 +70,77 @@ public class Events {
         if(event.getTarget()instanceof Player otherPlayer){
             catStick(event.getEntity().level(), event.getEntity(),otherPlayer,event.getEntity().getMainHandItem());
         }
-//        System.out.println(event.getTarget()+" <> "+event.getEntity().getMainHandItem());
     }
 
     @SubscribeEvent
     public static void interact(PlayerInteractEvent.EntityInteract event){
         if(event.getTarget()instanceof ServerPlayer otherPlayer){
-//            catStick(event.getLevel(),event.getEntity(),otherPlayer,event.getItemStack());
 
         }
-
     }
 
     public static final float LN21=(float) Math.log(20+1);
     public static void catStick(final Level level, final Player player, final Player otherPlayer, ItemStack item){
-        otherPlayer.getCapability(NekoCapability.NEKO_STATE).ifPresent(other->{
-            NekoRecord otherRecord=other.getOwner(player.getUUID());
-            if(otherRecord!=null&& NekoActionUtil.isCatStick(item)){
-                NekoActionUtil.growExpAndParticle(level,otherPlayer.getEyePosition(),otherRecord, 0.1f/( (float) Math.log(Math.max(2,otherRecord.getExp()*2+1))/LN21 ));
-                catStickEffects(otherPlayer);
+        if(isEnchantmentFish(player.getOffhandItem())){
+            player.getOffhandItem().shrink(1);
+            if(checkDayTime(level.dayTime())){
+                for (Entity entity : level.getEntities(player, new AABB(player.getX() - 4, player.getY() - 4, player.getZ() - 4, player.getX() + 4, player.getY() + 4, player.getZ() + 4), entity -> entity instanceof Cat)) {
+                    if (
+
+                            level.getBlockState(entity.blockPosition()).getBlock() instanceof EnchantmentTableBlock
+                                    && entity instanceof Cat cat
+                                    && cat.isOwnedBy(player)
+                    ) {
+                        if (player instanceof ServerPlayer && otherPlayer instanceof ServerPlayer) {
+                            CommandSyntaxException e;
+                            try {
+                                e = CommandTester.canAddNeko((ServerPlayer) player, (ServerPlayer) otherPlayer);
+                            } catch (CommandSyntaxException ex) {
+                                e = ex;
+                            }
+                            if (e == null) {
+                                cat.addEffect(new MobEffectInstance(MobEffects.WITHER, 20 * 20, 2));
+                                if (NekoConnectUtil.getNeko((ServerPlayer) player, (ServerPlayer) otherPlayer)) {
+                                    player.sendSystemMessage(Component.empty().append(otherPlayer.getName()).append(Lang.GET_NEKO_INFO.component()));
+                                    otherPlayer.sendSystemMessage(Component.empty().append(player.getName()).append(Lang.GET_OWNER_INFO.component()));
+                                }
+                            } else {
+                                player.sendSystemMessage(Component.literal(e.getMessage()).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
+                            }
+                        }
+                        break;
+                    }
+                }
             }
-        });
+        }
+        else {
+            otherPlayer.getCapability(NekoCapability.NEKO_STATE).ifPresent(other -> {
+                NekoRecord otherRecord = other.getOwner(player.getUUID());
+                if (otherRecord != null && NekoActionUtil.isCatStick(item)) {
+                    NekoActionUtil.growExpAndParticle(level, otherPlayer.getEyePosition(), otherRecord, 0.1f / ((float) Math.log(Math.max(2, otherRecord.getExp() * 2 + 1)) / LN21));
+                    catStickEffects(otherPlayer);
+                }
+            });
+        }
+    }
+    public static boolean checkDayTime(long time){
+        return (time%24000)>=17840&&(time%24000)<=18160;
     }
 
-        /**
-         * 给被撅的玩家添加效果。
-         * <ul>
-         *      <li>缓慢IV</li>
-         *      <li>挖掘疲劳III</li>
-         *      <li>虚弱III</li>
-         *      每个效果均为6秒，外加12秒的缓慢II
-         * </ul>
-         */
-        public static void catStickEffects(final Player player){
+    public static boolean isEnchantmentFish(ItemStack item){
+        return item.is(Items.COOKED_COD)&&!item.getEnchantmentTags().isEmpty();
+    }
+
+    /**
+     * 给被撅的玩家添加效果。
+     * <ul>
+     *      <li>缓慢IV</li>
+     *      <li>挖掘疲劳III</li>
+     *      <li>虚弱III</li>
+     *      每个效果均为6秒，外加12秒的缓慢II
+     * </ul>
+     */
+    public static void catStickEffects(final Player player){
 //        player.addEffect(new MobEffectInstance(MobEffects.JUMP,5*20,128,true,true));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,12*20,2,true,true));
         player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,6*20,4,true,true));

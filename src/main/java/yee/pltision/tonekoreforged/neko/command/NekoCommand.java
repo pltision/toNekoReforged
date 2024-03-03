@@ -101,6 +101,9 @@ public class NekoCommand {
                                         .executes(context ->  denyPlayer(context.getSource(),EntityArgument.getPlayer(context,"player")))
                                 )
                         )
+                        .then(Commands.literal("help")
+                                .executes(context ->  help(context.getSource()))
+                        )
 
         );
     }
@@ -363,5 +366,11 @@ public class NekoCommand {
             return 0;
         }
         else throw CommandExceptions.ACCEPT_FAIL.create();
+    }
+
+    public static int help(CommandSourceStack stack){
+        stack.sendSuccess(Lang.HELP_GUIDE::component,false);
+//        stack.sendSuccess(()->Component.translatableWithFallback("a.toneko.command","%s 喵喵","asdgweg"),false);
+        return 0;
     }
 }

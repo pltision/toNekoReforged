@@ -61,9 +61,51 @@ public class Lang {
 
         CAT_STICK=new ConfigLang("to_neko.cat_stick","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"Cat Stick\",\"color\":\"blue\"}","{\"type\":\"translatable\",\"translate\":\"to_neko.cat_stick\",\"fallback\":\"撅猫棒\",\"color\":\"blue\"}"),
 
-        FAIL_TO_GET_CAPABILITY=new ConfigLang("commands.toneko.fail_to_get_capability","Fail to get capability! Player: ","无法获取能力！玩家：");
-
-
+        FAIL_TO_GET_CAPABILITY=new ConfigLang("commands.toneko.fail_to_get_capability","Fail to get capability! Player: ","无法获取能力！玩家："),
+        HELP_GUIDE=new ConfigLang("commands.toneko.help", """
+                
+                """,
+                """
+                获取玩家的全部猫娘
+                /toneko getNeko
+                将 <player> 设为执行者的猫娘或发送请求
+                /toneko getNeko <player>
+                
+                获取玩家的全部主人
+                /toneko getOwner
+                将<player>设为执行者的主人或发送请求
+                /toneko getOwner <player>
+                
+                为执行者移除名称或 UUID 为 <player> 的猫娘或发送请求
+                /toneko removeNeko <player>
+                为执行者移除名称或 UUID 为 <player> 的主人或发送请求
+                /toneko removeOwner <player>
+                
+                获取执行者或 <player> 的口癖
+                /toneko petPhrase [<player>]
+                设置 <player> 的口癖，当执行者是 <player> 或其主人时方可设置
+                当 <ignore_english> 为 true 时，在对话中若所有字符的值 <=255 则不会添加口癖。若不填写则默认为若 <phrase> 所有字符的值 <=255 为 false，否则为 true
+                <ignore_after>为检查是否添加口癖时可以忽略口癖前的几个字符
+                /toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+                
+                获取执行者与 <player> 之间的好感经验值
+                /toneko getExp <player>
+                设置 <player1> 与 <player2> 之间的好感经验值，需要命令权限
+                /toneko setExp <player1> <player2> <value>
+                
+                同意 <player> 发出的请求
+                /toneko accept <player>
+                
+                拒绝 <player> 发出的请求
+                /toneko deny <player>
+                
+                若你有指令权限的话，还可以使用 execute 来指定执行者喵~
+                
+                如果启用了猫娘仪式的话，你可以用仪式将玩家变成你的猫娘。
+                使用青金石、任意附魔书和熟鳕鱼合成一条附魔鳕鱼。然后在午夜（17840<=x<=18160）时，将你驯服的猫放在附魔台方块上，副手手持鳕鱼，主手手持撅猫棒攻击附魔台附近的玩家。
+                若条件成立，被攻击的玩家将会变成你的猫娘，猫将受到15秒的凋零III效果。若检测另一个玩家的猫娘关系时有异常，你将会收到报错喵~
+                此外，无论仪式是否完成，鳕鱼都会消耗喵。
+                """);
 
     public static void inti(){}
 }

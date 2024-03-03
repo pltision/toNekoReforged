@@ -2,7 +2,7 @@ package yee.pltision.tonekoreforged.neko.common;
 
 import java.util.HashSet;
 
-public class PetPhrase {
+public class PetPhrase implements Cloneable {
 
     //有可能需要将它和后缀一起合并到PetPhrase里面
     public static HashSet<Character> IGNORE_CHARACTER;
@@ -66,5 +66,14 @@ public class PetPhrase {
                 ", ignoreAfter=" + ignoreAfter +
                 ", ignoreEnglish=" + ignoreEnglish +
                 '}';
+    }
+
+    @Override
+    public PetPhrase clone() {
+        try {
+            return (PetPhrase) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

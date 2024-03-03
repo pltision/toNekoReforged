@@ -21,6 +21,10 @@ public class Config {
             .comment("如果为true，模组不会读取或保存数据。仅调试用。")
             .define("noDataMode", false);
 
+    private static final ForgeConfigSpec.BooleanValue ENABLE_NEKO_RITUAL=BUILDER
+            .comment("If true, you can use a ritual to let player be your neko.")
+            .comment("如果为true，你可以用仪式将玩家变为你的猫娘。")
+            .define("enableNekoRitual", true);
     private static final ForgeConfigSpec.BooleanValue REMOVE_STATE_WHEN_REMOVED_ALL_OWNER = BUILDER
             .comment("If true, when command removed a neko's all owner, the neko will be not a neko.")
             .comment("如果为true，当使用命令移除了一只猫娘的所有主人后，它就不是猫娘了。")
