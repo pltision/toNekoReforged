@@ -21,7 +21,10 @@
 - 较丰富的配置文件和命令。
 
 ## 命令
-```mcfunction none
+```mcfunction
+#查看帮助
+toneko help
+
 #获取玩家的全部猫娘
 toneko getNeko
 #将<player>设为执行者的猫娘或发送请求
@@ -53,7 +56,10 @@ toneko setExp <player1> <player2> <value>
 toneko accept <player>
 
 #拒绝<player>发出的请求
-toneko deny <player>
+toneko deny <player>'
 
 #你还可以使用execute来指定执行者喵~
 ```
+
+## 期望
+我希望能让这个模组“更加的模组”，比如不要像插件一样通过命令或者菜单来完成所有的事情，以及我希望为它添加更多的功能和独立的玩法，比如我在里面添加了一个变猫仪式，还有准备添加一些互动类玩法。
