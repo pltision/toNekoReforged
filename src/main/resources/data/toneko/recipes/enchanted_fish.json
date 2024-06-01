@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "enchanted_book"
+    },
+    {
+      "item": "lapis_lazuli"
+    },
+    {
+      "item": "cooked_cod"
+    }
+  ],
+  "result": {
+    "item": "cooked_cod",
+    "nbt": {
+      "Enchantments":[{}]
+    }
+  }
+}

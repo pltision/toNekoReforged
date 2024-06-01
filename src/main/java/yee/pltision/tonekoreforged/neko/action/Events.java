@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.command.CommandTester;
@@ -83,7 +84,7 @@ public class Events {
     public static void catStick(final Level level, final Player player, final Player otherPlayer, ItemStack item){
         if(isEnchantmentFish(player.getOffhandItem())){
             player.getOffhandItem().shrink(1);
-            if(checkDayTime(level.dayTime())){
+            if(Config.usingRite==Config.DEFAULT_RITE &&checkDayTime(level.dayTime())){
                 for (Entity entity : level.getEntities(player, new AABB(player.getX() - 4, player.getY() - 4, player.getZ() - 4, player.getX() + 4, player.getY() + 4, player.getZ() + 4), entity -> entity instanceof Cat)) {
                     if (
 

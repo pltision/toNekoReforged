@@ -1,5 +1,6 @@
 package yee.pltision.tonekoreforged.neko.common;
 
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.Iterator;
@@ -10,6 +11,7 @@ import java.util.UUID;
  * 包含好感度等信息方便快速读取。
  * 如果真的有需要的话，可以将UUID换成任意的句柄喵~
  */
+@UnstableApi
 public interface NekoRecord {
 
     /**

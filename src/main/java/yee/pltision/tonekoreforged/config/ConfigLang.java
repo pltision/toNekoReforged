@@ -56,6 +56,7 @@ public class ConfigLang {
 
     static void load(List<? extends String> configLangs)
     {
+        List<ConfigLang> outConfigLangs=new ArrayList<>(configLangs.size());
         for (String configLang : configLangs) {
             try{
                 int index = configLang.indexOf(':');
@@ -64,11 +65,13 @@ public class ConfigLang {
                 ConfigLang configLang1= WAIT_FOR_INTI.get(key);
                 configLang1.component=Component.translatableWithFallback(key,lang);
                 configLang1.config=lang;
+                outConfigLangs.add(configLang1);
             }
             catch (Exception e){
                 ToNeko.LOGGER.error(e.toString());
             }
         }
+        outLang(outConfigLangs);
 
         CommandExceptions.intiExceptions();
     }
@@ -81,7 +84,7 @@ public class ConfigLang {
 
             writer.append("{\n");
             for (ConfigLang lang : langs) {
-                writer.append("\t\""+lang.key+"\": \""+lang.chinese+"\",\n");
+                writer.append("\t\""+lang.key+"\": \""+lang.chinese.replace("\n","\\n")+"\",\n");
             }
             writer.append("}");
             writer.close();
@@ -89,7 +92,7 @@ public class ConfigLang {
             writer=new FileWriter("en_us.json");
             writer.append("{\n");
             for (ConfigLang lang : langs) {
-                writer.append("\t\""+lang.key+"\": \""+lang.def+"\",\n");
+                writer.append("\t\""+lang.key+"\": \""+lang.def.replace("\n","\\n")+"\",\n");
             }
             writer.append("}");
             writer.close();

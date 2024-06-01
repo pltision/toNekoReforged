@@ -35,10 +35,10 @@ public class StateSerializeUtil {
         CompoundTag tag=new CompoundTag();
         tag.put("petPhrase",petPhrase(nekoState.phrase));
 
-        Set<NekoRecordObject> ownerRecords=nekoState.getOwners();
+        Map<UUID, NekoRecordObject> ownerRecords=nekoState.getOwners();
         if(ownerRecords!=null){
             ListTag recordList=new ListTag();
-            for(NekoRecordObject record:nekoState.getOwners()){
+            for(NekoRecordObject record:nekoState.getOwners().values()){
                 recordList.add(nekoRecord(record));
             }
             tag.put("owners",recordList);

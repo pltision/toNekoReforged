@@ -24,10 +24,12 @@ import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
+import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 import yee.pltision.tonekoreforged.neko.object.NekoRequest;
 import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -102,6 +104,9 @@ public class NekoCommand {
                                 )
                         )
                         .then(Commands.literal("help")
+                                .executes(context ->  help(context.getSource()))
+                        )
+                        .then(Commands.literal("nekoRite")
                                 .executes(context ->  help(context.getSource()))
                         )
 
@@ -180,13 +185,13 @@ public class NekoCommand {
         AtomicReference<NekoState> state = new AtomicReference<>();
         player.getCapability(NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
-            Set<? extends NekoRecord> owners = state.get().getOwners();
+            Map<UUID, NekoRecordObject> owners = state.get().getOwners();
             if (owners == null) {
                 throw CommandExceptions.PLAYER_NOT_NEKO.create();
             } else {
                 context.sendSuccess(() -> {
                     MutableComponent component = Lang.LIST_OWNER_INFO.component();
-                    Iterator<UUID> it = new NekoRecord.UUIDIterator(owners.iterator());
+                    Iterator<UUID> it = new NekoRecord.UUIDIterator(owners.values().iterator());
                     listPlayers(component, it, context.getServer());
                     return component;
                 }, false);
@@ -369,7 +374,7 @@ public class NekoCommand {
     }
 
     public static int help(CommandSourceStack stack){
-        stack.sendSuccess(Lang.HELP_GUIDE::component,false);
+        stack.sendSuccess(Config.usingRite,false);
 //        stack.sendSuccess(()->Component.translatableWithFallback("a.toneko.command","%s 喵喵","asdgweg"),false);
         return 0;
     }

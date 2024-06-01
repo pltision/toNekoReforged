@@ -2,9 +2,7 @@ package yee.pltision.tonekoreforged.neko.object;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.config.Config;
@@ -27,8 +25,8 @@ public class NekoStateObject implements NekoState {
     }
 
     @Override
-    public @Nullable Set<NekoRecordObject> getOwners() {
-        return ownerMap==null?null:ownerMap.values();
+    public @Nullable Map<UUID,NekoRecordObject> getOwners() {
+        return ownerMap;
     }
 
     @Override
@@ -110,7 +108,7 @@ public class NekoStateObject implements NekoState {
     }
 
     public static PetPhrase defaultPhrase(){
-        return new PetPhrase(Config.defaultPetPhrase,Config.defaultPetPhraseIgnoreEnglishText,Config.petPhraseIgnoreAfter);
+        return new PetPhrase(Config.defaultPetPhrase,Config.defaultPetPhraseIgnoreEnglishText,Config.defaultPetPhraseIgnoreAfter);
     }
 
     // NOT deep copy

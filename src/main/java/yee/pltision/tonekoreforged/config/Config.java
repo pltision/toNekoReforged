@@ -1,14 +1,15 @@
 package yee.pltision.tonekoreforged.config;
 
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
-
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Supplier;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
 // Demonstrates how to use Forge's config APIs
@@ -17,14 +18,14 @@ public class Config {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     private static final ForgeConfigSpec.BooleanValue NO_DATA_MODE=BUILDER
-            .comment("If true, mod will not read or load data. Only for debug.")
+            .comment("If true, mod will not read or load data. Only for test.")
             .comment("如果为true，模组不会读取或保存数据。仅调试用。")
             .define("noDataMode", false);
+    private static final ForgeConfigSpec.ConfigValue<String> NEKO_RITE = BUILDER
+            .comment("Using neko rite。 Neko rite can let a player be ones neko. It only can be \"disabled\" or \"default\" now.")
+            .comment("正在使用的变猫仪式。变猫仪式可能被用于强制的让一个玩家变成另一个玩家的猫娘。现在只有\"disabled\"和\"default\"选项。")
+            .define("nekoRite", "default");
 
-    private static final ForgeConfigSpec.BooleanValue ENABLE_NEKO_RITUAL=BUILDER
-            .comment("If true, you can use a ritual to let player be your neko.")
-            .comment("如果为true，你可以用仪式将玩家变为你的猫娘。")
-            .define("enableNekoRitual", true);
     private static final ForgeConfigSpec.BooleanValue REMOVE_STATE_WHEN_REMOVED_ALL_OWNER = BUILDER
             .comment("If true, when command removed a neko's all owner, the neko will be not a neko.")
             .comment("如果为true，当使用命令移除了一只猫娘的所有主人后，它就不是猫娘了。")
@@ -97,14 +98,14 @@ public class Config {
             .comment("口癖会插入到最后一个不在这个字符串内的字符后面。")
             .define("petPhrase.ignoreCharacters", ",.!?~-，。？！、—～…");
 
-    private static final ForgeConfigSpec.ConfigValue<Integer> PET_PHRASE_IGNORE_AFTER = BUILDER
+    private static final ForgeConfigSpec.ConfigValue<Integer> DEFAULT_PET_PHRASE_IGNORE_AFTER = BUILDER
             .comment("Ignore the first of X characters.")
             .comment("When program try to append pet phrase to a text, it will ignore first X characters of pet phrase, like ',' and ' ' and ignore character in above string like '~' then we will leave \"nya\".")
             .comment("Program will use this word to test is the last world in the text is equals to that word you leave. If true, program will not append pet phrase to the text.")
             .comment("忽略前x个字符。中文可填写0。")
             .comment("当程序尝试将口癖加到文本中时，它会忽略前x字符（例如','和' '）以及上面的字符串中的字符（例如'~'），之后你会剩下\"nya\"。")
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
-            .define("petPhrase.petPhraseIgnoreAfter", 2);
+            .define("petPhrase.defaultPetPhraseIgnoreAfter", 2);
 
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CONFIG_LANG = ConfigLang.langInti();
 
@@ -123,9 +124,13 @@ public class Config {
     public static boolean enableGetNekoOrOwner, enableRemoveNeko, enableRemoveOwner, addOrRemoveNeedRequest;
 
     public static String defaultPetPhrase;
-    public static int petPhraseIgnoreAfter;
+    public static int defaultPetPhraseIgnoreAfter;
     public static boolean defaultPetPhraseIgnoreEnglishText;
 
+    public static String configNekoRite;
+    public static Supplier<Component> usingRite=Lang.DISABLED_NEKO_RITE::component;
+
+    public static final Supplier<Component> DEFAULT_RITE=Lang.DEFAULT_NEKO_RITE_GUILD::component;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -151,7 +156,10 @@ public class Config {
 
         defaultPetPhrase = DEFAULT_PET_PHRASE.get();
         defaultPetPhraseIgnoreEnglishText = DEFAULT_PET_PHRASE_IGNORE_ENGLISH_TEXT.get();
-        petPhraseIgnoreAfter = PET_PHRASE_IGNORE_AFTER.get();
+        defaultPetPhraseIgnoreAfter = DEFAULT_PET_PHRASE_IGNORE_AFTER.get();
+
+        configNekoRite=NEKO_RITE.get();
+        if(configNekoRite.equals("default")) usingRite=DEFAULT_RITE;
 
         PetPhrase.IGNORE_CHARACTER = new HashSet<>();
         for (char c : PET_PHRASE_IGNORE_CHARACTER.get().toCharArray())

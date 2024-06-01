@@ -53,7 +53,7 @@ public class PetPhrase implements Cloneable {
 
     public static boolean isTextEnglish(String text){
         for(char c:text.toCharArray())
-            if(c>255) return false;
+            if(c>>>8!=0) return false;
         return true;
     }
 

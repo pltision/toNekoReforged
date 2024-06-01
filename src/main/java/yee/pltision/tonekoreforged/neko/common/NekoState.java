@@ -1,17 +1,24 @@
 package yee.pltision.tonekoreforged.neko.common;
 
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+/**
+ * 底层接口，不要调用！
+ */
+@UnstableApi
 public interface NekoState {
     /**
      * @return 猫猫的所有主人。当返回null时说明这不是一个猫猫。
      */
-    @Nullable Set<?extends NekoRecord> getOwners();
+    @Nullable Map<UUID, NekoRecordObject> getOwners();
 
     /**
      * 向猫猫添加主人。如果目标不是猫猫（即getOwners为null）则可能会新增一个集合将其设为猫猫。

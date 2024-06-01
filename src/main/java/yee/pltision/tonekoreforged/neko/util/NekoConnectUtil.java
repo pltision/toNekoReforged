@@ -8,7 +8,9 @@ import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.command.CommandExceptions;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
+import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -60,7 +62,7 @@ public class NekoConnectUtil {
         AtomicReference<NekoState> state = new AtomicReference<>();
         player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
-            Set<? extends NekoRecord> owners = state.get().getOwners();
+            Map<UUID, NekoRecordObject> owners = state.get().getOwners(); owners = state.get().getOwners();
             if (owners != null) {
                 if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
                     //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
