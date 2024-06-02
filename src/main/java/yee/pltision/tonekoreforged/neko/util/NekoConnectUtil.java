@@ -62,7 +62,7 @@ public class NekoConnectUtil {
         AtomicReference<NekoState> state = new AtomicReference<>();
         player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
-            Map<UUID, NekoRecordObject> owners = state.get().getOwners(); owners = state.get().getOwners();
+            Map<UUID, NekoRecord> owners = state.get().getOwners();
             if (owners != null) {
                 if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
                     //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了

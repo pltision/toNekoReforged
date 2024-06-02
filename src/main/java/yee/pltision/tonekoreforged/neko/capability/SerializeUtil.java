@@ -3,13 +3,15 @@ package yee.pltision.tonekoreforged.neko.capability;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.*;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 import java.util.*;
 
-public class StateSerializeUtil {
+public class SerializeUtil {
     public static CompoundTag petPhrase(PetPhrase phrase){
         CompoundTag tag=new CompoundTag();
         if(phrase==null){
@@ -24,21 +26,21 @@ public class StateSerializeUtil {
         return tag;
     }
 
-    public static CompoundTag nekoRecord(NekoRecordObject record){
+    public static CompoundTag nekoRecord(NekoRecord record){
         CompoundTag tag=new CompoundTag();
-        tag.putUUID("uuid",record.uuid);
-        tag.putFloat("exp",record.exp);
+        tag.putUUID("uuid",record.getUUID());
+        tag.putFloat("exp",record.getExp());
         return tag;
     }
 
-    public static CompoundTag nekoState(NekoStateObject nekoState){
+    public static CompoundTag nekoState(NekoState nekoState){
         CompoundTag tag=new CompoundTag();
-        tag.put("petPhrase",petPhrase(nekoState.phrase));
+        tag.put("petPhrase",petPhrase(nekoState.getPetPhrase()));
 
-        Map<UUID, NekoRecordObject> ownerRecords=nekoState.getOwners();
+        Map<UUID, NekoRecord> ownerRecords=nekoState.getOwners();
         if(ownerRecords!=null){
             ListTag recordList=new ListTag();
-            for(NekoRecordObject record:nekoState.getOwners().values()){
+            for(NekoRecord record:nekoState.getOwners().values()){
                 recordList.add(nekoRecord(record));
             }
             tag.put("owners",recordList);
@@ -67,17 +69,17 @@ public class StateSerializeUtil {
         return new NekoRecordObject(tag.getUUID("uuid"),tag.getInt("exp"));
     }
 
-    public static void nekoState(NekoStateObject nekoStateObject,CompoundTag tag){
+    public static void nekoState(NekoState nekoState,CompoundTag tag){
 
-        nekoStateObject.setPetPhrase(petPhrase(tag.getCompound("petPhrase")));
+        nekoState.setPetPhrase(petPhrase(tag.getCompound("petPhrase")));
 
         if(tag.getBoolean("isNeko")){
             try{
-                nekoStateObject.beNeko();
+                nekoState.beNeko();
                 for(Tag ownerTag:tag.getList("owners",10)){
                     try {
                         NekoRecordObject recordObject = nekoRecord((CompoundTag) ownerTag);
-                        nekoStateObject.ownerMap.put(recordObject.uuid, recordObject);
+                        nekoState.computeNekoState(recordObject.uuid,(k,o)-> recordObject);
                     }
                     catch (Exception e){
                         ToNeko.LOGGER.error(e.toString());
@@ -90,12 +92,12 @@ public class StateSerializeUtil {
 
         }
         else{
-            nekoStateObject.beNotNeko();
+            nekoState.beNonneko();
         }
 
         try{
             for(Tag nekoTag:tag.getList("nekos",11)){
-                nekoStateObject.addNeko(UUIDUtil.uuidFromIntArray(((IntArrayTag)nekoTag).getAsIntArray()));
+                nekoState.addNeko(UUIDUtil.uuidFromIntArray(((IntArrayTag)nekoTag).getAsIntArray()));
             }
         }
         catch (Exception e){

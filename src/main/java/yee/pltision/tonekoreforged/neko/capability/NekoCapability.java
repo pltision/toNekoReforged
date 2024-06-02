@@ -52,7 +52,7 @@ public class NekoCapability implements ICapabilityProvider {
         if(Config.doSave){
             event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
                 try {
-                    NbtIo.write(StateSerializeUtil.nekoState(cap),event.getPlayerFile("to_neko.dat"));
+                    NbtIo.write(SerializeUtil.nekoState(cap),event.getPlayerFile("to_neko.dat"));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -65,7 +65,7 @@ public class NekoCapability implements ICapabilityProvider {
         if(Config.doSave){
             event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
                 try {
-                    StateSerializeUtil.nekoState(cap, Objects.requireNonNull(NbtIo.read(event.getPlayerFile("to_neko.dat"))));
+                    SerializeUtil.nekoState(cap, Objects.requireNonNull(NbtIo.read(event.getPlayerFile("to_neko.dat"))));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NullPointerException e){
@@ -78,7 +78,7 @@ public class NekoCapability implements ICapabilityProvider {
     @SubscribeEvent
     public static void clone(PlayerEvent.Clone event){
         event.getOriginal().getCapability(NEKO_STATE).ifPresent(old->
-                        event.getEntity().getCapability(NEKO_STATE).ifPresent(cap->StateSerializeUtil.nekoState(cap,StateSerializeUtil.nekoState(old))
+                        event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> SerializeUtil.nekoState(cap, SerializeUtil.nekoState(old))
                 )
         );
     }

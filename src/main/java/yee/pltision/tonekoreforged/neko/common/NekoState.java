@@ -9,6 +9,7 @@ import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.BiFunction;
 
 /**
  * 底层接口，不要调用！
@@ -16,9 +17,19 @@ import java.util.UUID;
 @UnstableApi
 public interface NekoState {
     /**
+     * 将玩家变成猫猫
+     */
+    void beNeko();
+
+    /**
+     * 移除所有主人并移除猫猫状态
+     */
+    void beNonneko();
+
+    /**
      * @return 猫猫的所有主人。当返回null时说明这不是一个猫猫。
      */
-    @Nullable Map<UUID, NekoRecordObject> getOwners();
+    @Nullable Map<UUID, NekoRecord> getOwners();
 
     /**
      * 向猫猫添加主人。如果目标不是猫猫（即getOwners为null）则可能会新增一个集合将其设为猫猫。
@@ -26,6 +37,8 @@ public interface NekoState {
      * @return 如果成功添加（即原来不存在该uuid的主人）
      */
     boolean addOwner(UUID owner);
+
+    void computeNekoState(UUID uuid, BiFunction<? super UUID, ? super NekoRecord, ? extends NekoRecord> function);
 
     /**
      * @param uuid 尝试获取的主人的uuid。

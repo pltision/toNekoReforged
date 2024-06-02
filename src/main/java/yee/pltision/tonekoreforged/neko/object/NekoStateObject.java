@@ -11,11 +11,12 @@ import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 
 import java.util.*;
+import java.util.function.BiFunction;
 
 public class NekoStateObject implements NekoState {
     public static int DEFAULT_EXP=10;
     public Set<UUID> nekoSet;
-    public BiMap<UUID,NekoRecordObject> ownerMap;
+    public BiMap<UUID,NekoRecord> ownerMap;
 
     public PetPhrase phrase=null;
 
@@ -25,7 +26,7 @@ public class NekoStateObject implements NekoState {
     }
 
     @Override
-    public @Nullable Map<UUID,NekoRecordObject> getOwners() {
+    public @Nullable Map<UUID,NekoRecord> getOwners() {
         return ownerMap;
     }
 
@@ -33,14 +34,19 @@ public class NekoStateObject implements NekoState {
     public boolean addOwner(UUID owner){
         beNeko();
 
-        if(ownerMap==null) ownerMap=HashBiMap.create();
         if(ownerMap.containsKey(owner)) return false;
         ownerMap.put(owner,new NekoRecordObject(owner,DEFAULT_EXP));
         return true;
     }
 
     @Override
-    public @Nullable NekoRecordObject getOwner(UUID uuid) {
+    public void computeNekoState(UUID uuid, BiFunction<? super UUID, ? super NekoRecord, ? extends NekoRecord> function) {
+        beNeko();
+        ownerMap.compute(uuid,function);
+    }
+
+    @Override
+    public @Nullable NekoRecord getOwner(UUID uuid) {
         return ownerMap==null?null:ownerMap.get(uuid);
     }
 
@@ -54,12 +60,12 @@ public class NekoStateObject implements NekoState {
     @Override
     public boolean removeOwnerAndState(UUID owner) {
         if(ownerMap==null)return false;
-        NekoRecordObject removed=ownerMap.remove(owner);
+        NekoRecord removed=ownerMap.remove(owner);
         if(removed==null){
             return false;
         }
         else {
-            if(ownerMap.isEmpty()) beNotNeko();
+            if(ownerMap.isEmpty()) beNonneko();
             return true;
         }
     }
@@ -99,10 +105,11 @@ public class NekoStateObject implements NekoState {
     }
 
     public void beNeko(){
-        if(Config.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase) phrase=defaultPhrase();
+        if(Config.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase&&phrase==null||phrase.phrase.isEmpty()) phrase=defaultPhrase();
+        if(ownerMap==null) ownerMap=HashBiMap.create();
     }
 
-    public void beNotNeko(){
+    public void beNonneko(){
         ownerMap=null;
 
     }

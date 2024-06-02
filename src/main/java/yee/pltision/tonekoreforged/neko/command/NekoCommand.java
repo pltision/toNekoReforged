@@ -185,7 +185,7 @@ public class NekoCommand {
         AtomicReference<NekoState> state = new AtomicReference<>();
         player.getCapability(NEKO_STATE).ifPresent(state::set);
         if (state.get() != null) {
-            Map<UUID, NekoRecordObject> owners = state.get().getOwners();
+            Map<UUID, NekoRecord> owners = state.get().getOwners();
             if (owners == null) {
                 throw CommandExceptions.PLAYER_NOT_NEKO.create();
             } else {

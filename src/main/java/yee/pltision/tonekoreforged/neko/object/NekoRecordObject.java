@@ -3,10 +3,11 @@ package yee.pltision.tonekoreforged.neko.object;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.object.additions.NekoAdditions;
 
 import java.util.UUID;
 
-public class NekoRecordObject implements NekoRecord  {
+public class NekoRecordObject extends NekoAdditions implements NekoRecord {
     public final @NotNull UUID uuid;
     public float exp;
     public float factor=1;
