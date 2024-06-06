@@ -3,36 +3,43 @@ package yee.pltision.tonekoreforged.neko.capability;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.config.Config;
+import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber
 public class NekoCapability implements ICapabilityProvider {
-    public static final Capability<NekoStateObject> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
-    public final LazyOptional<NekoStateObject> optional;
+    public static final Capability<NekoState> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
+    public final LazyOptional<NekoState> optional;
 
-    public NekoCapability(){
-        optional=LazyOptional.of(NekoStateObject::new);
+    public NekoCapability(Player player){
+        optional=LazyOptional.of(()->getOrCreateNekoState(player.getUUID()));
     }
 
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
-        if(event.getObject()instanceof Player){
-            event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapability());
+        if(event.getObject()instanceof Player player){
+            event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapability(player));
         }
     }
 
@@ -46,8 +53,81 @@ public class NekoCapability implements ICapabilityProvider {
         return cap == NEKO_STATE ? optional.cast():LazyOptional.empty();
     }
 
+    public static Map<UUID, NekoState> nekoStatePool;
+    public static NekoState getOrCreateNekoState(UUID uuid){
+        return nekoStatePool.computeIfAbsent(uuid, k -> new NekoStateObject());
+    }
+
+    public static final String NEKO_STATE_SUFFIX="_neko_state.dat";
+    public static String TO_NEKO_PATH ="to_neko";
+
+    public static File getNekoPath(MinecraftServer server){
+        return new File(server.getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile(), TO_NEKO_PATH);
+    }
 
     @SubscribeEvent
+    public static void serverStart(ServerStartedEvent event){
+        if(!Config.doSave) return;
+        File toNekoPath= getNekoPath(event.getServer());
+        nekoStatePool=new HashMap<>();
+        if(toNekoPath.isDirectory()){
+            for(File file: Objects.requireNonNull(toNekoPath.listFiles())){
+                if(file.isFile()&&file.getName().endsWith(NEKO_STATE_SUFFIX)){
+                    UUID uuid;
+                    try{
+                        uuid=UUID.fromString(file.getName().substring(0,file.getName().length()-NEKO_STATE_SUFFIX.length()));
+                    }catch (IllegalArgumentException exception){
+                        ToNeko.LOGGER.warn("[ToNeko] {} is end of \"{}\" but not start with an UUID!",file,NEKO_STATE_SUFFIX);
+                        continue;
+                    }
+                    try{
+                        nekoStatePool.put(uuid, SerializeUtil.nekoState(new NekoStateObject(),Objects.requireNonNull(NbtIo.read(file))) );
+                    }
+                    catch (Exception exception){
+                        ToNeko.LOGGER.error("[ToNeko] Exception when reading neko state in {}! {}",file,exception);
+                    }
+                }
+                else ToNeko.LOGGER.info("[ToNeko] {} is not end of \"{}\", toNeko will not try to decode it like a neko state.",file,NEKO_STATE_SUFFIX);
+            }
+            //构建双向图
+            for(Map.Entry<UUID,NekoState> entry:nekoStatePool.entrySet()){
+                Map<UUID,?> owners=entry.getValue().getOwners();
+                if(owners!=null)
+                    for(UUID ownerUUID:owners.keySet()){
+                        nekoStatePool.computeIfAbsent(ownerUUID, k -> new NekoStateObject()).addNeko(entry.getKey());
+                    }
+            }
+        }
+        else{
+            if(toNekoPath.exists())
+                ToNeko.LOGGER.error("[ToNeko] {} is not a directory, maybe neko states cannot be save!",toNekoPath);
+            else {
+                ToNeko.LOGGER.info("[ToNeko] {} is not exists, maybe it just didn't been created.", toNekoPath);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void serverStop(ServerStoppingEvent event){
+        ToNeko.LOGGER.info("[ToNeko] Server stop, try save states: {}",nekoStatePool);
+        if(!Config.doSave) return;
+        File toNekoPath= getNekoPath(event.getServer());
+        if(!toNekoPath.exists())
+            if(!toNekoPath.mkdirs()) ToNeko.LOGGER.warn("[ToNeko] {} mkdirs() return false.",toNekoPath);
+        for(Map.Entry<UUID,NekoState> entry: nekoStatePool.entrySet()){
+            File file=new File(toNekoPath,entry.getKey().toString()+NEKO_STATE_SUFFIX);
+            ToNeko.LOGGER.info("[ToNeko] Saving: {}",file);
+            try{
+                NbtIo.write(SerializeUtil.nekoState(entry.getValue()),file);
+            }
+            catch (Exception exception){
+                ToNeko.LOGGER.error("[ToNeko] Exception when writing neko state in {}! {}",file,exception);
+            }
+        }
+        nekoStatePool=null;
+    }
+
+    /*@SubscribeEvent
     public static void save(PlayerEvent.SaveToFile event){
         if(Config.doSave){
             event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
@@ -60,8 +140,10 @@ public class NekoCapability implements ICapabilityProvider {
         }
 
     }
+
     @SubscribeEvent
     public static void load(PlayerEvent.LoadFromFile event){
+        event.getEntity().getCapability(NEKO_STATE).addListener();
         if(Config.doSave){
             event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> {
                 try {
@@ -69,7 +151,7 @@ public class NekoCapability implements ICapabilityProvider {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (NullPointerException e){
-                    ToNeko.LOGGER.info("Try read "+event.getPlayerFile("to_neko.dat")+" return null. Maybe data have not been created.");
+                    ToNeko.LOGGER.info("Try get neko state with UUID {} return null. Maybe data is not been created.", event.getPlayerFile("to_neko.dat"));
                 }
             });
         }
@@ -81,6 +163,6 @@ public class NekoCapability implements ICapabilityProvider {
                         event.getEntity().getCapability(NEKO_STATE).ifPresent(cap-> SerializeUtil.nekoState(cap, SerializeUtil.nekoState(old))
                 )
         );
-    }
 
+    }*/
 }

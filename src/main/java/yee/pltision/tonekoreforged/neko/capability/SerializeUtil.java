@@ -7,7 +7,6 @@ import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
-import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
 import java.util.*;
 
@@ -50,11 +49,12 @@ public class SerializeUtil {
             tag.putBoolean("isNeko",false);
         }
 
-        ListTag nekoList=new ListTag();
+        //仅序列化单向图
+        /*ListTag nekoList=new ListTag();
         for(UUID uuid:nekoState.getNekos()){
             nekoList.add(NbtUtils.createUUID(uuid));
         }
-        tag.put("nekos",nekoList);
+        tag.put("nekos",nekoList);*/
 
         return tag;
     }
@@ -69,7 +69,7 @@ public class SerializeUtil {
         return new NekoRecordObject(tag.getUUID("uuid"),tag.getInt("exp"));
     }
 
-    public static void nekoState(NekoState nekoState,CompoundTag tag){
+    public static NekoState nekoState(NekoState nekoState,CompoundTag tag){
 
         nekoState.setPetPhrase(petPhrase(tag.getCompound("petPhrase")));
 
@@ -95,13 +95,16 @@ public class SerializeUtil {
             nekoState.beNonneko();
         }
 
-        try{
+        //仅序列化单向图
+        /*try{
             for(Tag nekoTag:tag.getList("nekos",11)){
                 nekoState.addNeko(UUIDUtil.uuidFromIntArray(((IntArrayTag)nekoTag).getAsIntArray()));
             }
         }
         catch (Exception e){
             ToNeko.LOGGER.error(e.toString());
-        }
+        }*/
+
+        return nekoState;
     }
 }

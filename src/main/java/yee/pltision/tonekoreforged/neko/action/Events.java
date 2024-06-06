@@ -34,6 +34,7 @@ import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
+import yee.pltision.tonekoreforged.neko.util.StateApi;
 
 import java.util.List;
 
@@ -59,12 +60,10 @@ public class Events {
 /*        event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             event.setMessage(cap.prefix().append(event.getMessage()));
         })*/
-        event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            PetPhrase petPhrase=cap.getPetPhrase();
-            if(petPhrase!=null){
-                event.setMessage(Component.literal(petPhrase.addPhrase(event.getMessage().getString())));
-            }
-        });
+        PetPhrase petPhrase= StateApi.getPetPhrase(event.getPlayer());
+        if(petPhrase!=null){
+            event.setMessage(Component.literal(petPhrase.addPhrase(event.getMessage().getString())));
+        }
     }
     @SubscribeEvent
     public static void hit(AttackEntityEvent event){

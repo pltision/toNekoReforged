@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
@@ -27,7 +28,9 @@ import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
 import yee.pltision.tonekoreforged.neko.object.NekoRequest;
 import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
+import yee.pltision.tonekoreforged.neko.util.StateApi;
 
+import javax.swing.plaf.nimbus.State;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static yee.pltision.tonekoreforged.neko.capability.NekoCapability.NEKO_STATE;
 
+@SuppressWarnings({"StringConcatenationArgumentToLogCall", "LoggingSimilarMessage"})
 @Mod.EventBusSubscriber
 public class NekoCommand {
 
@@ -43,49 +47,49 @@ public class NekoCommand {
     public static void register(RegisterCommandsEvent event) {
         event.getDispatcher().register(
                 Commands.literal("toneko")
-                        .then(Commands.literal("getNeko").executes(context ->  listNekos(context.getSource()))
+                        .then(Commands.literal("getNeko").executes(context -> listNekos(context.getSource()))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .requires(source->Config.enableGetNekoOrOwner||source.hasPermission(2))
-                                        .executes(context ->  getNeko(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .requires(source -> Config.enableGetNekoOrOwner || source.hasPermission(2))
+                                        .executes(context -> getNeko(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                 )
                         )
-                        .then(Commands.literal("getOwner").executes(context ->  listOwners(context.getSource()))
+                        .then(Commands.literal("getOwner").executes(context -> listOwners(context.getSource()))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .requires(source->Config.enableGetNekoOrOwner||source.hasPermission(2))
-                                        .executes(context ->  getOwner(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .requires(source -> Config.enableGetNekoOrOwner || source.hasPermission(2))
+                                        .executes(context -> getOwner(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                 )
                         )
                         .then(Commands.literal("removeNeko")
-                                .requires(source->Config.enableRemoveNeko||source.hasPermission(2))
+                                .requires(source -> Config.enableRemoveNeko || source.hasPermission(2))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  removeNeko(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context,"player").getStringUUID()),EntityArgument.getPlayer(context,"player").getName().getString()))    //暂时改为Entity
+                                        .executes(context -> removeNeko(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context, "player").getStringUUID()), EntityArgument.getPlayer(context, "player").getName().getString()))    //暂时改为Entity
                                 )
                         )
                         .then(Commands.literal("removeOwner")
-                                .requires(source->Config.enableRemoveOwner||source.hasPermission(2))
+                                .requires(source -> Config.enableRemoveOwner || source.hasPermission(2))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  removeOwner(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context,"player").getStringUUID()),EntityArgument.getPlayer(context,"player").getName().getString()))   //暂时改为Entity
+                                        .executes(context -> removeOwner(context, OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context, "player").getStringUUID()), EntityArgument.getPlayer(context, "player").getName().getString()))   //暂时改为Entity
                                 )
                         )
                         .then(Commands.literal("getExp").then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  getExp(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .executes(context -> getExp(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                 )
                         )
                         .then(Commands.literal("setExp").requires((p_139171_) -> p_139171_.hasPermission(2))
                                 .then(Commands.argument("player1", EntityArgument.player()).then(Commands.argument("player2", EntityArgument.player()).then(Commands.argument("value", IntegerArgumentType.integer())
-                                        .executes(context ->  setExp(context.getSource(),EntityArgument.getPlayer(context,"player1"),EntityArgument.getPlayer(context,"player2"),IntegerArgumentType.getInteger(context,"value")))
+                                        .executes(context -> setExp(context.getSource(), EntityArgument.getPlayer(context, "player1"), OldUsersConverter.convertMobOwnerIfNecessary(context.getSource().getServer(), EntityArgument.getPlayer(context, "player").getStringUUID()), IntegerArgumentType.getInteger(context, "value")))
                                 )))
                         )
                         .then(Commands.literal("petPhrase")
-                                .executes(context ->  getPetPhrase(context.getSource(),context.getSource().getPlayerOrException()))
+                                .executes(context -> getPetPhrase(context.getSource(), context.getSource().getPlayerOrException()))
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  getPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .executes(context -> getPetPhrase(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                         .then(Commands.argument("phrase", StringArgumentType.string())
-                                                .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),!PetPhrase.isTextEnglish(StringArgumentType.getString(context,"phrase")),0))
+                                                .executes(context -> setPetPhrase(context.getSource(), EntityArgument.getPlayer(context, "player"), StringArgumentType.getString(context, "phrase"), !PetPhrase.isTextEnglish(StringArgumentType.getString(context, "phrase")), 0))
                                                 .then(Commands.argument("ignore_english", BoolArgumentType.bool())
-                                                        .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),BoolArgumentType.getBool(context,"ignore_english"),0))
-                                                        .then(Commands.argument("ignore_after",IntegerArgumentType.integer(0))
-                                                                .executes(context ->  setPetPhrase(context.getSource(),EntityArgument.getPlayer(context,"player"),StringArgumentType.getString(context,"phrase"),BoolArgumentType.getBool(context,"ignore_english"),IntegerArgumentType.getInteger(context,"ignore_after")))
+                                                        .executes(context -> setPetPhrase(context.getSource(), EntityArgument.getPlayer(context, "player"), StringArgumentType.getString(context, "phrase"), BoolArgumentType.getBool(context, "ignore_english"), 0))
+                                                        .then(Commands.argument("ignore_after", IntegerArgumentType.integer(0))
+                                                                .executes(context -> setPetPhrase(context.getSource(), EntityArgument.getPlayer(context, "player"), StringArgumentType.getString(context, "phrase"), BoolArgumentType.getBool(context, "ignore_english"), IntegerArgumentType.getInteger(context, "ignore_after")))
                                                         )
                                                 )
                                         )
@@ -95,19 +99,19 @@ public class NekoCommand {
                         )
                         .then(Commands.literal("accept")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  acceptPlayer(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .executes(context -> acceptPlayer(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                 )
                         )
                         .then(Commands.literal("deny")
                                 .then(Commands.argument("player", EntityArgument.player())
-                                        .executes(context ->  denyPlayer(context.getSource(),EntityArgument.getPlayer(context,"player")))
+                                        .executes(context -> denyPlayer(context.getSource(), EntityArgument.getPlayer(context, "player")))
                                 )
                         )
                         .then(Commands.literal("help")
-                                .executes(context ->  help(context.getSource()))
+                                .executes(context -> help(context.getSource()))
                         )
                         .then(Commands.literal("nekoRite")
-                                .executes(context ->  help(context.getSource()))
+                                .executes(context -> help(context.getSource()))
                         )
 
         );
@@ -119,262 +123,258 @@ public class NekoCommand {
      * 用于列出玩家的所有猫猫。当尝试列出的uuid的玩家离线时，会尝试从GameProfileCache中获取。若仍未找点直接输出uuid。
      */
     public static int listNekos(CommandSourceStack context) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
+        try {
+            Player player = context.getPlayerOrException();
 
-        context.sendSuccess(()->{
-            MutableComponent component= Lang.LIST_NEKO_INFO.component();
-            player.getCapability(NEKO_STATE).ifPresent(cap->{
-                Iterator<UUID> it=cap.getNekos().iterator();
-                listPlayers(component,it,context.getServer());
-            });
-            return component;
-        },false);
-
+            context.sendSuccess(() -> {
+                MutableComponent component = Lang.LIST_NEKO_INFO.component();
+                listPlayers(component, StateApi.getNekos(player).iterator(), context.getServer());
+                return component;
+            }, false);
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
+        }
         return 0;
     }
 
     /**
      * 用于通过uuid列表中的获取玩家的名字并添加到component里面
      */
-    public static void listPlayers(MutableComponent component, Iterator<UUID> it, MinecraftServer server){
+    public static void listPlayers(MutableComponent component, Iterator<UUID> it, MinecraftServer server) {
         component.append("[");
-        PlayerList playerList= server.getPlayerList();
-        while (it.hasNext()){   //遍历集合
-            UUID uuid=it.next();
-            Player neko=playerList.getPlayer(uuid);
-            if(neko==null){    //如果无法从playerList获取到玩家，尝试从GameProfileCache中获取名称
-                GameProfileCache gameProfileCache= server.getProfileCache();
-                if(gameProfileCache!=null){
+        PlayerList playerList = server.getPlayerList();
+        while (it.hasNext()) {   //遍历集合
+            UUID uuid = it.next();
+            Player neko = playerList.getPlayer(uuid);
+            if (neko == null) {    //如果无法从playerList获取到玩家，尝试从GameProfileCache中获取名称
+                GameProfileCache gameProfileCache = server.getProfileCache();
+                if (gameProfileCache != null) {
 //                    System.out.println(uuid);
                     gameProfileCache.get(uuid).ifPresentOrElse(
-                            profile->component.append(profile.getName()),
-                            ()->component.append(uuid.toString()));
-                }
-                else component.append(uuid.toString());  //都找不到直接输出uuid
-            }
-            else component.append(neko.getName());
-            if(it.hasNext()) component.append(", "); //如果不是最后一个的话输出逗号
+                            profile -> component.append(profile.getName()),
+                            () -> component.append(uuid.toString()));
+                } else component.append(uuid.toString());  //都找不到直接输出uuid
+            } else component.append(neko.getName());
+            if (it.hasNext()) component.append(", "); //如果不是最后一个的话输出逗号
         }
         component.append("]");
     }
 
+    @SuppressWarnings("LoggingSimilarMessage")
     public static int getNeko(CommandSourceStack context, ServerPlayer neko) throws CommandSyntaxException {
-        ServerPlayer player=context.getPlayerOrException();
+        try {
+            ServerPlayer player = context.getPlayerOrException();
 
-        CommandSyntaxException exception=CommandTester.canAddNeko(player,neko);
+            CommandSyntaxException exception = CommandTester.canAddNeko(player, neko);
+            if (exception != null && !context.hasPermission(2)) throw exception;
 
-        if(exception!=null&&!context.hasPermission(2)) throw exception;
-
-        if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)){
-            NekoRequest.trySendAndReturn(context,player,neko, (source, sender, accept) -> {
-                CommandSyntaxException e=CommandTester.canAddOwner(accept,sender);
-                if(e!=null) throw e;
-                CommandFunctions.getNeko(source,sender,accept);
-            },Lang.GET_NEKO_REQUEST.component());
+            if (Config.addOrRemoveNeedRequest && !context.hasPermission(2)) {
+                NekoRequest.trySendAndReturn(context, player, neko, (source, sender, accept) -> {
+                    CommandSyntaxException e = CommandTester.canAddOwner(accept, sender);
+                    if (e != null) throw e;
+                    CommandFunctions.getNeko(source, sender, accept);
+                }, Lang.GET_NEKO_REQUEST.component());
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
-        }
-        else {
-            CommandFunctions.getNeko(context,player,neko);
+            } else {
+                CommandFunctions.getNeko(context, player, neko);
+            }
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
 
         return 0;
     }
-    public static int listOwners(CommandSourceStack context) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
 
-        AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NEKO_STATE).ifPresent(state::set);
-        if (state.get() != null) {
-            Map<UUID, NekoRecord> owners = state.get().getOwners();
+    public static int listOwners(CommandSourceStack context) throws CommandSyntaxException {
+        try {
+            Player player = context.getPlayerOrException();
+
+            Set<UUID> owners = StateApi.getOwners(player);
             if (owners == null) {
                 throw CommandExceptions.PLAYER_NOT_NEKO.create();
             } else {
                 context.sendSuccess(() -> {
                     MutableComponent component = Lang.LIST_OWNER_INFO.component();
-                    Iterator<UUID> it = new NekoRecord.UUIDIterator(owners.values().iterator());
+                    Iterator<UUID> it = owners.iterator();
                     listPlayers(component, it, context.getServer());
                     return component;
                 }, false);
             }
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
         return 0;
     }
 
     public static int getOwner(CommandSourceStack context, ServerPlayer owner) throws CommandSyntaxException {
-        ServerPlayer player=context.getPlayerOrException();
+        try {
+            ServerPlayer player = context.getPlayerOrException();
 
-        CommandSyntaxException exception=CommandTester.canAddOwner(player,owner);
+            CommandSyntaxException exception = CommandTester.canAddOwner(player, owner);
 
-        if(exception!=null&&context.hasPermission(2)) throw exception;
+            if (exception != null && context.hasPermission(2)) throw exception;
 
-        if(Config.addOrRemoveNeedRequest&&!context.hasPermission(2)){
-            NekoRequest.trySendAndReturn(context,player,owner, (source, sender, accept) -> {
-                CommandSyntaxException e=CommandTester.canAddNeko(accept,sender);
-                if(e!=null) throw e;
-                CommandFunctions.getOwner(source,sender,accept);
-            },Lang.GET_OWNER_REQUEST.component());
+            if (Config.addOrRemoveNeedRequest && !context.hasPermission(2)) {
+                NekoRequest.trySendAndReturn(context, player, owner, (source, sender, accept) -> {
+                    CommandSyntaxException e = CommandTester.canAddNeko(accept, sender);
+                    if (e != null) throw e;
+                    CommandFunctions.getOwner(source, sender, accept);
+                }, Lang.GET_OWNER_REQUEST.component());
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
-        }
-        else {
-            CommandFunctions.getOwner(context,player,owner);
+            } else {
+                CommandFunctions.getOwner(context, player, owner);
+            }
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
 
         return 0;
     }
 
     public static int removeNeko(CommandContext<CommandSourceStack> context, UUID neko, String input) throws CommandSyntaxException {
-        ServerPlayer player=context.getSource().getPlayerOrException();
+        try {
+            ServerPlayer player = context.getSource().getPlayerOrException();
 
-        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NEKO_STATE).ifPresent(cap->{
-            if(!cap.checkNeko(neko)){
-                exception.set(CommandExceptions.REMOVE_NEKO_NOT_FOUND.create());
-            }
-            else{
-                try {
-                    if(Config.addOrRemoveNeedRequest&&!context.getSource().hasPermission(2)) {
-                        ServerPlayer nekoPlayer=context.getSource().getServer().getPlayerList().getPlayer(neko);
-                        if(nekoPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
-                        NekoRequest.trySendAndReturn(context.getSource(),player,nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
-                    }
-                    else{
-                        CommandFunctions.removeNeko(context.getSource(),player,neko,input);
-                    }
-                } catch (CommandSyntaxException e) {
-                    exception.set(e);
+            if (!StateApi.containsNeko(player,neko)) {
+                throw  CommandExceptions.REMOVE_NEKO_NOT_FOUND.create();
+            } else {
+                if (Config.addOrRemoveNeedRequest && !context.getSource().hasPermission(2)) {
+                    ServerPlayer nekoPlayer = context.getSource().getServer().getPlayerList().getPlayer(neko);
+                    if (nekoPlayer == null) throw EntityArgument.NO_PLAYERS_FOUND.create();
+                    NekoRequest.trySendAndReturn(context.getSource(), player, nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source, sender, accept.getUUID(), input), Lang.REMOVE_REQUEST.component());
+                } else {
+                    CommandFunctions.removeNeko(context.getSource(), player, neko, input);
                 }
             }
-        });
-        if(exception.get()!=null)throw exception.get();
-
-        return 0;
-    }
-
-    public static int removeOwner(CommandContext<CommandSourceStack> context, UUID owner, String input) throws CommandSyntaxException {
-        ServerPlayer player=context.getSource().getPlayerOrException();
-
-        AtomicReference<CommandSyntaxException> exception=new AtomicReference<>();
-        player.getCapability(NEKO_STATE).ifPresent(cap->{
-            if(cap.getOwner(owner)==null){
-                exception.set(CommandExceptions.REMOVE_OWNER_NOT_FOUND.create());
-            }
-            else{
-                try {
-                    if(Config.addOrRemoveNeedRequest&&!context.getSource().hasPermission(2)) {
-                        ServerPlayer ownerPlayer=context.getSource().getServer().getPlayerList().getPlayer(owner);
-                        if(ownerPlayer==null) throw EntityArgument.NO_PLAYERS_FOUND.create();
-                        NekoRequest.trySendAndReturn(context.getSource(),player,ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source,sender,accept.getUUID(),input),Lang.REMOVE_REQUEST.component());
-                    }
-                    else{
-                        CommandFunctions.removeOwner(context.getSource(),player,owner,input);
-                    }
-                } catch (CommandSyntaxException e) {
-                    exception.set(e);
-                }
-            }
-        });
-        if(exception.get()!=null)throw exception.get();
-
-        return 0;
-    }
-
-    public static int getExp(CommandSourceStack context, ServerPlayer get) throws CommandSyntaxException {
-        Player player=context.getPlayerOrException();
-
-        if(!NekoModifyUtil.modifyStateRecord(player,get.getUUID(),
-                nekoRecord -> context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(nekoRecord.getExp())), false)))
-        {
-            throw CommandExceptions.GET_EXP_NOT_FOUND.create();
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
 
         return 0;
     }
 
-    public static int setExp(CommandSourceStack context,ServerPlayer neko, ServerPlayer owner,float set) throws CommandSyntaxException {
-        if(!NekoModifyUtil.modifyStateRecord(neko,owner.getUUID(), nekoRecord -> {
-                    nekoRecord.setExp(set);
-                    context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
-                }))
-        {
-            throw CommandExceptions.SET_EXP_NOT_CONNECTED.create();
+    public static int removeOwner(CommandContext<CommandSourceStack> context, UUID owner, String input) throws CommandSyntaxException {
+        try {
+            ServerPlayer player = context.getSource().getPlayerOrException();
+
+            if (!StateApi.containsOwner(player,owner)) {
+                throw CommandExceptions.REMOVE_OWNER_NOT_FOUND.create();
+            } else {
+                if (Config.addOrRemoveNeedRequest && !context.getSource().hasPermission(2)) {
+                    ServerPlayer ownerPlayer = context.getSource().getServer().getPlayerList().getPlayer(owner);
+                    if (ownerPlayer == null) throw EntityArgument.NO_PLAYERS_FOUND.create();
+                    NekoRequest.trySendAndReturn(context.getSource(), player, ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source, sender, accept.getUUID(), input), Lang.REMOVE_REQUEST.component());
+                } else {
+                    CommandFunctions.removeOwner(context.getSource(), player, owner, input);
+                }
+            }
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
+        }
+
+        return 0;
+    }
+
+    public static int getExp(CommandSourceStack context, ServerPlayer get) throws CommandSyntaxException {
+        try {
+            Player player = context.getPlayerOrException();
+
+            float exp=StateApi.getExp(player,get.getUUID());
+            if(Float.isNaN(exp)) throw CommandExceptions.GET_EXP_NOT_FOUND.create();
+            context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(exp)), false);
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
+        }
+
+        return 0;
+    }
+
+    public static int setExp(CommandSourceStack context, ServerPlayer a, UUID b, float set) throws CommandSyntaxException {
+        try {
+            if (StateApi.setExp(a, b, set))
+                throw CommandExceptions.SET_EXP_NOT_CONNECTED.create();
+            context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
 
         return 0;
     }
 
     public static int getPetPhrase(CommandSourceStack context, ServerPlayer player) {
-        player.getCapability(NEKO_STATE).ifPresent(cap-> context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(cap.getPetPhrase())), false));
-
+        try {
+            context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(StateApi.getPetPhrase(player))), false);
+        } catch (Exception e) {
+            ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
+        }
         return 0;
     }
-    public static int setPetPhrase(CommandSourceStack context, ServerPlayer set,String phrase,boolean ignoreEnglish,int ignoreAfter) throws CommandSyntaxException {
-        ServerPlayer player=context.getPlayerOrException();
 
-        AtomicReference<NekoState> stateAtomicReference=new AtomicReference<>();
-        player.getCapability(NEKO_STATE).ifPresent(stateAtomicReference::set);
-        NekoState state=stateAtomicReference.get();
-        if(state!=null){
-            if(!context.hasPermission(2)){
-                if(player==set){
-                    if((!Config.everyoneCanModifyTheirPetPhrase)&&!Config.nekoCanModifyTheirPetPhrase) throw CommandExceptions.SET_PET_PHRASE_EVERYONE_CANNOT.create();
-                    if( (state.getOwners()!=null && !Config.nekoCanModifyTheirPetPhrase) &&
-                            !( Config.ownerCanModifyTheirNekoPetPhrase && state.checkNeko(player.getUUID()) ) )
-                        throw CommandExceptions.SET_PET_PHRASE_EVERYONE_EXCEPT_NEKO.create();
-                    if(!Config.everyoneCanModifyTheirPetPhrase)throw CommandExceptions.SET_PET_PHRASE_ONLY_NEKO.create();
-                }
-                else{
-                    if(Config.ownerCanModifyTheirNekoPetPhrase){
-                        if(!state.checkNeko(set.getUUID())) throw CommandExceptions.SET_PET_PHRASE_NOT_OWNER.create();
-                    }
-                    else throw CommandExceptions.SET_PET_PHRASE_CANNOT_MODIFY_OTHER.create();
-                }
+    public static int setPetPhrase(CommandSourceStack context, ServerPlayer set, String phrase, boolean ignoreEnglish, int ignoreAfter) throws CommandSyntaxException {
+        try {
+            ServerPlayer player = context.getPlayerOrException();
+
+            CommandSyntaxException exception = CommandTester.canModifyPetPhrase(player, set);
+            if (exception != null && !context.hasPermission(2)) throw exception;
 
 
+            if (phrase == null) {
+                StateApi.setPetPhrase(set, null);
+                context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append("null"), false);
+            } else {
+                int ignoreAfterMax = PetPhrase.getLastIndexOfNotIgnoreCharacter(phrase) + 1;
+                if (ignoreAfter > ignoreAfterMax) throw CommandExceptions.SET_PET_PHRASE_AFTER_IGNORE_ILLEGAL.create();
+                PetPhrase petPhrase = new PetPhrase(phrase, ignoreEnglish, ignoreAfter);
+                StateApi.setPetPhrase(set, petPhrase);
+                context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append(petPhrase.toString()), false);
             }
-
-            AtomicReference<CommandSyntaxException> throwException=new AtomicReference<>();
-            set.getCapability(NEKO_STATE).ifPresent(cap->{
-                if(phrase==null){
-                    cap.setPetPhrase(null);
-                    context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append("null"), false);
-                }
-                else{
-                    int ignoreAfterMax= PetPhrase.getLastIndexOfNotIgnoreCharacter(phrase)+1;
-                    if(ignoreAfter>ignoreAfterMax)throwException.set(CommandExceptions.SET_PET_PHRASE_AFTER_IGNORE_ILLEGAL.create());
-                    PetPhrase petPhrase=new PetPhrase(phrase,ignoreEnglish,ignoreAfter);
-                    cap.setPetPhrase(petPhrase);
-                    context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append(petPhrase.toString()), false);
-
-                }
-            });
-            if(throwException.get()!=null)throw throwException.get();
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
 
         return 0;
     }
 
-    public static int acceptPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
-        ServerPlayer player= source.getPlayerOrException();
+    public static int acceptPlayer(CommandSourceStack source, ServerPlayer sender) throws CommandSyntaxException {
+        try {
+            ServerPlayer player = source.getPlayerOrException();
 
-        if(NekoRequest.tryAccept(source,sender,player)){
-            source.sendSuccess(Lang.ACCEPT_INFO::component,false);
-            return 0;
+            if (NekoRequest.tryAccept(source, sender, player)) {
+                source.sendSuccess(Lang.ACCEPT_INFO::component, false);
+                return 0;
+            } else throw CommandExceptions.ACCEPT_FAIL.create();
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
-        else throw CommandExceptions.ACCEPT_FAIL.create();
     }
 
-    public static int denyPlayer(CommandSourceStack source,ServerPlayer sender) throws CommandSyntaxException {
-        ServerPlayer player= source.getPlayerOrException();
+    public static int denyPlayer(CommandSourceStack source, ServerPlayer sender) throws CommandSyntaxException {
+        try {
+            ServerPlayer player = source.getPlayerOrException();
 
-        if(NekoRequest.deny(source.getServer(),sender,player)){
-            source.sendSuccess(Lang.DENY_INFO::component,false);
-            return 0;
+            if (NekoRequest.deny(source.getServer(), sender, player)) {
+                source.sendSuccess(Lang.DENY_INFO::component, false);
+                return 0;
+            } else throw CommandExceptions.ACCEPT_FAIL.create();
+        } catch (Exception e) {
+            if (!(e instanceof CommandSyntaxException)) ToNeko.LOGGER.error("[ToNeko] Exception when execute command: " + e);
+            throw e;
         }
-        else throw CommandExceptions.ACCEPT_FAIL.create();
     }
 
-    public static int help(CommandSourceStack stack){
-        stack.sendSuccess(Config.usingRite,false);
+    public static int help(CommandSourceStack stack) {
+        stack.sendSuccess(Config.usingRite, false);
 //        stack.sendSuccess(()->Component.translatableWithFallback("a.toneko.command","%s 喵喵","asdgweg"),false);
         return 0;
     }

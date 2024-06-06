@@ -11,6 +11,7 @@ import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@Deprecated
 public class NekoModifyUtil {
     /**
      * 此方法可以读取已离线的玩家数据（暂未实现）

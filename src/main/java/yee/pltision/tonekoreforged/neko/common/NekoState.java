@@ -2,6 +2,7 @@ package yee.pltision.tonekoreforged.neko.common;
 
 import io.netty.util.internal.UnstableApi;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.neko.object.NekoRecordObject;
@@ -14,7 +15,7 @@ import java.util.function.BiFunction;
 /**
  * 底层接口，不要调用！
  */
-@UnstableApi
+@ApiStatus.Internal
 public interface NekoState {
     /**
      * 将玩家变成猫猫
@@ -42,7 +43,7 @@ public interface NekoState {
 
     /**
      * @param uuid 尝试获取的主人的uuid。
-     * @return 若拥有一个此uuid的主人返回它的记录，否则返回Null。
+     * @return 若拥有一个此uuid的主人返回它的记录，否则返回null。
      */
     @Nullable NekoRecord getOwner(UUID uuid);
 

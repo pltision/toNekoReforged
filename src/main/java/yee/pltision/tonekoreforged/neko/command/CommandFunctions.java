@@ -8,14 +8,11 @@ import net.minecraft.world.entity.player.Player;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
-import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
-import yee.pltision.tonekoreforged.neko.util.NekoCommonUtils;
+import yee.pltision.tonekoreforged.neko.util.StateApi;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -53,14 +50,8 @@ public class CommandFunctions {
     }
 
     public static boolean removeNeko(ServerPlayer player, UUID neko) {
-
-        NekoModifyUtil.remove(player, NekoModifyUtil.OperatorState.OWNER,neko, Config.removeStateWhenRemovedAllOwner);  //为player移除主人
         //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> isSuccess.set(cap.removeNeko(neko)));
-
-        return isSuccess.get();
+        return StateApi.removeNeko(player,neko,Config.removeStateWhenRemovedAllOwner);
     }
 
 
@@ -68,22 +59,12 @@ public class CommandFunctions {
      * @return 如果成功移除。否则就是未找到。
      */
     public static boolean removeOwner(Player player, UUID owner) throws CommandSyntaxException {
-        AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
-        if (state.get() != null) {
-            if (NekoCommonUtils.isNeko(player)) {
-                if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
-                    //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
+        //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
 
-                    NekoModifyUtil.remove(player, NekoModifyUtil.OperatorState.NEKO,owner,false/*主人移除猫猫不需要移除集合，此值形参无效*/);
-                    return true;
-                }
-                else return false;
-            }
-            else throw CommandExceptions.PLAYER_NOT_NEKO.create();
-
+        if (StateApi.isNeko(player)) {
+            return StateApi.removeOwner(player,owner,Config.removeStateWhenRemovedAllOwner);
         }
-        return false;
+        else throw CommandExceptions.PLAYER_NOT_NEKO.create();
     }
 
 }

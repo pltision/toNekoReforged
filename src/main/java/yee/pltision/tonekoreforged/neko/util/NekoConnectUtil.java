@@ -21,61 +21,12 @@ public class NekoConnectUtil {
      * @return 如果成功添加了。（失败的话说明neko已经是player的猫猫了
      */
     public static boolean getNeko(ServerPlayer player, ServerPlayer neko){
-
-        NekoModifyUtil.connect(player, NekoModifyUtil.OperatorState.OWNER,neko);  //将player添加为neko的主人
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            isSuccess.set(cap.addNeko(neko.getUUID()));     //将neko添加为player的猫猫
-        });
-
-        return isSuccess.get();
+        return StateApi.connect(neko,player);
     }
 
     public static boolean getOwner(ServerPlayer player, ServerPlayer owner) {
-        NekoModifyUtil.connect(player, NekoModifyUtil.OperatorState.NEKO,owner);  //将player添加为over的猫猫
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
-            isSuccess.set(cap.addOwner(owner.getUUID()));     //将owner添加为player的主人
-        });
-
-        return isSuccess.get();
+        return StateApi.connect(player,owner);
     }
 
-    public static boolean removeNeko(ServerPlayer player, UUID neko){
-
-        NekoModifyUtil.remove(player, NekoModifyUtil.OperatorState.OWNER,neko, Config.removeStateWhenRemovedAllOwner);  //为player移除主人
-        //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
-
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(cap-> isSuccess.set(cap.removeNeko(neko)));
-
-        return isSuccess.get();
-    }
-
-
-    /**
-     * @return 如果成功移除。否则就是未找到。
-     */
-    public static boolean removeOwner(Player player, UUID owner) throws CommandSyntaxException {
-        AtomicReference<NekoState> state = new AtomicReference<>();
-        player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state::set);
-        if (state.get() != null) {
-            Map<UUID, NekoRecord> owners = state.get().getOwners();
-            if (owners != null) {
-                if(state.get().removeOwner(owner,Config.removeStateWhenRemovedAllOwner)){   //如果成功移除
-                    //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
-
-                    NekoModifyUtil.remove(player, NekoModifyUtil.OperatorState.NEKO,owner,false/*主人移除猫猫不需要移除集合，此值形参无效*/);
-                    return true;
-                }
-                else return false;
-            }
-            else throw CommandExceptions.PLAYER_NOT_NEKO.create();
-
-        }
-        return false;
-    }
 
 }

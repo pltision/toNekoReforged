@@ -62,11 +62,11 @@ public class Config {
     private static final ForgeConfigSpec.BooleanValue PLAYER_CAN_HAVE_MULTIPLE_NEKOS = BUILDER
             .comment("If true, a player can have multiple nekos.")
             .comment("如果为true，一个玩家可以有多个猫娘。")
-            .define("command.playerCanHaveMultipleNekos", false);
+            .define("command.playerCanHaveMultipleNekos", true);
     private static final ForgeConfigSpec.BooleanValue PLAYER_CAN_HAVE_MULTIPLE_OWNERS = BUILDER
             .comment("If true, a player can have multiple owners.")
             .comment("如果为true，一个玩家可以有多个主人。")
-            .define("command.playerCanHaveMultipleOwners", false);
+            .define("command.playerCanHaveMultipleOwners", true);
 
     private static final ForgeConfigSpec.BooleanValue ENABLE_GET_NEKO_OR_OWNER = BUILDER
             .comment("If true, player can use command to get their neko or owner.")
