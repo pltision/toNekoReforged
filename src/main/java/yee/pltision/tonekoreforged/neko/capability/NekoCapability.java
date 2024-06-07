@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.config.Config;
+import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
 
@@ -57,6 +58,9 @@ public class NekoCapability implements ICapabilityProvider {
     public static NekoState getOrCreateNekoState(UUID uuid){
         return nekoStatePool.computeIfAbsent(uuid, k -> new NekoStateObject());
     }
+    public static NekoState getNekoState(UUID uuid){
+        return nekoStatePool.get(uuid);
+    }
 
     public static final String NEKO_STATE_SUFFIX="_neko_state.dat";
     public static String TO_NEKO_PATH ="to_neko";
@@ -81,7 +85,7 @@ public class NekoCapability implements ICapabilityProvider {
                         continue;
                     }
                     try{
-                        nekoStatePool.put(uuid, SerializeUtil.nekoState(new NekoStateObject(),Objects.requireNonNull(NbtIo.read(file))) );
+                        nekoStatePool.put(uuid, SerializeUtil.nekoState(new NekoStateObject(),Objects.requireNonNull(NbtIo.read(file)), NekoCapability::getOrCreateNekoState));
                     }
                     catch (Exception exception){
                         ToNeko.LOGGER.error("[ToNeko] Exception when reading neko state in {}! {}",file,exception);
@@ -91,11 +95,10 @@ public class NekoCapability implements ICapabilityProvider {
             }
             //构建双向图
             for(Map.Entry<UUID,NekoState> entry:nekoStatePool.entrySet()){
-                Map<UUID,?> owners=entry.getValue().getOwners();
-                if(owners!=null)
-                    for(UUID ownerUUID:owners.keySet()){
-                        nekoStatePool.computeIfAbsent(ownerUUID, k -> new NekoStateObject()).addNeko(entry.getKey());
-                    }
+                Map<UUID, NekoRecord> nekos=entry.getValue().getNekos();
+                for(UUID ownerUUID:nekos.keySet()){
+                    nekoStatePool.computeIfAbsent(ownerUUID, k -> new NekoStateObject()).addOwner(entry.getKey(),entry.getValue());
+                }
             }
         }
         else{

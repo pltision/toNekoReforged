@@ -7,7 +7,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 /**
- * 记录一个猫猫对主人的UUID等信息。
+ * 记录一个猫猫的UUID等信息。
  * 包含好感度等信息方便快速读取。
  * 如果真的有需要的话，可以将UUID换成任意的句柄喵~
  */
@@ -15,17 +15,19 @@ import java.util.UUID;
 public interface NekoRecord {
 
     /**
-     * @return 主人的uuid
+     * @return 猫猫的uuid
      */
     UUID getUUID();
 
+    NekoState getState();
+
     /**
-     * @return 对主人的好感度
+     * @return 猫猫的好感度
      */
     float getExp();
 
     /**
-     * 设置对主人的好感度
+     * 设置猫猫的好感度
      */
     void setExp(float exp);
 
@@ -49,7 +51,7 @@ public interface NekoRecord {
     void modifyFactor(float factor);
 
     /**
-     * 让程序增长（或减少）对主人的好感度
+     * 让程序增长（或减少）对猫猫的好感度
      * @return 实际增长的好感度
      */
     float growExp(float exp);
@@ -58,29 +60,5 @@ public interface NekoRecord {
      * 用于处理因数等动态信息。
      */
     void tick(Player player);
-
-    /**
-     * 封装Iterator，用于仅遍历uuid
-     */
-    class UUIDIterator implements Iterator<UUID>{
-        final Iterator<?extends NekoRecord> recordIterator;
-        public UUIDIterator(Iterator<?extends NekoRecord> recordIterator){
-            this.recordIterator=recordIterator;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return recordIterator.hasNext();
-        }
-
-        @Override
-        public UUID next() {
-            return recordIterator.next().getUUID();
-        }
-    }
-
-    /*default void copy(NekoRecord other){
-        other.setExp(getExp());
-    }*/
 
 }

@@ -1,11 +1,9 @@
 package yee.pltision.tonekoreforged.neko.util;
 
 
-import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
@@ -15,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class StateApi {
+public class NekoStateApi {
 
     public static @Nullable Set<UUID> getOwners(Player player){
         NekoState state = player.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(player));
@@ -24,7 +22,7 @@ public class StateApi {
 
     public static Set<UUID> getNekos(Player player){
         NekoState state = player.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(player));
-        return state.getNekos();
+        return state.getNekos().keySet();
     }
 
     public static @Nullable Set<Player> getPlayerOwners(Level level, Player player){
@@ -64,20 +62,20 @@ public class StateApi {
     public static boolean connect(Player neko,Player owner){
         NekoState nekoState = neko.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(neko));
         NekoState ownerState = owner.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(owner));
-        return nekoState.addOwner(owner.getUUID()) | ownerState.addNeko(neko.getUUID());
+        return nekoState.addOwner(owner.getUUID(),ownerState) | ownerState.addNeko(neko.getUUID(),nekoState);
     }
 
 
     public static boolean removeNeko(Player owner, UUID neko, boolean removeState){
         NekoState nekoState = NekoCapability.getOrCreateNekoState(neko);
         NekoState ownerState = owner.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(owner));
-        return ( removeState?nekoState.removeOwnerAndState(neko):nekoState.removeOwner(neko) ) | ownerState.removeNeko(owner.getUUID());
+        return nekoState.removeOwner(owner.getUUID(),removeState) | ownerState.removeNeko(owner.getUUID());
     }
 
     public static boolean removeOwner(Player neko, UUID owner, boolean removeState){
         NekoState nekoState = neko.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(neko));
         NekoState ownerState = NekoCapability.getOrCreateNekoState(owner);
-        return ( removeState?nekoState.removeOwnerAndState(neko.getUUID()):nekoState.removeOwner(neko.getUUID()) ) | ownerState.removeNeko(owner);
+        return nekoState.removeOwner(owner,removeState) | ownerState.removeNeko(owner);
     }
 
     public static PetPhrase getPetPhrase(Player player){
@@ -95,11 +93,12 @@ public class StateApi {
      */
     public static float getExp(Player a,UUID b) {
         NekoState state = a.getCapability(NekoCapability.NEKO_STATE).orElseThrow(() -> new CannotGetCapabilityException(a));
-        NekoRecord nekoRecord = state.getOwner(b);
+        NekoRecord nekoRecord = state.getNeko(b);
         if (nekoRecord == null){
-            if (state.getNekos().contains(b)) {
+            state=state.getOwner(b);
+            if (state!=null) {
                 state = NekoCapability.nekoStatePool.get(b);
-                nekoRecord = state.getOwner(a.getUUID());
+                nekoRecord = state.getNeko(a.getUUID());
                 if(nekoRecord!=null) return nekoRecord.getExp();
             }
         }
@@ -108,29 +107,28 @@ public class StateApi {
     }
 
     /**
-     * @return 如果失败返回false
+     * @return 如果失败返回true
      */
-    public static boolean setExp(Player a,UUID b,float exp){
-        NekoState state = a.getCapability(NekoCapability.NEKO_STATE).orElseThrow(() -> new CannotGetCapabilityException(a));
-        NekoRecord nekoRecord = state.getOwner(b);
-        if (nekoRecord == null){
-            if (state.getNekos().contains(b)) {
-                NekoState bState = NekoCapability.getOrCreateNekoState(b);
-                if (bState != null) {
-                    nekoRecord = state.getOwner(a.getUUID());
-                    if(nekoRecord!=null){
+    public static boolean setExp(UUID a,UUID b,float exp){
+        NekoState state = NekoCapability.getNekoState(a);
+        if(state!=null){
+            NekoRecord nekoRecord = state.getNeko(b);
+            if (nekoRecord == null){
+                state=state.getOwner(b);
+                if (state!=null) {
+                    nekoRecord = state.getNeko(a);
+                    if(nekoRecord!=null) {
                         nekoRecord.setExp(exp);
                         return false;
                     }
                 }
             }
-        }
-        else{
-            nekoRecord.setExp(exp);
-            return false;
+            else{
+                nekoRecord.setExp(exp);
+                return false;
+            }
         }
         return true;
-
     }
 
 

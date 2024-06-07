@@ -7,15 +7,10 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
-import yee.pltision.tonekoreforged.neko.common.NekoState;
-import yee.pltision.tonekoreforged.neko.util.StateApi;
+import yee.pltision.tonekoreforged.neko.util.NekoStateApi;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
-import yee.pltision.tonekoreforged.neko.util.NekoModifyUtil;
 
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class CommandFunctions {
 
@@ -51,7 +46,7 @@ public class CommandFunctions {
 
     public static boolean removeNeko(ServerPlayer player, UUID neko) {
         //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
-        return StateApi.removeNeko(player,neko,Config.removeStateWhenRemovedAllOwner);
+        return NekoStateApi.removeNeko(player,neko,Config.removeStateWhenRemovedAllOwner);
     }
 
 
@@ -61,8 +56,8 @@ public class CommandFunctions {
     public static boolean removeOwner(Player player, UUID owner) throws CommandSyntaxException {
         //TODO: 如果移除了集合向neko发送信息说明它不是猫猫了
 
-        if (StateApi.isNeko(player)) {
-            return StateApi.removeOwner(player,owner,Config.removeStateWhenRemovedAllOwner);
+        if (NekoStateApi.isNeko(player)) {
+            return NekoStateApi.removeOwner(player,owner,Config.removeStateWhenRemovedAllOwner);
         }
         else throw CommandExceptions.PLAYER_NOT_NEKO.create();
     }

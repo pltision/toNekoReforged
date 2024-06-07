@@ -2,21 +2,17 @@ package yee.pltision.tonekoreforged.neko.action;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
-import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.AABB;
@@ -34,9 +30,7 @@ import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
-import yee.pltision.tonekoreforged.neko.util.StateApi;
-
-import java.util.List;
+import yee.pltision.tonekoreforged.neko.util.NekoStateApi;
 
 @Mod.EventBusSubscriber
 public class Events {
@@ -60,7 +54,7 @@ public class Events {
 /*        event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             event.setMessage(cap.prefix().append(event.getMessage()));
         })*/
-        PetPhrase petPhrase= StateApi.getPetPhrase(event.getPlayer());
+        PetPhrase petPhrase= NekoStateApi.getPetPhrase(event.getPlayer());
         if(petPhrase!=null){
             event.setMessage(Component.literal(petPhrase.addPhrase(event.getMessage().getString())));
         }
@@ -114,10 +108,10 @@ public class Events {
             }
         }
         else {
-            otherPlayer.getCapability(NekoCapability.NEKO_STATE).ifPresent(other -> {
-                NekoRecord otherRecord = other.getOwner(player.getUUID());
-                if (otherRecord != null && NekoActionUtil.isCatStick(item)) {
-                    NekoActionUtil.growExpAndParticle(level, otherPlayer.getEyePosition(), otherRecord, 0.1f / ((float) Math.log(Math.max(2, otherRecord.getExp() * 2 + 1)) / LN21));
+            player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state -> {
+                NekoRecord nekoRecord = state.getNeko(player.getUUID());
+                if (nekoRecord != null && NekoActionUtil.isCatStick(item)) {
+                    NekoActionUtil.growExpAndParticle(level, otherPlayer.getEyePosition(), nekoRecord, 0.1f / ((float) Math.log(Math.max(2, nekoRecord.getExp() * 2 + 1)) / LN21));
                     catStickEffects(otherPlayer);
                 }
             });

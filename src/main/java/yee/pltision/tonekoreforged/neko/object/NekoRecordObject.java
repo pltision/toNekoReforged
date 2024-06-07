@@ -3,23 +3,31 @@ package yee.pltision.tonekoreforged.neko.object;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
+import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.object.additions.NekoAdditions;
 
 import java.util.UUID;
 
 public class NekoRecordObject extends NekoAdditions implements NekoRecord {
-    public final @NotNull UUID uuid;
+    public final UUID uuid;
+    public final NekoState state;
     public float exp;
     public float factor=1;
 
-    public NekoRecordObject(@NotNull UUID uuid,int exp) {
+    public NekoRecordObject(UUID uuid, NekoState state, int exp) {
         this.uuid = uuid;
+        this.state = state;
         this.exp=exp;
     }
 
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public NekoState getState() {
+        return state;
     }
 
     @Override

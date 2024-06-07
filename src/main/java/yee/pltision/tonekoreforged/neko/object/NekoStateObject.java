@@ -6,6 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.config.Config;
+import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
@@ -15,80 +16,80 @@ import java.util.function.BiFunction;
 
 public class NekoStateObject implements NekoState {
     public static int DEFAULT_EXP=10;
-    public Set<UUID> nekoSet;
-    public BiMap<UUID,NekoRecord> ownerMap;
+    public Map<UUID,NekoRecord> nekos;
+    public BiMap<UUID,NekoState> owners;
 
     public PetPhrase phrase=null;
 
     public NekoStateObject(){
-        nekoSet =new HashSet<>();
-        ownerMap= null;
+        nekos =new HashMap<>();
+        owners = null;
     }
 
     @Override
-    public @Nullable Map<UUID,NekoRecord> getOwners() {
-        return ownerMap;
+    public Map<UUID,NekoState> getOwners() {
+        return owners;
     }
 
     @Override
-    public boolean addOwner(UUID owner){
+    public boolean addOwner(UUID owner,NekoState state){
         beNeko();
-
-        if(ownerMap.containsKey(owner)) return false;
-        ownerMap.put(owner,new NekoRecordObject(owner,DEFAULT_EXP));
-        return true;
+        return owners.put(owner,state)==null;
+    }
+    @Override
+    public boolean addNeko(UUID neko,NekoState state){
+        return nekos.put(neko, new NekoRecordObject(neko,state,DEFAULT_EXP))==null;
     }
 
     @Override
     public void computeNekoState(UUID uuid, BiFunction<? super UUID, ? super NekoRecord, ? extends NekoRecord> function) {
-        beNeko();
-        ownerMap.compute(uuid,function);
+        nekos.compute(uuid,function);
     }
 
     @Override
-    public @Nullable NekoRecord getOwner(UUID uuid) {
-        return ownerMap==null?null:ownerMap.get(uuid);
+    public @Nullable NekoState getOwner(UUID uuid) {
+        return owners ==null?null: owners.get(uuid);
+    }
+    @Override
+    public @Nullable NekoRecord getNeko(UUID uuid) {
+        return nekos.get(uuid);
     }
 
     @Override
     public boolean removeOwner(UUID owner) {
-        if(ownerMap==null)return false;
-        NekoRecord removed=ownerMap.remove(owner);
+        if(owners ==null)return false;
+        NekoState removed= owners.remove(owner);
         return removed != null;
     }
 
     @Override
     public boolean removeOwnerAndState(UUID owner) {
-        if(ownerMap==null)return false;
-        NekoRecord removed=ownerMap.remove(owner);
+        if(owners ==null)return false;
+        var removed= owners.remove(owner);
         if(removed==null){
             return false;
         }
         else {
-            if(ownerMap.isEmpty()) beNonneko();
+            if(owners.isEmpty()) beNonneko();
             return true;
         }
     }
 
     @Override
-    public @NotNull Set<UUID> getNekos() {
-        return Collections.unmodifiableSet(nekoSet);
+    public @NotNull Map<UUID,NekoRecord> getNekos() {
+        return nekos;
     }
 
-    @Override
-    public boolean addNeko(UUID neko){
-        return nekoSet.add(neko);
-    }
 
 
     @Override
     public boolean checkNeko(UUID uuid) {
-        return nekoSet.contains(uuid);
+        return nekos.containsKey(uuid);
     }
 
     @Override
     public boolean removeNeko(UUID neko) {
-        return nekoSet.remove(neko);
+        return nekos.remove(neko)!=null;
     }
 
     @Override
@@ -106,11 +107,11 @@ public class NekoStateObject implements NekoState {
 
     public void beNeko(){
         if(Config.addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase&&phrase==null||phrase.phrase.isEmpty()) phrase=defaultPhrase();
-        if(ownerMap==null) ownerMap=HashBiMap.create();
+        if(owners ==null) owners =HashBiMap.create();
     }
 
     public void beNonneko(){
-        ownerMap=null;
+        owners =null;
 
     }
 
@@ -120,8 +121,8 @@ public class NekoStateObject implements NekoState {
 
     // NOT deep copy
     public void copy(NekoStateObject clone){
-        ownerMap=clone.ownerMap;
-        nekoSet=clone.nekoSet;
+        owners =clone.owners;
+        nekos =clone.nekos;
         phrase=clone.phrase;
 
     }
