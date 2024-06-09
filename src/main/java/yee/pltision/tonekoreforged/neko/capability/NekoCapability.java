@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -28,7 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
 public class NekoCapability implements ICapabilityProvider {
     public static final Capability<NekoState> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
     public final LazyOptional<NekoState> optional;

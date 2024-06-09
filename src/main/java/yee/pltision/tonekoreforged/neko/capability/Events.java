@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.neko.action;
+package yee.pltision.tonekoreforged.neko.capability;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
@@ -16,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -24,7 +25,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.command.CommandTester;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
@@ -32,7 +32,7 @@ import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoStateApi;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
 public class Events {
 
     @SubscribeEvent
