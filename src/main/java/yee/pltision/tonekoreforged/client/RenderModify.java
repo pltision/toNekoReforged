@@ -1,3 +1,4 @@
+/*
 package yee.pltision.tonekoreforged.client;
 
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
@@ -25,3 +26,4 @@ public class RenderModify {
         }
     }
 }
+*/

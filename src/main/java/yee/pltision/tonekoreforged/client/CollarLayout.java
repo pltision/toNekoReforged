@@ -1,3 +1,4 @@
+/*
 package yee.pltision.tonekoreforged.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -38,11 +39,13 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
     }
 
     //East North Low
-    /*public static final Vector3f ENL=new Vector3f(3,0,-2),ENH=new Vector3f(3,1,-2);
+    */
+/*public static final Vector3f ENL=new Vector3f(3,0,-2),ENH=new Vector3f(3,1,-2);
     public static final Vector3f ESL=new Vector3f(3,0,2),ESH=new Vector3f(3,1,2);
     public static final Vector3f WNL=new Vector3f(-3,0,-2),WNH=new Vector3f(-3,1,-2);
     public static final Vector3f WSL=new Vector3f(-3,0,2),WSH=new Vector3f(-3,1,2);
-*/
+*//*
+
     public static final Vector2f SIZE = new Vector2f(3, 2);
 
     public static Matrix2f RIGHT_FONT = new Matrix2f(1, 0, 0, 1);
@@ -73,16 +76,18 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
 
         VertexConsumer vertexconsumer = source.getBuffer(RENDER_TYPE);
 
-        /*vertex(idk4f, idk3f, vertexconsumer, idkInt, -1, 0, -1, 0.0F, 0.0F, 0, -1, 0);
+        */
+/*vertex(idk4f, idk3f, vertexconsumer, idkInt, -1, 0, -1, 0.0F, 0.0F, 0, -1, 0);
         vertex(idk4f, idk3f, vertexconsumer, idkInt, -1, 0, 1, 0.0F, 1.0F, 0, -1, 0);
         vertex(idk4f, idk3f, vertexconsumer, idkInt, 1, 0, 1, 1.0F, 1.0F, 0, -1, 0);
-        vertex(idk4f, idk3f, vertexconsumer, idkInt, 1, 0, -1, 1.0F, 0.0F, 0, -1, 0);*/
+        vertex(idk4f, idk3f, vertexconsumer, idkInt, 1, 0, -1, 1.0F, 0.0F, 0, -1, 0);*//*
+
 
 
         Vector3f afterMove=new Vector3f(getParentModel().body.x,getParentModel().body.y,getParentModel().body.z);
         Vector3f move=new Vector3f(0,
                 Math.abs((getParentModel().head.xRot+getParentModel().body.xRot)/3.14159265358979f*2*0.2f),
-                (float) Math.sin(-getParentModel().head.xRot-getParentModel().body.xRot)*1.5f);
+                (float) Math.sin(getParentModel().head.xRot+getParentModel().body.xRot)*-1.5f);
         afterMove.mul(NORMAL);
 
         Matrix3f d3transform=new Matrix3f();
@@ -187,3 +192,4 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
         consumer.vertex(idk4f, x, y, z).color(255, 255, 255, 255).uv(uvx, uvy).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(idkInt).normal(idk3f, rx, ry, rz).endVertex();
     }
 }
+*/
