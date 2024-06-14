@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,7 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-@Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
+@Mod.EventBusSubscriber
 public class NekoCapability implements ICapabilityProvider {
     public static final Capability<NekoState> NEKO_STATE = CapabilityManager.get(new CapabilityToken<>(){});
     public final LazyOptional<NekoState> optional;
@@ -55,10 +56,12 @@ public class NekoCapability implements ICapabilityProvider {
         return cap == NEKO_STATE ? optional.cast():LazyOptional.empty();
     }
 
-    public static Map<UUID, NekoState> nekoStatePool;
+    public static Map<UUID, NekoState> nekoStatePool=new HashMap<>();
+
     public static NekoState getOrCreateNekoState(UUID uuid){
         return nekoStatePool.computeIfAbsent(uuid, k -> new NekoStateObject());
     }
+
     public static NekoState getNekoState(UUID uuid){
         return nekoStatePool.get(uuid);
     }
@@ -71,7 +74,7 @@ public class NekoCapability implements ICapabilityProvider {
     }
 
     @SubscribeEvent
-    public static void serverStart(ServerStartedEvent event){
+    public static void serverStart(ServerAboutToStartEvent event){
         if(!Config.doSave) return;
         File toNekoPath= getNekoPath(event.getServer());
         nekoStatePool=new HashMap<>();
@@ -113,14 +116,14 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void serverStop(ServerStoppingEvent event){
-        ToNeko.LOGGER.info("[ToNeko] Server stop, try save states: {}",nekoStatePool);
+//        ToNeko.LOGGER.info("[ToNeko] Server stop, try save states: {}",nekoStatePool);
         if(!Config.doSave) return;
         File toNekoPath= getNekoPath(event.getServer());
         if(!toNekoPath.exists())
             if(!toNekoPath.mkdirs()) ToNeko.LOGGER.warn("[ToNeko] {} mkdirs() return false.",toNekoPath);
         for(Map.Entry<UUID,NekoState> entry: nekoStatePool.entrySet()){
             File file=new File(toNekoPath,entry.getKey().toString()+NEKO_STATE_SUFFIX);
-            ToNeko.LOGGER.info("[ToNeko] Saving: {}",file);
+//            ToNeko.LOGGER.info("[ToNeko] Saving: {}",file);
             try{
                 NbtIo.write(SerializeUtil.nekoState(entry.getValue()),file);
             }

@@ -1,9 +1,12 @@
 package yee.pltision.tonekoreforged.neko.util;
 
 
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.common.MinecraftForge;
 import org.jetbrains.annotations.Nullable;
+import yee.pltision.tonekoreforged.event.NekoStateEvent;
 import yee.pltision.tonekoreforged.neko.capability.NekoCapability;
 import yee.pltision.tonekoreforged.neko.common.NekoRecord;
 import yee.pltision.tonekoreforged.neko.common.NekoState;
@@ -60,22 +63,46 @@ public class NekoStateApi {
     }
 
     public static boolean connect(Player neko,Player owner){
+        if(MinecraftForge.EVENT_BUS.post(new NekoStateEvent.TryConnectPlayersEvent(neko,owner))) return false;
+
         NekoState nekoState = neko.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(neko));
         NekoState ownerState = owner.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(owner));
-        return nekoState.addOwner(owner.getUUID(),ownerState) | ownerState.addNeko(neko.getUUID(),nekoState);
+
+        if(nekoState.addOwner(owner.getUUID(),ownerState) | ownerState.addNeko(neko.getUUID(),nekoState)){
+            MinecraftForge.EVENT_BUS.post(new NekoStateEvent.ConnectedPlayersEvent(owner,neko));
+            return true;
+        }
+        return false;
     }
 
 
     public static boolean removeNeko(Player owner, UUID neko, boolean removeState){
+        var event=new NekoStateEvent.TryRemoveNekoEvent(owner,neko,removeState);
+        if(MinecraftForge.EVENT_BUS.post(event)) return false;
+        removeState=event.doRemoveNekoStateWhenPlayerHaveNoOwner();
+
         NekoState nekoState = NekoCapability.getOrCreateNekoState(neko);
         NekoState ownerState = owner.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(owner));
-        return nekoState.removeOwner(owner.getUUID(),removeState) | ownerState.removeNeko(owner.getUUID());
+
+        if(nekoState.removeOwner(owner.getUUID(),removeState) | ownerState.removeNeko(neko)){
+            MinecraftForge.EVENT_BUS.post(new NekoStateEvent.RemovedNekoEvent(owner,neko,nekoState.isNeko()));
+            return true;
+        }
+        return false;
     }
 
     public static boolean removeOwner(Player neko, UUID owner, boolean removeState){
+        var event=new NekoStateEvent.TryRemoveOwnerEvent(neko,owner,removeState);
+        if(MinecraftForge.EVENT_BUS.post(event)) return false;
+        removeState=event.doRemoveNekoStateWhenPlayerHaveNoOwner();
+
         NekoState nekoState = neko.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(neko));
         NekoState ownerState = NekoCapability.getOrCreateNekoState(owner);
-        return nekoState.removeOwner(owner,removeState) | ownerState.removeNeko(owner);
+        if(nekoState.removeOwner(owner,removeState) | ownerState.removeNeko(owner)){
+            MinecraftForge.EVENT_BUS.post(new NekoStateEvent.RemovedNekoEvent(neko,owner,nekoState.isNeko()));
+            return true;
+        }
+        return false;
     }
 
     public static PetPhrase getPetPhrase(Player player){
@@ -139,4 +166,5 @@ public class NekoStateApi {
             this.player=player;
         }
     }
+
 }

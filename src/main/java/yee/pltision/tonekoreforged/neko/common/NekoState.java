@@ -29,6 +29,13 @@ public interface NekoState {
     void beNonneko();
 
     /**
+     * 判断玩家是否是猫猫
+     */
+    default boolean isNeko(){
+        return getOwners()==null;
+    }
+
+    /**
      * @return 猫猫的所有主人。当返回null时说明这不是一个猫猫。
      */
     @Nullable Map<UUID, NekoState> getOwners();
