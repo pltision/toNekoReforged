@@ -4,15 +4,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.LevelResource;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -75,7 +75,7 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void serverStart(ServerAboutToStartEvent event){
-        if(!Config.doSave) return;
+        if(Config.dontSave) return;
         File toNekoPath= getNekoPath(event.getServer());
         nekoStatePool=new HashMap<>();
         if(toNekoPath.isDirectory()){
@@ -116,9 +116,27 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void serverStop(ServerStoppingEvent event){
-//        ToNeko.LOGGER.info("[ToNeko] Server stop, try save states: {}",nekoStatePool);
-        if(!Config.doSave) return;
-        File toNekoPath= getNekoPath(event.getServer());
+        if(Config.dontSave) return;
+//        ToNeko.LOGGER.info("[ToNeko] Server stop, try save neko states: {}",nekoStatePool);
+        saveNekoStates(event.getServer());
+        nekoStatePool=null;
+    }
+
+    @SubscribeEvent
+    public static void saveOverworld(LevelEvent.Save event){
+        try {
+//            System.out.println("喵");
+            if(Config.saveNekoStatesWhenSaveOverworld&&!event.getLevel().isClientSide()&&event.getLevel()==event.getLevel().getServer().overworld()){
+                saveNekoStates(event.getLevel().getServer());
+            }
+        }
+        catch (Exception e){
+            ToNeko.LOGGER.error("[ToNeko] Exception when save neko states when save overworld: "+e);
+        }
+    }
+
+    public static void saveNekoStates(MinecraftServer server){
+        File toNekoPath= getNekoPath(server);
         if(!toNekoPath.exists())
             if(!toNekoPath.mkdirs()) ToNeko.LOGGER.warn("[ToNeko] {} mkdirs() return false.",toNekoPath);
         for(Map.Entry<UUID,NekoState> entry: nekoStatePool.entrySet()){

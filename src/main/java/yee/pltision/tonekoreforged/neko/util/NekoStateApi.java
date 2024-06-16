@@ -98,7 +98,18 @@ public class NekoStateApi {
 
         NekoState nekoState = neko.getCapability(NekoCapability.NEKO_STATE).orElseThrow(()->new CannotGetCapabilityException(neko));
         NekoState ownerState = NekoCapability.getOrCreateNekoState(owner);
-        if(nekoState.removeOwner(owner,removeState) | ownerState.removeNeko(owner)){
+
+        /*try {
+            System.out.println("阿米诺斯");
+            System.out.println("neko: "+neko.getUUID()+" "+nekoState);
+            System.out.println("owner: "+owner+" "+ownerState);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }*/
+
+        if(nekoState.removeOwner(owner,removeState) | ownerState.removeNeko(neko.getUUID())){
             MinecraftForge.EVENT_BUS.post(new NekoStateEvent.RemovedNekoEvent(neko,owner,nekoState.isNeko()));
             return true;
         }

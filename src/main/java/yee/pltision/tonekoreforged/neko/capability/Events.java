@@ -16,11 +16,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.config.Config;
@@ -32,11 +30,13 @@ import yee.pltision.tonekoreforged.neko.util.NekoActionUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoConnectUtil;
 import yee.pltision.tonekoreforged.neko.util.NekoStateApi;
 
-@Mod.EventBusSubscriber(Dist.DEDICATED_SERVER)
+@SuppressWarnings("resource")
+@Mod.EventBusSubscriber
 public class Events {
 
     @SubscribeEvent
     public static void modifyRecipe(PlayerEvent.ItemCraftedEvent event){
+        if(event.getEntity().level().isClientSide) return;
         if(NekoActionUtil.isCatStick(event.getCrafting())){
             ItemStack item=event.getCrafting();
             CompoundTag tag= item.getTag();
@@ -50,6 +50,7 @@ public class Events {
 
     @SubscribeEvent
     public static void modifyChatMessage(ServerChatEvent event){
+        if(event.getPlayer().level().isClientSide()) return;
 //        event.setCanceled(true);
 /*        event.getPlayer().getCapability(NekoCapability.NEKO_STATE).ifPresent(cap->{
             event.setMessage(cap.prefix().append(event.getMessage()));
@@ -61,17 +62,18 @@ public class Events {
     }
     @SubscribeEvent
     public static void hit(AttackEntityEvent event){
-        if(event.getTarget()instanceof Player otherPlayer){
+        if(event.getEntity().level().isClientSide()) return;
+        if(event.getTarget()instanceof Player otherPlayer&&NekoActionUtil.isCatStick(event.getEntity().getMainHandItem())){
             catStick(event.getEntity().level(), event.getEntity(),otherPlayer,event.getEntity().getMainHandItem());
         }
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void interact(PlayerInteractEvent.EntityInteract event){
         if(event.getTarget()instanceof ServerPlayer otherPlayer){
 
         }
-    }
+    }*/
 
     public static final float LN21=(float) Math.log(20+1);
     public static void catStick(final Level level, final Player player, final Player otherPlayer, ItemStack item){
@@ -80,7 +82,6 @@ public class Events {
             if(Config.usingRite==Config.DEFAULT_RITE &&checkDayTime(level.dayTime())){
                 for (Entity entity : level.getEntities(player, new AABB(player.getX() - 4, player.getY() - 4, player.getZ() - 4, player.getX() + 4, player.getY() + 4, player.getZ() + 4), entity -> entity instanceof Cat)) {
                     if (
-
                             level.getBlockState(entity.blockPosition()).getBlock() instanceof EnchantmentTableBlock
                                     && entity instanceof Cat cat
                                     && cat.isOwnedBy(player)
@@ -109,8 +110,9 @@ public class Events {
         }
         else {
             player.getCapability(NekoCapability.NEKO_STATE).ifPresent(state -> {
-                NekoRecord nekoRecord = state.getNeko(player.getUUID());
-                if (nekoRecord != null && NekoActionUtil.isCatStick(item)) {
+                NekoRecord nekoRecord = state.getNeko(otherPlayer.getUUID());
+//                System.out.println("test: "+nekoRecord);
+                if (nekoRecord != null) {
                     NekoActionUtil.growExpAndParticle(level, otherPlayer.getEyePosition(), nekoRecord, 0.1f / ((float) Math.log(Math.max(2, nekoRecord.getExp() * 2 + 1)) / LN21));
                     catStickEffects(otherPlayer);
                 }

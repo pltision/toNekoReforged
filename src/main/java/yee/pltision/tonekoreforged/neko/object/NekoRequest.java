@@ -69,18 +69,18 @@ public class NekoRequest {
 
     public static void trySendAndReturn(CommandSourceStack source, ServerPlayer sender, ServerPlayer to, WhenAccept whenAccept, MutableComponent info)throws CommandSyntaxException{
         if(trySend(source.getServer(),sender,to,whenAccept)){
-            to.sendSystemMessage(Component.empty().append(sender.getName()).append(info).append(" ")
+            to.sendSystemMessage(Component.empty().append(info).append(" ")
                     .append(Lang.ACCEPT_REQUEST_BUTTON.component()
                             .setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko accept "+sender.getName().getString()))
-                                    .withColor(TextColor.parseColor("#00ff00")).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Lang.REQUEST_COMMAND_INFO.component().append("/toneko accept "+sender.getName().getString())))
+                                    .withColor(TextColor.parseColor("#00ff00")).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Lang.REQUEST_COMMAND_INFO.component("/toneko accept "+sender.getName().getString())))
                             ))
                     .append(" ")
                     .append(Lang.DENY_REQUEST_BUTTON.component()
                             .setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/toneko deny "+sender.getName().getString()))
-                                    .withColor(TextColor.parseColor("#ff0000")).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Lang.REQUEST_COMMAND_INFO.component().append("/toneko deny "+sender.getName().getString())))
+                                    .withColor(TextColor.parseColor("#ff0000")).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,Lang.REQUEST_COMMAND_INFO.component("/toneko deny "+sender.getName().getString())))
                             ))
             );
-            source.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(to.getName()), false);
+            source.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component(to.getName()), false);
         }
         else{
             throw CommandExceptions.SEND_REQUEST_COOLING.create();

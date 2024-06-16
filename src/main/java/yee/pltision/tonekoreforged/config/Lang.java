@@ -2,53 +2,56 @@ package yee.pltision.tonekoreforged.config;
 
 public class Lang {
     public static final ConfigLang
-            PLAYER_NOT_NEKO=new ConfigLang("commands.toneko.player_not_neko", "This player is not a neko","这个玩家不是一只猫娘"),
+        PLAYER_NOT_NEKO=new ConfigLang("commands.toneko.player_not_neko", "This player is not a neko","这个玩家不是一只猫娘"),
 
-        SEND_REQUEST_INFO=new ConfigLang("commands.toneko.request.send_request_info", "Send request to ","已将请求发送至"),
+        SEND_REQUEST_INFO=new ConfigLang("commands.toneko.request.send_request_info", "Send request to %s","已将请求发送至%s"),
         ACCEPT_REQUEST_BUTTON=new ConfigLang("commands.toneko.accept.accept_button", "[Accept]","[接受]"),
         DENY_REQUEST_BUTTON=new ConfigLang("commands.toneko.deny.deny_button", "[Deny]","[拒绝]"),
-        REQUEST_COMMAND_INFO=new ConfigLang("commands.toneko.request.request_command_info", "Run command ","运行指令"),
-        SEND_REQUEST_COOLING=new ConfigLang("commands.toneko.request.cooling", "Your request is not accepted or expire, please wait a minute to try again","你的请求未被接收，请稍等一会再发送另一个请求"),
+        REQUEST_COMMAND_INFO=new ConfigLang("commands.toneko.request.request_command_info", "Execute command: ","运行指令: %s"),
+        SEND_REQUEST_COOLING=new ConfigLang("commands.toneko.request.cooling", "Your request is not accepted or expire, please wait a minute to try again","你的请求还未被接受或过期，请稍等一会再发送另一个请求"),
 
 
         LIST_NEKO_INFO=new ConfigLang("commands.toneko.list_neko.info", "Your nekos include: ","你的猫娘包括: "),
 
         GET_NEKO_ALREADY=new ConfigLang("commands.toneko.get_neko.already", "This player is already your neko","这个玩家已经是你的猫娘了"),
-        GET_NEKO_INFO=new ConfigLang("commands.toneko.get_neko.info", " is your neko now","现在是你的猫娘了"),
-        GET_NEKO_REQUEST=new ConfigLang("commands.toneko.get_neko.request_info", " want let you be their neko","想让你成为他的猫娘"),
+        GET_NEKO_INFO=new ConfigLang("commands.toneko.get_neko.info", "%s is your neko now","%s现在是你的猫娘了"),
+        GET_NEKO_REQUEST=new ConfigLang("commands.toneko.get_neko.request_info", "%s want let you be their neko","%s想让你成为他的猫娘"),
         GET_NEKO_NEKO_CANNOT_HAVE_OTHER_NEKO=new ConfigLang("commands.toneko.get_neko.neko_cannot_have", "A neko cannot have other neko","猫娘不能拥有其他猫娘"),
         GET_NEKO_CANNOT_MULTIPLE =new ConfigLang("commands.toneko.get_neko.cannot_multiple", "You cannot have multiple neko","你不能拥有多个猫娘"),
         GET_NEKO_OTHER_ALREADY=new ConfigLang("commands.toneko.get_neko.other_already", "This player is already have a owner","这个玩家已经有一个主人了"),
         CANNOT_BE_OWN_NEKO_OR_OWNER=new ConfigLang("commands.toneko.cannot_be_own_neko_or_owner","Cannot be own neko or owner","不能成为自己的主人或猫娘"),
 
-        REMOVE_REQUEST=new ConfigLang("commands.toneko.remove_request", " want remove your connect","想与你断开联系"),
+        REMOVE_REQUEST=new ConfigLang("commands.toneko.remove_request", "%s want remove your connect","%s想与你断开联系"),
         LIST_OWNER_INFO=new ConfigLang("commands.toneko.list_owner.info", "Your owners include: ","你的主人包括: "),
 
         GET_OWNER_ALREADY=new ConfigLang("commands.toneko.get_owner.already", "This player is already your owner","这个玩家已经是你的主人了"),
-        GET_OWNER_INFO=new ConfigLang("commands.toneko.get_owner.info", " is your owner now","现在是你的主人了"),
-        GET_OWNER_REQUEST=new ConfigLang("commands.toneko.get_owner.request_info", " want let you be their owner","想让你成为他的主人"),
+        GET_OWNER_INFO=new ConfigLang("commands.toneko.get_owner.info", "%s is your owner now","%s现在是你的主人了"),
+        GET_OWNER_REQUEST=new ConfigLang("commands.toneko.get_owner.request_info", "%s want let you be their owner","%s想让你成为他的主人"),
         GET_OWNER_CANNOT_MULTIPLE =new ConfigLang("commands.toneko.get_owner.cannot_multiple", "You cannot have multiple owner","你不能拥有多个主人"),
         GET_OWNER_OTHER_ALREADY=new ConfigLang("commands.toneko.get_owner.other_already", "This player is already have a neko","这个玩家已经有一只猫娘了"),
 
 
         REMOVE_NEKO_NOT_FOUND=new ConfigLang("commands.toneko.remove_neko.not_found", "You have no neko whit this UUID or name","你没有这个UUID或名称的猫娘"),
-        REMOVE_NEKO_INFO=new ConfigLang("commands.toneko.remove_neko.info", " is not your neko now","现在不是你的猫娘了"),
+        REMOVE_NEKO_INFO=new ConfigLang("commands.toneko.remove_neko.info", "%s is not your neko now","%s现在不是你的猫娘了"),
+
+        REMOVED_NEKO_STATE_INFO=new ConfigLang("commands.toneko.removed_neko_state", "You are not a neko now","你现在不是猫娘了"),
 
         REMOVE_OWNER_NOT_FOUND=new ConfigLang("commands.toneko.remove_owner.not_found", "You have no owner whit this UUID or name","你没有这个UUID或名称的主人"),
-        REMOVE_OWNER_INFO=new ConfigLang("commands.toneko.remove_owner.info", " is not your owner now","现在不是你的主人了"),
+        REMOVE_OWNER_INFO=new ConfigLang("commands.toneko.remove_owner.info", "%s is not your owner now","%s现在不是你的主人了"),
 
         GET_EXP_NOT_FOUND=new ConfigLang("commands.toneko.get_exp.not_found", "You are not a neko or owner whit this player","你不是这个玩家的猫娘或主人"),
-        GET_EXP_INFO=new ConfigLang("commands.toneko.get_exp.info", "Your exp is ","你们的好感经验值是"),
+        GET_EXP_INFO=new ConfigLang("commands.toneko.get_exp.info", "Your exp is %s","你们的好感经验值是%s"),
 
         SET_EXP_NOT_CONNECTED=new ConfigLang("commands.toneko.set_exp.not_connected", "These tow players (or same player) is not connected","这两个（或同个）玩家没有建立关系"),
-        SET_EXP_INFO=new ConfigLang("commands.toneko.set_exp.info", "Set exp to ","已将好感经验值设为"),
+        SET_EXP_INFO=new ConfigLang("commands.toneko.set_exp.info", "Set exp to %s","已将好感经验值设为%s"),
 
-//        NEKO_PREFIX=new ConfigLang("tone_ko.neko_prefix", "[Neko] ","[猫娘] "),
+//        NEKO_PREFIX=new ConfigLang("to_neko.neko_prefix", "[Neko] ","[猫娘] "),
 
-        GET_PET_PHRASE_INFO=new ConfigLang("commands.toneko.get_pet_phrase.info", " has pet phrase with ","的口癖为"),
+        GET_PET_PHRASE_INFO=new ConfigLang("commands.toneko.get_pet_phrase.info", "%s has pet phrase with %s","%s的口癖为%s"),
 
-        SET_PET_PHRASE_INFO=new ConfigLang("commands.toneko.set_pet_phrase.info", " own pet phrase set to ","的口癖为"),
-        SET_PET_PHRASE_ONLY_NEKO=new ConfigLang("commands.toneko.set_pet_phrase.only_neko", " own pet phrase be set to ","的口癖被设为了"),
+        CLEARED_PET_PHRASE_INFO =new ConfigLang("commands.toneko.set_pet_phrase.clear", "Cleared pet phrase for %s","清除了%s的口癖"),
+        SET_PET_PHRASE_INFO =new ConfigLang("commands.toneko.set_pet_phrase.info", "Set %s own pet phrase to %s","已将%s的口癖设为%s"),
+        SET_PET_PHRASE_ONLY_NEKO=new ConfigLang("commands.toneko.set_pet_phrase.only_neko", "Only can modify neko's pet phrase","只能修改猫娘的口癖"),
         SET_PET_PHRASE_EVERYONE_EXCEPT_NEKO=new ConfigLang("commands.toneko.set_pet_phrase.except_neko", "Neko cannot modify their pet phrase","猫娘不可以修改它们的口癖"),
         SET_PET_PHRASE_EVERYONE_CANNOT=new ConfigLang("commands.toneko.set_pet_phrase.everyone_cannot", "Cannot modify own pet phrase","不可以修改自己的口癖"),
         SET_PET_PHRASE_NOT_OWNER=new ConfigLang("commands.toneko.set_pet_phrase.not_owner", "Only owner can modify their neko's pet phrase","只有猫娘的主人可以修改猫娘的口癖"),
@@ -81,10 +84,13 @@ public class Lang {
                 Get the pet phrase of the executor or <player>
                 /toneko petPhrase [<player>]
                 
-                Set the pet phrase of the <player>
+                Set the pet phrase for <player>
                 When <ignore_english> is true, if all character in message <=255 will not append pet phrase to message, false for default
                 Ignore <ignore_after> character to the pet phrase after
                 /toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+                
+                Clear pet phrase for <player>
+                /toneko petPhrase <player> ""
                 
                 Accept request from <player>
                 /toneko accept <player>
@@ -118,6 +124,9 @@ public class Lang {
                 当 <ignore_english> 为 true 时，在对话中若所有字符的值 <=255 则不会添加口癖。若不填写则默认为 false
                 <ignore_after>为检查是否添加口癖时可以忽略口癖前的几个字符
                 /toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+                
+                移除玩家的口癖
+                /toneko petPhrase <player> ""
                 
                 获取执行者与 <player> 之间的好感经验值
                 /toneko getExp <player>

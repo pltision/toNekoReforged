@@ -8,7 +8,7 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 // An example config class. This is not required, but it's a good idea to have one to keep your config organized.
@@ -18,9 +18,14 @@ public class Config {
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
     private static final ForgeConfigSpec.BooleanValue NO_DATA_MODE=BUILDER
-            .comment("If true, mod will not read or load data. Only for test.")
+            .comment("If true, mod will not read or save data. Only for test.")
             .comment("如果为true，模组不会读取或保存数据。仅调试用。")
             .define("noDataMode", false);
+    private static final ForgeConfigSpec.BooleanValue SAVE_NEKO_STATES_WHEN_SAVE_OVERWORLD =BUILDER
+            .comment("Save neko states when save overwold. If something wrong when save in server, try disable this.")
+            .comment("在保存主世界时保存猫娘状态。如果在服务器中保存时遇到了什么错误可以试试禁用这个。")
+            .define("saveNekoStatesWhenSaveOverworld", false);
+
     private static final ForgeConfigSpec.ConfigValue<String> NEKO_RITE = BUILDER
             .comment("Using neko rite。 Neko rite can let a player be ones neko. It only can be \"disabled\" or \"default\" now.")
             .comment("正在使用的变猫仪式。变猫仪式可能被用于强制的让一个玩家变成另一个玩家的猫娘。现在只有\"disabled\"和\"default\"选项。")
@@ -107,11 +112,14 @@ public class Config {
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
             .define("petPhrase.defaultPetPhraseIgnoreAfter", 2);
 
-    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CONFIG_LANG = ConfigLang.langInti();
+//    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CONFIG_LANG = ConfigLang.langInti();
+    public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CONFIG_LANG_MAP=ConfigLang.initDefaultLangMap();
+//    public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CHINESE_LANG_MAP=ConfigLang.initChineseLangMap();
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static boolean doSave;
+    public static boolean dontSave;
+    public static boolean saveNekoStatesWhenSaveOverworld;
 
     public static boolean removeStateWhenRemovedAllOwner;
     public static boolean addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase;
@@ -134,7 +142,8 @@ public class Config {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        doSave =!NO_DATA_MODE.get();
+        dontSave =NO_DATA_MODE.get();
+        saveNekoStatesWhenSaveOverworld=SAVE_NEKO_STATES_WHEN_SAVE_OVERWORLD.get();
 
         removeStateWhenRemovedAllOwner = REMOVE_STATE_WHEN_REMOVED_ALL_OWNER.get();
         addPetPhraseWhenPlayerBeNekoAndItHaveNoPhrase = ADD_PET_PHRASE_WHEN_PLAYER_BE_NEKO_AND_IT_HAVE_NO_PHRASE.get();
@@ -165,6 +174,6 @@ public class Config {
         for (char c : PET_PHRASE_IGNORE_CHARACTER.get().toCharArray())
             PetPhrase.IGNORE_CHARACTER.add(c);
 
-        ConfigLang.load(CONFIG_LANG.get());
+        ConfigLang.initConfigLangInstants();
     }
 }

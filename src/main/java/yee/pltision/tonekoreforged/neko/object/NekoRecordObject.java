@@ -71,4 +71,13 @@ public class NekoRecordObject extends NekoAdditions implements NekoRecord {
     @Override
     public void tick(Player player) {}
 
+    @Override
+    public String toString() {
+        return "NekoRecordObject{" +
+                "uuid=" + uuid +
+//                ", state=" + state +
+                ", exp=" + exp +
+                ", factor=" + factor +
+                '}';
+    }
 }

@@ -106,7 +106,7 @@ public class NekoCommand {
                                 .executes(context -> help(context.getSource()))
                         )
                         .then(Commands.literal("nekoRite")
-                                .executes(context -> help(context.getSource()))
+                                .executes(context -> rite(context.getSource()))
                         )
 
         );
@@ -124,7 +124,7 @@ public class NekoCommand {
      * 用于通过uuid列表中的获取玩家的名字并添加到component里面
      */
     public static void listPlayers(MutableComponent component, Iterator<UUID> it, MinecraftServer server) {
-        component.append("[");
+        component.append("{");
         PlayerList playerList = server.getPlayerList();
         while (it.hasNext()) {   //遍历集合
             UUID uuid = it.next();
@@ -139,7 +139,7 @@ public class NekoCommand {
             } else component.append(neko.getName());
             if (it.hasNext()) component.append(", "); //如果不是最后一个的话输出逗号
         }
-        component.append("]");
+        component.append("}");
     }
 
     /**
@@ -197,7 +197,7 @@ public class NekoCommand {
                 CommandSyntaxException e = CommandTester.canAddOwner(accept, sender);
                 if (e != null) throw e;
                 CommandFunctions.getNeko(source, sender, accept);
-            }, Lang.GET_NEKO_REQUEST.component());
+            }, Lang.GET_NEKO_REQUEST.component(player.getName()));
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
         } else {
             CommandFunctions.getNeko(context, player, neko);
@@ -222,7 +222,7 @@ public class NekoCommand {
                 CommandSyntaxException e = CommandTester.canAddNeko(accept, sender);
                 if (e != null) throw e;
                 CommandFunctions.getOwner(source, sender, accept);
-            }, Lang.GET_OWNER_REQUEST.component());
+            }, Lang.GET_OWNER_REQUEST.component(player.getName()));
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
         } else {
             CommandFunctions.getOwner(context, player, owner);
@@ -251,7 +251,7 @@ public class NekoCommand {
             if (doSendRequest) {
                 ServerPlayer nekoPlayer = stack.getServer().getPlayerList().getPlayer(neko);
                 if (nekoPlayer == null) throw EntityArgument.NO_PLAYERS_FOUND.create();
-                NekoRequest.trySendAndReturn(stack, player, nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source, sender, accept.getUUID(), str), Lang.REMOVE_REQUEST.component());
+                NekoRequest.trySendAndReturn(stack, player, nekoPlayer, (source, sender, accept) -> CommandFunctions.removeNeko(source, sender, accept.getUUID(), str), Lang.REMOVE_REQUEST.component(player.getName()));
             } else {
                 CommandFunctions.removeNeko(stack, player, neko, str);
             }
@@ -274,7 +274,7 @@ public class NekoCommand {
             if (doSendRequest) {
                 ServerPlayer ownerPlayer = stack.getServer().getPlayerList().getPlayer(owner);
                 if (ownerPlayer == null) throw EntityArgument.NO_PLAYERS_FOUND.create();
-                NekoRequest.trySendAndReturn(stack, player, ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source, sender, accept.getUUID(), str), Lang.REMOVE_REQUEST.component());
+                NekoRequest.trySendAndReturn(stack, player, ownerPlayer, (source, sender, accept) -> CommandFunctions.removeOwner(source, sender, accept.getUUID(), str), Lang.REMOVE_REQUEST.component(player.getName()));
             } else {
                 CommandFunctions.removeOwner(stack, player, owner, str);
             }
@@ -288,7 +288,7 @@ public class NekoCommand {
 
         float exp= NekoStateApi.getExp(player,getUuidOrException(context.getServer(), get));
         if(Float.isNaN(exp)) throw CommandExceptions.GET_EXP_NOT_FOUND.create();
-        context.sendSuccess(() -> Lang.GET_EXP_INFO.component().append(String.valueOf(exp)), false);
+        context.sendSuccess(() -> Lang.GET_EXP_INFO.component(String.valueOf(exp)), false);
 
         return 0;
     }
@@ -296,13 +296,13 @@ public class NekoCommand {
     public static int setExp(CommandSourceStack context, UUID a, UUID b, float set) throws CommandSyntaxException {
         if (NekoStateApi.setExp(a, b, set))
             throw CommandExceptions.SET_EXP_NOT_CONNECTED.create();
-        context.sendSuccess(() -> Lang.SET_EXP_INFO.component().append(String.valueOf(set)), true);
+        context.sendSuccess(() -> Lang.SET_EXP_INFO.component(String.valueOf(set)), true);
 
         return 0;
     }
 
     public static int getPetPhrase(CommandSourceStack context, ServerPlayer player) {
-        context.sendSuccess(() -> Component.empty().append(player.getName()).append(Lang.GET_PET_PHRASE_INFO.component()).append(String.valueOf(NekoStateApi.getPetPhrase(player))), false);
+        context.sendSuccess(() -> Lang.GET_PET_PHRASE_INFO.component(player.getName(),NekoStateApi.getPetPhrase(player)), false);
 
         return 0;
     }
@@ -318,15 +318,15 @@ public class NekoCommand {
         if (exception != null && !(context.hasPermission(2)||ignoreDefaultException)) throw exception;
 
 
-        if (phrase == null) {
+        if (phrase == null || phrase.isEmpty()) {
             NekoStateApi.setPetPhrase(set, null);
-            context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append("null"), false);
+            context.sendSuccess(() -> Lang.CLEARED_PET_PHRASE_INFO.component(set.getName()), false);
         } else {
             int ignoreAfterMax = PetPhrase.getLastIndexOfNotIgnoreCharacter(phrase) + 1;
             if (ignoreAfter > ignoreAfterMax) throw CommandExceptions.SET_PET_PHRASE_AFTER_IGNORE_ILLEGAL.create();
             PetPhrase petPhrase = new PetPhrase(phrase, ignoreEnglish, ignoreAfter);
             NekoStateApi.setPetPhrase(set, petPhrase);
-            context.sendSuccess(() -> Component.empty().append(set.getName()).append(Lang.SET_PET_PHRASE_INFO.component()).append(petPhrase.toString()), false);
+            context.sendSuccess(() -> Lang.SET_PET_PHRASE_INFO.component(set.getName(),petPhrase), false);
         }
 
         return 0;
@@ -351,8 +351,11 @@ public class NekoCommand {
     }
 
     public static int help(CommandSourceStack stack) {
-        stack.sendSuccess(Config.usingRite, false);
-//        stack.sendSuccess(()->Component.translatableWithFallback("a.toneko.command","%s 喵喵","asdgweg"),false);
+        stack.sendSuccess(Lang.HELP_GUIDE::component,false);
+        return 0;
+    }
+    public static int rite(CommandSourceStack stack) {
+        stack.sendSuccess(Config.usingRite,false);
         return 0;
     }
 

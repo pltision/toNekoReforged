@@ -127,5 +127,12 @@ public class NekoStateObject implements NekoState {
 
     }
 
-
+    @Override
+    public String toString() {
+        return super.toString()+"{" +
+                "nekos=" + nekos +
+                ", owners=" + (owners==null?null:owners.keySet()) +
+                ", phrase=" + phrase +
+                '}';
+    }
 }
