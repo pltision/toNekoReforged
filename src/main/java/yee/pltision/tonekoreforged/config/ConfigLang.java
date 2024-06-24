@@ -37,7 +37,6 @@ public class ConfigLang {
 
     public static Map<String,ForgeConfigSpec.ConfigValue<String>> initDefaultLangMap(){
         Lang.inti();
-        outLang(WAIT_FOR_INTI.values());
 
         Map<String,ForgeConfigSpec.ConfigValue<String>> configValues=new HashMap<>();
         for(int i=0;i<KEYS.size();i++)
@@ -104,23 +103,31 @@ public class ConfigLang {
         CommandExceptions.intiExceptions();
     }
 
-    @SuppressWarnings("all")
-    @Deprecated
-    static void outLang(Collection<ConfigLang>  langs){
+//    @SuppressWarnings("all")
+    static void outLang(){
         try{
-            FileWriter writer=new FileWriter("zh_cn.json");
+            Collection<ConfigLang>  langs=WAIT_FOR_INTI.values();
+            FileWriter writer=new FileWriter("to_neko/zh_cn.json");
 
             writer.append("{\n");
             for (ConfigLang lang : langs) {
-                writer.append("\t\""+lang.key+"\": \""+ (lang.chinese.replace("\n","\\n")).replace("\"","\\\"") +"\",\n");
+                writer.append("\t\"").append(lang.key).append("\": \"").append((lang.chinese.replace("\n", "\\n")).replace("\"", "\\\"")).append("\",\n");
             }
             writer.append("}");
             writer.close();
 
-            writer=new FileWriter("en_us.json");
+            writer = new FileWriter("to_neko/en_us.json");
             writer.append("{\n");
             for (ConfigLang lang : langs) {
-                writer.append("\t\""+lang.key+"\": \""+ (lang.def.replace("\n","\\n")).replace("\"","\\\"") +"\",\n");
+                writer.append("\t\"").append(lang.key).append("\": \"").append((lang.def.replace("\n", "\\n")).replace("\"", "\\\"")).append("\",\n");
+            }
+            writer.append("}");
+            writer.close();
+
+            writer = new FileWriter("to_neko/config.json");
+            writer.append("{\n");
+            for (ConfigLang lang : langs) {
+                writer.append("\t\"").append(lang.key).append("\": \"").append((lang.config.replace("\n", "\\n")).replace("\"", "\\\"")).append("\",\n");
             }
             writer.append("}");
             writer.close();

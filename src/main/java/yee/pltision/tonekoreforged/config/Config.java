@@ -7,7 +7,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.neko.common.PetPhrase;
-import java.util.HashSet;
+
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -25,6 +26,10 @@ public class Config {
             .comment("Save neko states when save overwold. If something wrong when save in server, try disable this.")
             .comment("在保存主世界时保存猫娘状态。如果在服务器中保存时遇到了什么错误可以试试禁用这个。")
             .define("saveNekoStatesWhenSaveOverworld", false);
+    private static final ForgeConfigSpec.BooleanValue OUTPUT_LANGUAGE_FILE =BUILDER
+            .comment("Output json language file to ./to_neko for make resource pack.")
+            .comment("输出json的语言文件到 ./to_neko 以用于制作资源包。")
+            .define("outputLanguageFile", false);
 
     private static final ForgeConfigSpec.ConfigValue<String> NEKO_RITE = BUILDER
             .comment("Using neko rite。 Neko rite can let a player be ones neko. It only can be \"disabled\" or \"default\" now.")
@@ -90,31 +95,42 @@ public class Config {
             .comment("如果为true，玩家通过命令获取或移除主人和猫娘需要请求。")
             .define("command.addOrRemoveNeedRequest", true);
 
+    //根据择默认语言选择配置
+    public static final boolean useChinese=Locale.getDefault().getLanguage().equals("zh");
+
+    static String defaultPetPhrase(){return useChinese?"喵~":", nya~";}
+    static boolean defaultPetPhraseIgnoreEnglishText(){return useChinese;}
+    static int defaultPetPhraseIgnoreAfter(){return useChinese?0:2;}
+
+    static {
+        BUILDER.comment("Default pet phrase will change with your locale. if is getLanguage() return \"zh\" it will use chinese, else use english.")
+                .comment("默认的口癖会随着你的区域更改。如果getLanguage()返回\"zh\"它会使用中文，否则使用英文。");
+    }
+
     private static final ForgeConfigSpec.ConfigValue<String> DEFAULT_PET_PHRASE = BUILDER
-            .comment("The default pet phrase.")
+            .comment("The default pet phrase. In english it can be \", nya~\".")
             .comment("默认的口癖。中文可填写\"喵~\"。")
-            .define("petPhrase.defaultPetPhrase", ", nya~");
+            .define("petPhrase.defaultPetPhrase", defaultPetPhrase());
     private static final ForgeConfigSpec.BooleanValue DEFAULT_PET_PHRASE_IGNORE_ENGLISH_TEXT = BUILDER
-            .comment("If true, default pet phrase will not append to text that all character's value <= 255.")
+            .comment("If true, default pet phrase will not append to text that all character's value <= 255. In english it can be false.")
             .comment("如果为true，默认的口癖不会添加到所有字符的值<=255（可以认为都是英文）的文本中。中文可填写true。")
-            .define("petPhrase.defaultPetPhraseIgnoreEnglishText", false);
+            .define("petPhrase.defaultPetPhraseIgnoreEnglishText", defaultPetPhraseIgnoreEnglishText());
     private static final ForgeConfigSpec.ConfigValue<String> PET_PHRASE_IGNORE_CHARACTER = BUILDER
             .comment("Pet phrase will insert before the last character that not in this string.")
             .comment("口癖会插入到最后一个不在这个字符串内的字符后面。")
             .define("petPhrase.ignoreCharacters", ",.!?~-，。？！、—～…");
-
     private static final ForgeConfigSpec.ConfigValue<Integer> DEFAULT_PET_PHRASE_IGNORE_AFTER = BUILDER
-            .comment("Ignore the first of X characters.")
+            .comment("Ignore the first of X characters. If use default pet phrase it can be 0.")
             .comment("When program try to append pet phrase to a text, it will ignore first X characters of pet phrase, like ',' and ' ' and ignore character in above string like '~' then we will leave \"nya\".")
             .comment("Program will use this word to test is the last world in the text is equals to that word you leave. If true, program will not append pet phrase to the text.")
             .comment("忽略前x个字符。中文可填写0。")
             .comment("当程序尝试将口癖加到文本中时，它会忽略前x字符（例如','和' '）以及上面的字符串中的字符（例如'~'），之后你会剩下\"nya\"。")
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
-            .define("petPhrase.defaultPetPhraseIgnoreAfter", 2);
+            .define("petPhrase.defaultPetPhraseIgnoreAfter", defaultPetPhraseIgnoreAfter());
 
-//    public static final ForgeConfigSpec.ConfigValue<List<? extends String>> CONFIG_LANG = ConfigLang.langInti();
+    //TODO: 写括号处理啥的，还有给忽略字符追加括号
+
     public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CONFIG_LANG_MAP=ConfigLang.initDefaultLangMap();
-//    public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CHINESE_LANG_MAP=ConfigLang.initChineseLangMap();
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -170,10 +186,11 @@ public class Config {
         configNekoRite=NEKO_RITE.get();
         if(configNekoRite.equals("default")) usingRite=DEFAULT_RITE;
 
-        PetPhrase.IGNORE_CHARACTER = new HashSet<>();
-        for (char c : PET_PHRASE_IGNORE_CHARACTER.get().toCharArray())
-            PetPhrase.IGNORE_CHARACTER.add(c);
+        PetPhrase.IGNORE_CHARACTER = PetPhrase.stringToCharacterHashSet(PET_PHRASE_IGNORE_CHARACTER.get());
 
         ConfigLang.initConfigLangInstants();
+
+        if(OUTPUT_LANGUAGE_FILE.get())ConfigLang.outLang();
+
     }
 }

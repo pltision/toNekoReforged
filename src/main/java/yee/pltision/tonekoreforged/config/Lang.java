@@ -66,96 +66,102 @@ public class Lang {
 
         FAIL_TO_GET_CAPABILITY=new ConfigLang("commands.toneko.fail_to_get_capability","Fail to get capability! Player: ","无法获取能力！玩家："),
         HELP_GUIDE=new ConfigLang("commands.toneko.help", """
-                Get your all nekos
-                /toneko getNeko
-                Set <player> to your neko or send request
-                /toneko getNeko <player>
-                
-                Get your all owners
-                /toneko getOwner
-                Set <player> to your owner or send request
-                /toneko getOwner <player>
-                
-                Remove a neko with a name or UUID with <player> or send request
-                /toneko removeNeko <player>
-                Remove a owner with a name or UUID with <player> or send request
-                /toneko removeOwner <player>
-                
-                Get the pet phrase of the executor or <player>
-                /toneko petPhrase [<player>]
-                
-                Set the pet phrase for <player>
-                When <ignore_english> is true, if all character in message <=255 will not append pet phrase to message, false for default
-                Ignore <ignore_after> character to the pet phrase after
-                /toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
-                
-                Clear pet phrase for <player>
-                /toneko petPhrase <player> ""
-                
-                Accept request from <player>
-                /toneko accept <player>
-                
-                Deny request from <player>
-                /toneko deny <player>
-                
-                Check is enable neko rite and see how to use
-                /toneko nekoRite
-                """,
-                """
-                获取玩家的全部猫娘
-                /toneko getNeko
-                将 <player> 设为执行者的猫娘或发送请求
-                /toneko getNeko <player>
-                
-                获取玩家的全部主人
-                /toneko getOwner
-                将<player>设为执行者的主人或发送请求
-                /toneko getOwner <player>
-                
-                为执行者移除名称或 UUID 为 <player> 的猫娘或发送请求
-                /toneko removeNeko <player>
-                为执行者移除名称或 UUID 为 <player> 的主人或发送请求
-                /toneko removeOwner <player>
-                
-                获取执行者或 <player> 的口癖
-                /toneko petPhrase [<player>]
-                
-                设置 <player> 的口癖
-                当 <ignore_english> 为 true 时，在对话中若所有字符的值 <=255 则不会添加口癖。若不填写则默认为 false
-                <ignore_after>为检查是否添加口癖时可以忽略口癖前的几个字符
-                /toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
-                
-                移除玩家的口癖
-                /toneko petPhrase <player> ""
-                
-                获取执行者与 <player> 之间的好感经验值
-                /toneko getExp <player>
-                设置 <player1> 与 <player2> 之间的好感经验值，需要命令权限
-                /toneko setExp <player1> <player2> <value>
-                
-                同意 <player> 发出的请求
-                /toneko accept <player>
-                
-                拒绝 <player> 发出的请求
-                /toneko deny <player>
-                
-                查看是否启用以及如何使用变猫仪式
-                /toneko nekoRite
-                
-                若你有指令权限的话，还可以使用 execute 来指定执行者喵~
-                """),
+Get help
+/toneko help
+
+Get your all nekos
+/toneko getNeko
+Set <player> to your neko or send request
+/toneko getNeko <player>
+
+Get your all owners
+/toneko getOwner
+Set <player> to your owner or send request
+/toneko getOwner <player>
+
+Remove a neko with a name or UUID with <player> or send request
+/toneko removeNeko <player>
+Remove a owner with a name or UUID with <player> or send request
+/toneko removeOwner <player>
+
+Get the pet phrase of the executor or <player>
+/toneko petPhrase [<player>]
+
+Set the pet phrase for <player>
+When <ignore_english> is true, if all character in message <=255 will not append pet phrase to message, false for default
+Ignore <ignore_after> character to the pet phrase after
+/toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+
+Clear pet phrase for <player>
+/toneko petPhrase <player> ""
+
+Accept request from <player>
+/toneko accept <player>
+
+Deny request from <player>
+/toneko deny <player>
+
+Check is enable neko rite and see how to use
+/toneko nekoRite
+""",
+"""
+查看帮助
+/toneko help
+
+获取玩家的全部猫娘
+/toneko getNeko
+将 <player> 设为执行者的猫娘或发送请求
+/toneko getNeko <player>
+
+获取玩家的全部主人
+/toneko getOwner
+将<player>设为执行者的主人或发送请求
+/toneko getOwner <player>
+
+为执行者移除名称或 UUID 为 <player> 的猫娘或发送请求
+/toneko removeNeko <player>
+为执行者移除名称或 UUID 为 <player> 的主人或发送请求
+/toneko removeOwner <player>
+
+获取执行者或 <player> 的口癖
+/toneko petPhrase [<player>]
+
+设置 <player> 的口癖
+当 <ignore_english> 为 true 时，在对话中若所有字符的值 <=255 则不会添加口癖。若不填写则默认为 false
+<ignore_after>为检查是否添加口癖时可以忽略口癖前的几个字符
+/toneko petPhrase <player> <phrase> [<ignore_english>] [<ignore_after>]
+
+移除玩家的口癖
+/toneko petPhrase <player> ""
+
+获取执行者与 <player> 之间的好感经验值
+/toneko getExp <player>
+设置 <player1> 与 <player2> 之间的好感经验值，需要命令权限
+/toneko setExp <player1> <player2> <value>
+
+同意 <player> 发出的请求
+/toneko accept <player>
+
+拒绝 <player> 发出的请求
+/toneko deny <player>
+
+查看是否启用以及如何使用变猫仪式
+/toneko nekoRite
+
+若你有指令权限的话，还可以使用 execute 来指定执行者喵~
+"""),
         DISABLED_NEKO_RITE=new ConfigLang("command.toneko.disabled_rite","The neko rite is been disabled or config is wrong","变猫仪式并未启用或配置文件错误"),
         DEFAULT_NEKO_RITE_GUILD=new ConfigLang("command.toneko.default_rite",
-                """
-                Use lapis lazuli, enchanted_book and cooked cod to craft an enchanted cod.
-                Then in the mid night (17840<=DayTime<=18160), let your cat sit on the Enchantment Table, put the enchanted cod on your off hand and use Cat Stick to attack another player.
-                If every things fine, your cat will get 15 second Wither effect in level 3, and the another player will be your neko.
-                If the state with another player is not right, you will get some message Whether the rite is successful or not, your cod will be shrink.
-                """, """
-                使用青金石、任意附魔书和熟鳕鱼合成一条附魔鳕鱼。然后在午夜（17840<=DayTime<=18160）时，将你驯服的猫放在附魔台方块上，副手手持鳕鱼，主手手持撅猫棒攻击附魔台附近的玩家。
-                若条件成立，被攻击的玩家将会变成你的猫娘，猫将受到15秒的凋零III效果。若检测另一个玩家的猫娘关系时有异常，你将会收到报错喵~
-                此外，无论仪式是否完成，鳕鱼都会消耗喵。
-                """);
+"""
+Use lapis lazuli, enchanted_book and cooked cod to craft an enchanted cod.
+Then in the mid night (17840<=DayTime<=18160), let your cat sit on the Enchantment Table, put the enchanted cod on your off hand and use Cat Stick to attack another player.
+If every things fine, your cat will get 15 second Wither effect in level 3, and the another player will be your neko.
+If the state with another player is not right, you will get some message Whether the rite is successful or not, your cod will be shrink.
+""", """
+使用青金石、任意附魔书和熟鳕鱼合成一条附魔鳕鱼。然后在午夜（17840<=DayTime<=18160）时，将你驯服的猫放在附魔台方块上，副手手持鳕鱼，主手手持撅猫棒攻击附魔台附近的玩家。
+若条件成立，被攻击的玩家将会变成你的猫娘，猫将受到15秒的凋零III效果。若检测另一个玩家的猫娘关系时有异常，你将会收到报错喵~
+此外，无论仪式是否完成，鳕鱼都会消耗喵。
+""");
 
     public static void inti(){}
 }
