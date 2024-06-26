@@ -95,14 +95,13 @@ public class PetPhrase implements Cloneable {
 
         int index=text.length();
 
-        BracketPair bracket;
         boolean allBracketsCanBreak=true;    //用于检验是否要破坏括号的flag，如果可破坏括号在不可破坏括号内就不破坏
         Stack<SearchNode> stack=new Stack<>();
         while (true){
             index--;
             if(index<0) break;
 
-            bracket=CLOSE_BRACKETS.get(text.charAt(index));
+            BracketPair bracket=CLOSE_BRACKETS.get(text.charAt(index));
             if (bracket == null)
             {
                 if(!stack.isEmpty() && stack.peek().bracket.open.contains(text.charAt(index))) { //结束一个括号
