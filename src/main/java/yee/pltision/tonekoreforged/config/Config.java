@@ -128,7 +128,12 @@ public class Config {
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
             .define("petPhrase.defaultPetPhraseIgnoreAfter", defaultPetPhraseIgnoreAfter());
 
-    //TODO: 写括号处理啥的，还有给忽略字符追加括号
+    /*//TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
+    Pair<BracketPair,ForgeConfigSpec> pair=BUILDER.configure(builder->{
+        builder.tr
+        return new BracketPair("","");
+    });*/
+
 
     public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CONFIG_LANG_MAP=ConfigLang.initDefaultLangMap();
 
@@ -186,11 +191,12 @@ public class Config {
         configNekoRite=NEKO_RITE.get();
         if(configNekoRite.equals("default")) usingRite=DEFAULT_RITE;
 
-        PetPhrase.IGNORE_CHARACTER = PetPhrase.stringToCharacterHashSet(PET_PHRASE_IGNORE_CHARACTER.get());
+        PetPhrase.initStatics(PET_PHRASE_IGNORE_CHARACTER.get(),PetPhrase.BRACKETS);
 
         ConfigLang.initConfigLangInstants();
 
         if(OUTPUT_LANGUAGE_FILE.get())ConfigLang.outLang();
 
     }
+
 }
