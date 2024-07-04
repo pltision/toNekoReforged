@@ -26,8 +26,8 @@ public class PetPhrase implements Cloneable {
             new BracketPair("⌈","⌉"),
             new BracketPair("⌊","⌋"),
             new BracketPair("〔","〕"),
-            new BracketPair("⟨","⟩"),
-            new BracketPair("\"“","\"”").random());
+            new BracketPair("⟨","⟩")
+            /*new BracketPair("\"“","\"”").random()*/);
 
     public static void initStatics(String ignoreCharacters,List<BracketPair> brackets){
         IGNORE_CHARACTERS=PetPhrase.stringToCharacterHashSet(ignoreCharacters);

@@ -48,7 +48,7 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void registerCaps(RegisterCapabilitiesEvent event) {
-        event.register(NekoStateObject.class);
+        event.register(NekoState.class);
     }
 
     @Override
@@ -75,9 +75,9 @@ public class NekoCapability implements ICapabilityProvider {
 
     @SubscribeEvent
     public static void serverStart(ServerAboutToStartEvent event){
+        nekoStatePool=new HashMap<>();
         if(Config.dontSave) return;
         File toNekoPath= getNekoPath(event.getServer());
-        nekoStatePool=new HashMap<>();
         if(toNekoPath.isDirectory()){
             for(File file: Objects.requireNonNull(toNekoPath.listFiles())){
                 if(file.isFile()&&file.getName().endsWith(NEKO_STATE_SUFFIX)){
@@ -149,7 +149,6 @@ public class NekoCapability implements ICapabilityProvider {
                 ToNeko.LOGGER.error("[ToNeko] Exception when writing neko state in {}! {}",file,exception);
             }
         }
-        nekoStatePool=null;
     }
 
     /*@SubscribeEvent
