@@ -1,9 +1,5 @@
 package yee.pltision.tonekoreforged.neko.common;
 
-import yee.pltision.tonekoreforged.config.Config;
-import yee.pltision.tonekoreforged.neko.object.NekoStateObject;
-
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class PetPhrase implements Cloneable {
@@ -83,11 +79,10 @@ public class PetPhrase implements Cloneable {
     }
 
     public static int filterLastBracket(String text){
-        class SearchNode{
+        class BracketCloseRecord {
             final BracketPair bracket;
             final int index;
-//            boolean notEmpty;
-            SearchNode(BracketPair bracket,int index) {
+            BracketCloseRecord(BracketPair bracket, int index) {
                 this.bracket=bracket;
                 this.index = index;
             }
@@ -96,7 +91,7 @@ public class PetPhrase implements Cloneable {
         int index=text.length();
 
         boolean allBracketsCanBreak=true;    //用于检验是否要破坏括号的flag，如果可破坏括号在不可破坏括号内就不破坏
-        Stack<SearchNode> stack=new Stack<>();
+        Stack<BracketCloseRecord> stack=new Stack<>();
         while (true){
             index--;
             if(index<0) break;
@@ -115,7 +110,7 @@ public class PetPhrase implements Cloneable {
                 }
             }
             else {
-                stack.push(new SearchNode(bracket, index));
+                stack.push(new BracketCloseRecord(bracket, index));
                 allBracketsCanBreak&=bracket.canBreakContent();
             }
         }
