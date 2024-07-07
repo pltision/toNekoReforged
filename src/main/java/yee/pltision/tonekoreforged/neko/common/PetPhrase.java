@@ -94,7 +94,7 @@ public class PetPhrase implements Cloneable {
         Stack<BracketCloseRecord> stack=new Stack<>();
         while (true){
             index--;
-            if(index<0) break;
+            if(index<0) return stack.isEmpty()?0:stack.peek().index;
 
             BracketPair bracket=CLOSE_BRACKETS.get(text.charAt(index));
             if (bracket == null)
@@ -114,7 +114,6 @@ public class PetPhrase implements Cloneable {
                 allBracketsCanBreak&=bracket.canBreakContent();
             }
         }
-        return stack.isEmpty()?0:stack.peek().index;
     }
 
     /**
