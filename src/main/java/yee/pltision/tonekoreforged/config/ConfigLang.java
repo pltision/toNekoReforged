@@ -4,7 +4,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.neko.command.CommandExceptions;
+import yee.pltision.tonekoreforged.nekostate.command.CommandExceptions;
 
 import java.io.FileWriter;
 import java.util.*;

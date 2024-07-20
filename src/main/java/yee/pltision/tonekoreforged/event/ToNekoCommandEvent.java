@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
-import yee.pltision.tonekoreforged.neko.common.PetPhrase;
+import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 
 import java.util.UUID;
 

@@ -6,7 +6,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.neko.common.PetPhrase;
+import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 
 import java.util.Locale;
 import java.util.Map;
