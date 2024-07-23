@@ -8,6 +8,7 @@ import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ public class TailModel extends Model {
     static Vector3f VERTEX=new Vector3f(1,1,0);
     static Quaternionf VERTEX_ROTATE=new Quaternionf().rotateZ(Mth.PI/2);
 
-    static Vector3f STAND_MOVE=new Vector3f(0,12,2);
+    static Vector3f STAND_MOVE=new Vector3f(0,12,1);
 
     static float bValue(float speed){
         return Math.min(1,1/Math.max(1,Math.min(speed*6,5)));
@@ -48,7 +49,15 @@ public class TailModel extends Model {
     }
 
     static Quaternionf getInitRotate(LivingEntity entity,float time,float speed){
+        if(entity.isVisuallySwimming())
+            return new Quaternionf().rotateX( -( Mth.sin(aValue(time,speed))*Mth.PI/12+Mth.PI*(2/3f)) );
+        if(entity.getPose()== Pose.SLEEPING)
+            return new Quaternionf().rotateX( -( Mth.PI*(2/3f)) );
         return new Quaternionf().rotateX( -( Mth.sin(aValue(time,speed))*Mth.PI/12+Mth.PI/3 )*bValue(speed));
+    }
+
+    float swingScale(LivingEntity entity){
+        return entity.isVisuallySwimming()||entity.getPose()== Pose.SLEEPING ? 0.5f : 1f;
     }
 
     @Override
@@ -69,7 +78,11 @@ public class TailModel extends Model {
         compute3f.set(0,0,1).rotate(computeRotate);
         float speed= (float) (entity.getDeltaMovement().x * compute3f.x + entity.getDeltaMovement().y * compute3f.y + entity.getDeltaMovement().z * compute3f.z);
         speed=Mth.lerp(partialTick,Math.min(movement.x * compute3f.x + movement.y * compute3f.y + movement.z * compute3f.z,speed),speed);   //好像并没有什么卵用的插值
+
+        float swingScale= swingScale(entity);
+
 //        System.out.println(speed+"\t"+movement+"\t"+compute3f);
+//        System.out.println(entity.isSwimming()+"\t"+entity.isVisuallySwimming());
 
         Vector3f move=getMove(entity);
 
@@ -86,7 +99,7 @@ public class TailModel extends Model {
 
         for(int i=0;i<SECTION_COUNT;i++){
             computeRotate.set(0,0,0,1)
-                    .rotateX(Mth.cos((1-Mth.cos(i*Mth.PI/SECTION_COUNT/2))*Mth.PI*(1+Mth.cos(aValue(time,speed))/8))*Mth.PI/6*bValue(speed));
+                    .rotateX(Mth.cos((1-Mth.cos(i*Mth.PI/SECTION_COUNT/2))*Mth.PI*(1+Mth.cos(aValue(time,speed))/8))*Mth.PI/6*bValue(speed) *swingScale );
             nextRotate.set(itRotate).mul(computeRotate);
             next.set(it).add(compute3f.set(SECTION_MOVE).rotate(nextRotate));
 
