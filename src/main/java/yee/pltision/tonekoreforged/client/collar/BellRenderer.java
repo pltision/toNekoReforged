@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.collar.bauble;
+package yee.pltision.tonekoreforged.client.collar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -14,8 +14,6 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
-import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
 import static yee.pltision.tonekoreforged.RendererUtils.*;
@@ -55,8 +53,7 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
         rotate.rotateX((-Mth.sin(model.head.xRot)+Mth.sin(model.body.xRot)+0.25f)*Mth.PI/4);
         rotate.rotateX(Mth.abs(-Mth.sin(walking/2)*Mth.PI/4)*speed);//摆动
 
-
-        Vector3f afterMove=new Vector3f(0, .5f,-Mth.sin(model.head.xRot)*0.5f);
+        Vector3f afterMove=new Vector3f(0, .5f,-Mth.sin(model.head.xRot)*0.5f-Math.max(Mth.sin(model.head.xRot),0));
 
         move.set(bottom);
 //        bottom.add(top.mul(-1));

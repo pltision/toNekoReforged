@@ -4,17 +4,16 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
-public class TailAndEarMaterial implements ArmorMaterial {
-    public static final TailAndEarMaterial EAR=new TailAndEarMaterial("ear");
-    public static final TailAndEarMaterial TAIL=new TailAndEarMaterial("tail");
+public class NekoArmorMaterial implements ArmorMaterial {
+    public static final NekoArmorMaterial EAR=new NekoArmorMaterial("ear");
+    public static final NekoArmorMaterial TAIL=new NekoArmorMaterial("to_neko:tail");
 
     final String name;
 
-    public TailAndEarMaterial(String name) {
+    public NekoArmorMaterial(String name) {
         this.name = name;
     }
 

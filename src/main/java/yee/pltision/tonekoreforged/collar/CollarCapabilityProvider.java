@@ -23,7 +23,7 @@ import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
 import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
 import yee.pltision.tonekoreforged.client.collar.CollarRenderer;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
-import yee.pltision.tonekoreforged.collar.bauble.BellRenderer;
+import yee.pltision.tonekoreforged.client.collar.BellRenderer;
 
 import java.util.List;
 

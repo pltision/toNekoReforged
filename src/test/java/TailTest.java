@@ -28,11 +28,11 @@ public class TailTest extends Panel {
         List<Vector2f> points=new ArrayList<>();
         Vector2f it=new Vector2f();
         Vector2f add=new Vector2f(25,0);
-        add.mul(new Matrix2f().rotate(( Mth.sin(a)*Mth.PI/8+Mth.PI*(1/3f) )*b ));
+        add.mul(new Matrix2f().rotate(( Mth.sin(a)*Mth.PI/12+Mth.PI*(1/3f) )*b ));
         for(int i=0;i<=10;i++){
             points.add(new Vector2f(it));
             it.add(add);
-            add.mul(new Matrix2f().rotate(-Mth.cos(i*Mth.PI/10*(1+Mth.cos(a)/12))*Mth.PI/4*b));
+            add.mul(new Matrix2f().rotate(-Mth.cos(i*Mth.PI/10*(1+Mth.cos(a)/8))*Mth.PI/4*b));
         }
         for(int i=0;i<10;i++){
             g.drawLine((int) (points.get(i).x+dx), (int) (points.get(i).y+dy), (int) (points.get(i+1).x+dx), (int) (points.get(i+1).y+dy));

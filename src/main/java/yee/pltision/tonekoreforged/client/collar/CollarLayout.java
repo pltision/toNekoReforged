@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.Vector3fUtils;
 import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.collar.CollarState;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
@@ -53,10 +54,7 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
 
     public static Vector3f ZERO=new Vector3f(0,0,0);
     public static Vector3f LIGHT=new Vector3f(0,-1,0);
-    public static Matrix3f NORMAL=new Matrix3f(
-            1/16f,0,0,
-            0,1/16f,0,
-            0,0,1/16f);
+    public static Matrix3f NORMAL= Vector3fUtils.ENTITY_SCALE;
 
     @Override
     public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity, float neverMind1, float neverMind2, float neverMind3, float neverMind4, float neverMind5, float neverMind6) {
@@ -139,9 +137,9 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
 
     public static String modelPartToString(ModelPart modelPart) {
         return "{\n" +
-                "\tpos = {" + modelPart.x + ", " + modelPart.y + ", " + modelPart.z + "}, \n" +
-                "\trot = {" + modelPart.xRot + ", " + modelPart.yRot + ", " + modelPart.zRot + "}, \n" +
-                "\tscale = {" + modelPart.xScale + ", " + modelPart.yScale + ", " + modelPart.zScale + "}, \n" +
+                "\tpos = [" + modelPart.x + ", " + modelPart.y + ", " + modelPart.z + "], \n" +
+                "\trot = [" + modelPart.xRot + ", " + modelPart.yRot + ", " + modelPart.zRot + "], \n" +
+                "\tscale = [" + modelPart.xScale + ", " + modelPart.yScale + ", " + modelPart.zScale + "], \n" +
                 "\tvisible = " + modelPart.visible + ", \n" +
                 "\tskipDraw = " + modelPart.skipDraw + ", \n" +
                 "}";
