@@ -49,7 +49,7 @@ public class TailModel extends Model {
     }
 
     static Quaternionf getInitRotate(LivingEntity entity,float time,float speed){
-        if(entity.isVisuallySwimming())
+        if(entity.isVisuallySwimming()||entity.isFallFlying())
             return new Quaternionf().rotateX( -( Mth.sin(aValue(time,speed))*Mth.PI/12+Mth.PI*(2/3f)) );
         if(entity.getPose()== Pose.SLEEPING)
             return new Quaternionf().rotateX( -( Mth.PI*(2/3f)) );
