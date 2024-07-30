@@ -122,7 +122,7 @@ public class CollarCapabilityProvider implements ICapabilityProvider {
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject()instanceof Player player){
-            event.addCapability(new ResourceLocation(ToNeko.MODID,"collar_state"), new CollarCapabilityProvider(player));
+            event.addCapability(ToNeko.location("collar_state"), new CollarCapabilityProvider(player));
         }
     }
 

@@ -6,12 +6,13 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
+import yee.pltision.tonekoreforged.ToNeko;
 
 public class NekoArmorMaterial implements ArmorMaterial {
-    public static final NekoArmorMaterial EAR=new NekoArmorMaterial("ear");
-    public static final NekoArmorMaterial TAIL=new NekoArmorMaterial("to_neko:tail");
+    public static final NekoArmorMaterial EARS=new NekoArmorMaterial(ToNeko.location("ears").toString());
+    public static final NekoArmorMaterial TAIL=new NekoArmorMaterial(ToNeko.location("tail").toString());
 
-    final String name;
+    String name;
 
     public NekoArmorMaterial(String name) {
         this.name = name;

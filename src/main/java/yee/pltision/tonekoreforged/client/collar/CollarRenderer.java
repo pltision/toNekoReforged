@@ -20,7 +20,7 @@ import java.lang.Math;
 
 @OnlyIn(Dist.CLIENT)
 public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> implements CollarRenderHelper<E,M> {
-    public static final ResourceLocation COLLAR = new ResourceLocation(ToNeko.MODID, "textures/entity/collar.png");
+    public static final ResourceLocation COLLAR = ToNeko.location("textures/entity/collar.png");
     public static final CollarRenderer<LivingEntity,HumanoidModel<LivingEntity>> INSTANT = new CollarRenderer<>();
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(COLLAR);
 

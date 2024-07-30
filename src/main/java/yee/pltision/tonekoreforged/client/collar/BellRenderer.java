@@ -21,7 +21,7 @@ import static yee.pltision.tonekoreforged.Vector3fUtils.*;
 
 
 public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implements CollarBaubleRenderer<E,M> {
-    public static final ResourceLocation RING = new ResourceLocation(ToNeko.MODID, "textures/entity/ring.png");
+    public static final ResourceLocation RING = ToNeko.location("textures/entity/ring.png");
     public static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(RING);
 
     public static final BellRenderer<Entity,?> INSTANT=new BellRenderer<>();

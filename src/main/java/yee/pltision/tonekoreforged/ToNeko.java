@@ -3,6 +3,7 @@ package yee.pltision.tonekoreforged;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
@@ -42,6 +43,12 @@ public class ToNeko
             consumer.accept(NekoArmorClientItemExtensions.TAIL);
         }
     });
+    public static final RegistryObject<Item> EARS=ITEMS.register("ears",()->new ArmorItem(NekoArmorMaterial.EARS, ArmorItem.Type.HELMET,new Item.Properties()){
+        @Override
+        public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
+            consumer.accept(NekoArmorClientItemExtensions.EARS);
+        }
+    });
 
     public ToNeko()
     {
@@ -66,6 +73,10 @@ public class ToNeko
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
         }
+    }
+
+    public static ResourceLocation location(String name){
+        return new ResourceLocation(MODID,name);
     }
 
 }

@@ -41,7 +41,7 @@ public class NekoCapability implements ICapabilityProvider {
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
         if(event.getObject()instanceof Player player){
-            event.addCapability(new ResourceLocation(ToNeko.MODID,"neko_state"), new NekoCapability(player));
+            event.addCapability(ToNeko.location("neko_state"), new NekoCapability(player));
         }
     }
 

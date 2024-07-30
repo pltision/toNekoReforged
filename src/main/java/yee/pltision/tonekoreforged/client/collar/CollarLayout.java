@@ -25,7 +25,7 @@ import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 @OnlyIn(Dist.CLIENT)
 public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> extends RenderLayer<E, M> {
 
-    public static final ResourceLocation COLLAR = new ResourceLocation(ToNeko.MODID, "textures/entity/collar.png");
+    public static final ResourceLocation COLLAR = ToNeko.location("textures/entity/collar.png");
     private static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(COLLAR);
 
 
