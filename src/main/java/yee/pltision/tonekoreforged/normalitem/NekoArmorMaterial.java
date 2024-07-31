@@ -35,7 +35,7 @@ public class NekoArmorMaterial implements ArmorMaterial {
 
     @Override
     public @NotNull SoundEvent getEquipSound() {
-        return SoundEvents.ARMOR_EQUIP_LEATHER;
+        return SoundEvents.CAT_AMBIENT;
     }
 
     @Override
