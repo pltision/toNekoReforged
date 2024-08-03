@@ -10,12 +10,16 @@ public class ears - Converted<T extends Entity> extends EntityModel<T> {
 	private final ModelPart ears;
 	private final ModelPart right;
 	private final ModelPart left;
+	private final ModelPart color_fur;
+	private final ModelPart color_inside;
 
 	public ears - Converted(ModelPart root) {
 		this.head = root.getChild("head");
 		this.ears = root.getChild("ears");
 		this.right = root.getChild("right");
 		this.left = root.getChild("left");
+		this.color_fur = root.getChild("color_fur");
+		this.color_inside = root.getChild("color_inside");
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -37,6 +41,12 @@ public class ears - Converted<T extends Entity> extends EntityModel<T> {
 		.texOffs(0, 0).addBox(-0.5F, -3.0F, 0.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(4, 4).addBox(1.5F, -3.0F, -1.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F))
 		.texOffs(0, 4).addBox(-1.5F, -3.0F, -1.0F, 1.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, -7.0F, 0.0F));
+
+		PartDefinition color_fur = head.addOrReplaceChild("color_fur", CubeListBuilder.create().texOffs(8, 12).mirror().addBox(1.5F, -8.5F, -1.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false)
+		.texOffs(8, 12).addBox(-3.5F, -8.5F, -1.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition color_inside = head.addOrReplaceChild("color_inside", CubeListBuilder.create().texOffs(0, 8).mirror().addBox(1.5F, -10.0F, 0.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
+		.texOffs(0, 8).addBox(-3.5F, -10.0F, 0.0F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 16, 16);
 	}

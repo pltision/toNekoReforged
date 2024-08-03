@@ -46,5 +46,8 @@
   "command.toneko.disabled_rite": "The neko rite is been disabled or config is wrong",
   "commands.toneko.get_neko.request_info": "%s want let you be their neko",
   "commands.toneko.cannot_be_own_neko_or_owner": "Cannot be own neko or owner",
-  "item.to_neko.tail": "Tail"
+  "item.to_neko.tail": "Tail",
+  "item.to_neko.ears": "Ears",
+  "item.to_neko.dyed_ears": "Dyed Ears",
+  "item.to_neko.dyed_tail": "Dyed Tail"
 }

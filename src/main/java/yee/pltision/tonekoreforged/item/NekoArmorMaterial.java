@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.normalitem;
+package yee.pltision.tonekoreforged.item;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -10,7 +10,9 @@ import yee.pltision.tonekoreforged.ToNeko;
 
 public class NekoArmorMaterial implements ArmorMaterial {
     public static final NekoArmorMaterial EARS=new NekoArmorMaterial(ToNeko.location("ears").toString());
+    public static final NekoArmorMaterial DYED_EARS=new NekoArmorMaterial(ToNeko.location("dyed_ears").toString());
     public static final NekoArmorMaterial TAIL=new NekoArmorMaterial(ToNeko.location("tail").toString());
+    public static final NekoArmorMaterial DYED_TAIL=new NekoArmorMaterial(ToNeko.location("dyed_tail").toString());
 
     String name;
 
@@ -35,7 +37,7 @@ public class NekoArmorMaterial implements ArmorMaterial {
 
     @Override
     public @NotNull SoundEvent getEquipSound() {
-        return SoundEvents.CAT_AMBIENT;
+        return SoundEvents.ARMOR_EQUIP_LEATHER;
     }
 
     @Override

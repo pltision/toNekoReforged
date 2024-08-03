@@ -1,0 +1,5 @@
+{
+  "type": "to_neko:crafting_dying_translate",
+  "clean": "to_neko:ears",
+  "dyed": "to_neko:dyed_ears"
+}

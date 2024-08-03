@@ -1,0 +1,8 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "to_neko:item/deyd_ears",
+		"layer1": "to_neko:item/deyd_ears_overlay"
+	}
+}

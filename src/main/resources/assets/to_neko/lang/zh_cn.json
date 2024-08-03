@@ -46,5 +46,8 @@
   "command.toneko.disabled_rite": "变猫仪式并未启用或配置文件错误",
   "commands.toneko.get_neko.request_info": "%s想让你成为他的猫娘",
   "commands.toneko.cannot_be_own_neko_or_owner": "不能成为自己的主人或猫娘",
-  "item.to_neko.tail": "尾巴"
+  "item.to_neko.tail": "尾巴",
+  "item.to_neko.ears": "耳朵",
+  "item.to_neko.dyed_ears": "染色耳朵",
+  "item.to_neko.dyed_tail": "染色尾巴"
 }

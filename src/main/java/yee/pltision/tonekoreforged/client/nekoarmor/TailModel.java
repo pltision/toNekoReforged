@@ -60,8 +60,14 @@ public class TailModel extends Model {
         return entity.isVisuallySwimming()||entity.getPose()== Pose.SLEEPING ? 0.5f : 1f;
     }
 
+    int r,g,b,a;
     @Override
     public void renderToBuffer(@NotNull PoseStack pose, @NotNull VertexConsumer consumer, int idkInt, int p_103114_, float r, float g, float b, float a) {
+        this.r= (int) (r*255);
+        this.g= (int) (g*255);
+        this.b= (int) (b*255);
+        this.a= (int) (a*255);
+
         Vector3f compute3f=new Vector3f();
         Quaternionf computeRotate=new Quaternionf();
 
@@ -122,7 +128,7 @@ public class TailModel extends Model {
 
     }
 
-    public static void section(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
+    public void section(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
                                Vector3f it,Vector3f next,Quaternionf itRotate,Quaternionf nextRotate,
                                Vector3f move,Vector3f vertex,Vector3f normal,Vector3f computeNormal,Vector3f compute3f,float[] uvs,int index){
         for(int i=0;i<4;i++){
@@ -149,7 +155,7 @@ public class TailModel extends Model {
         array[3]=array[1]+SECTION_HEIGHT;
     }
 
-    public static void vertex(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
+    public void vertex(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
                               Vector3f originVertex,Quaternionf rotate,Vector3f sectionMove,Vector3f move,Vector3f compute3f,
                               float uvx, float uvy,Vector3f normal
     ){
@@ -161,9 +167,9 @@ public class TailModel extends Model {
         vertex(pose,consumer,idkInt,compute3f.x,compute3f.y,compute3f.z,uvx,uvy,normal);
     }
 
-    public static void vertex(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
+    public void vertex(PoseStack.Pose pose, VertexConsumer consumer, int idkInt,
                               float x, float y, float z,
                               float uvx, float uvy,Vector3f normal) {
-        consumer.vertex(pose.pose(), x, y, z).color(255, 255, 255, 255).uv(uvx, uvy).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(idkInt).normal(pose.normal(), normal.x,normal.y,normal.z).endVertex();
+        consumer.vertex(pose.pose(), x, y, z).color(r, g, b, a).uv(uvx, uvy).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(idkInt).normal(pose.normal(), normal.x,normal.y,normal.z).endVertex();
     }
 }

@@ -2,10 +2,16 @@ package yee.pltision.tonekoreforged;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,7 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
 import yee.pltision.tonekoreforged.config.Config;
-import yee.pltision.tonekoreforged.normalitem.NekoArmorMaterial;
+import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
+import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
 import java.util.function.Consumer;
 
@@ -36,6 +43,10 @@ public class ToNeko
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(Registries.ITEM,MODID);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER=DeferredRegister.create(Registries.RECIPE_SERIALIZER,MODID);
+    public static final RegistryObject<RecipeSerializer<DyingTranslateRecipe>> DYE_TRANSLATE_RECIPE=RECIPE_SERIALIZER.register("crafting_dying_translate",()->
+            DyingTranslateRecipe.Serializer.INSTANCE
+    );
 
     public static final RegistryObject<Item> TAIL=ITEMS.register("tail",()->new ArmorItem(NekoArmorMaterial.TAIL, ArmorItem.Type.LEGGINGS,new Item.Properties()){
         @Override
@@ -49,9 +60,32 @@ public class ToNeko
             consumer.accept(NekoArmorClientItemExtensions.EARS);
         }
     });
+    public static final RegistryObject<Item> DYED_TAIL=ITEMS.register("dyed_tail",()->new DyeableArmorItem(NekoArmorMaterial.DYED_TAIL, ArmorItem.Type.LEGGINGS,new Item.Properties()){
+        @Override
+        public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
+            consumer.accept(NekoArmorClientItemExtensions.TAIL);
+        }
+        @Override
+        public int getColor(@NotNull ItemStack p_41122_) {
+            CompoundTag compoundtag = p_41122_.getTagElement("display");
+            return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : 0xffffff;
+        }
+    });
+    public static final RegistryObject<Item> DYED_EARS=ITEMS.register("dyed_ears",()->new DyeableArmorItem(NekoArmorMaterial.DYED_EARS, ArmorItem.Type.HELMET,new Item.Properties()){
+        @Override
+        public void initializeClient(@NotNull Consumer<IClientItemExtensions> consumer) {
+            consumer.accept(NekoArmorClientItemExtensions.EARS);
+        }
+        @Override
+        public int getColor(@NotNull ItemStack p_41122_) {
+            CompoundTag compoundtag = p_41122_.getTagElement("display");
+            return compoundtag != null && compoundtag.contains("color", 99) ? compoundtag.getInt("color") : 0xffffff;
+        }
+    });
 
     public ToNeko()
     {
+
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // Register ourselves for server and other game events we are interested in
@@ -61,6 +95,7 @@ public class ToNeko
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         ITEMS.register(modEventBus);
+        RECIPE_SERIALIZER.register(modEventBus);
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
