@@ -150,8 +150,8 @@ Check is enable neko rite and see how to use
 
 若你有指令权限的话，还可以使用 execute 来指定执行者喵~
 """),
-        DISABLED_NEKO_RITE=new ConfigLang("command.toneko.disabled_rite","The neko rite is been disabled or config is wrong","变猫仪式并未启用或配置文件错误"),
-        DEFAULT_NEKO_RITE_GUILD=new ConfigLang("command.toneko.default_rite",
+        DISABLED_NEKO_RITE=new ConfigLang("commands.toneko.disabled_rite","The neko rite is been disabled or config is wrong","变猫仪式并未启用或配置文件错误"),
+        DEFAULT_NEKO_RITE_GUILD=new ConfigLang("commands.toneko.default_rite",
 """
 Use lapis lazuli, enchanted_book and cooked cod to craft an enchanted cod.
 Then in the mid night (17840<=DayTime<=18160), let your cat sit on the Enchantment Table, put the enchanted cod on your off hand and use Cat Stick to attack another player.

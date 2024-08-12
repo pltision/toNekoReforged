@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "to_neko:item/tail"
+    "layer0": "toneko:item/dyed_tail"
   }
 }

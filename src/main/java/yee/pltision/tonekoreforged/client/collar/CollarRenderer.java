@@ -14,6 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.*;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.Vector3fUtils;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
 import java.lang.Math;
@@ -33,13 +34,6 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
     public static Matrix2f LEFT_BACK = new Matrix2f(-1, 0, 0, -1);
     public static Matrix2f LEFT_FONT = new Matrix2f(-1, 0, 0, 1);
 
-
-    public static Vector3f LIGHT=new Vector3f(0,-1,0);
-    public static Matrix3f NORMAL=new Matrix3f(
-            1/16f,0,0,
-            0,1/16f,0,
-            0,0,1/16f);
-
     @Override
     public boolean isTrueModel(Model model) {
         return model instanceof HumanoidModel<?>;
@@ -47,19 +41,21 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
 
 
     public static void getTransform(HumanoidModel<?> model,Matrix3f transform){
-        transform.set(NORMAL);
+        transform.set(Vector3fUtils.ENTITY_SCALE);
+    }
 
-        transform.rotateY(model.head.yRot);
+    public static void getRotate(HumanoidModel<?> model,Quaternionf rotate){
+        rotate.rotateY(model.head.yRot);
 
-        transform.rotateX(model.body.xRot);
-        transform.rotateY(model.body.yRot);
-        transform.rotateZ(model.body.zRot);
+        rotate.rotateX(model.body.xRot);
+        rotate.rotateY(model.body.yRot);
+        rotate.rotateZ(model.body.zRot);
 
-        transform.rotateX((model.head.xRot+model.body.xRot)/3);
+        rotate.rotateX((model.head.xRot+model.body.xRot)/3);
     }
 
     public static Vector3f getBodyMove(HumanoidModel<?> model){
-        return new Vector3f(model.body.x,model.body.y,model.body.z).mul(NORMAL);
+        return new Vector3f(model.body.x,model.body.y,model.body.z).mul(Vector3fUtils.ENTITY_SCALE);
     }
     public static Vector3f getMove(HumanoidModel<?> model){
         return new Vector3f(0,
@@ -69,6 +65,7 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
     public static void transformVector(Vector3f vector,Vector3f move,Matrix3f transform,Vector3f afterMove){
         vector.add(move);
         vector.mul(transform);
+        vector.mul(Vector3fUtils.ENTITY_SCALE);
         vector.add(afterMove);
     }
 
@@ -84,48 +81,59 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
         Vector3f afterMove=getBodyMove(model);
 
         Matrix3f d3transform=new Matrix3f();
-        getTransform(model,d3transform);
+//        getTransform(model,d3transform);
+
+        Quaternionf rotate=new Quaternionf();
+        getRotate(model,rotate);
+        d3transform.rotate(rotate);
 
         Vector2f compute2f=new Vector2f();
         Vector3f compute3f=new Vector3f();
+
+        Vector3f normal=new Vector3f();
+        Quaternionf normalRotate=new Quaternionf();
 
         //后
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
                 new float[]{0/16f,0/16f,6/16f,1/16f},
                 SIZE,LEFT_FONT,RIGHT_FONT,
-                move,afterMove,d3transform,LIGHT);
+                move,afterMove,d3transform,normal.set(0,-1,0).rotate(rotate));
 
         //右
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
                 new float[]{0/16f,2/16f,4/16f,3/16f},
                 SIZE,RIGHT_FONT,RIGHT_BACK,
-                move,afterMove,d3transform,LIGHT);
+                move,afterMove,d3transform,normal.set(0,-1,0).rotate(rotate));
 
         //前
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
                 new float[]{0/16f,1/16f,6/16f,2/16f},
                 SIZE,RIGHT_BACK,LEFT_BACK,
-                move,afterMove,d3transform,LIGHT);
+                move,afterMove,d3transform,normal.set(0,-1,0).rotate(rotate));
 
         //左
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
                 new float[]{0/16f,3/16f,4/16f,4/16f},
                 SIZE,LEFT_FONT,LEFT_BACK,
-                move,afterMove,d3transform,LIGHT);
+                move,afterMove,d3transform,normal.set(0,-1,0).rotate(rotate));
 
         stack.popPose();
     }
 
     @Override
-    public void getTiePos(E entity, CollarState state, M model, int slot, Vector3f top, Vector3f button, Matrix3f transform, Matrix3f rotate) {
-        getTransform(model,transform);
+    public void getTiePos(E entity, CollarState state, M model, int slot, Vector3f top, Vector3f button, Matrix3f transform, Quaternionf positionRotate) {
+//        getTransform(model,transform);
+        Quaternionf quaternionf=new Quaternionf();
+        getRotate(model,quaternionf);
+        transform.rotate(quaternionf);
+
         Vector2f compute2f=new Vector2f();
         Vector3f afterMove=getBodyMove(model);
         Vector3f move=getMove(model);
         switch (slot){
             case 0->{
                 compute2f.set(SIZE).mul(LEFT_BACK);
-                rotate.rotateY((float) Math.PI);
+                positionRotate.rotateY((float) Math.PI);
                 compute2f.add(1.5f,0);
                 top.set(compute2f.x(),-1,compute2f.y());
                 button.set(compute2f.x(),0,compute2f.y());
@@ -137,32 +145,32 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
     public static void face(Vector2f compute2f, Vector3f compute3f, PoseStack.Pose pose, VertexConsumer vertexconsumer, int idkInt,
                             float[] uv,
                             Vector2f pos, Matrix2f posTransform0, Matrix2f posTransform1,
-                            Vector3f move, Vector3f afterMove, Matrix3f d3Transform, Vector3f light) {
+                            Vector3f move, Vector3f afterMove, Matrix3f d3Transform, Vector3f normal) {
         compute2f.set(pos).mul(posTransform0);
         compute3f.set(compute2f.x, -1, compute2f.y);
         transformVector(compute3f,move,d3Transform,afterMove);
         vertex(pose.pose(), pose.normal(), vertexconsumer, idkInt,
                 compute3f.x,compute3f.y,compute3f.z, uv[0], uv[1],
-                light.x, light.y, light.z);
+                normal.x, normal.y, normal.z);
 
         compute3f.set(compute2f.x, 0, compute2f.y);
         transformVector(compute3f,move,d3Transform,afterMove);
         vertex(pose.pose(), pose.normal(), vertexconsumer, idkInt,
                 compute3f.x,compute3f.y,compute3f.z, uv[0], uv[3],
-                light.x, light.y, light.z);
+                normal.x, normal.y, normal.z);
 
         compute2f.set(pos).mul(posTransform1);
         compute3f.set(compute2f.x, 0, compute2f.y);
         transformVector(compute3f,move,d3Transform,afterMove);
         vertex(pose.pose(), pose.normal(), vertexconsumer, idkInt,
                 compute3f.x,compute3f.y,compute3f.z, uv[2], uv[3],
-                light.x, light.y, light.z);
+                normal.x, normal.y, normal.z);
 
         compute3f.set(compute2f.x, -1, compute2f.y);
         transformVector(compute3f,move,d3Transform,afterMove);
         vertex(pose.pose(), pose.normal(), vertexconsumer, idkInt,
                 compute3f.x,compute3f.y,compute3f.z, uv[2], uv[1],
-                light.x, light.y, light.z);
+                normal.x, normal.y, normal.z);
 
 //        vertex(idk4f,idk3f);
     }

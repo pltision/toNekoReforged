@@ -18,7 +18,7 @@
   "commands.toneko.set_pet_phrase.only_neko": "Only can modify neko's pet phrase",
   "commands.toneko.request.send_request_info": "Send request to %s",
   "commands.toneko.get_neko.neko_cannot_have": "A neko cannot have other neko",
-  "command.toneko.default_rite": "Use lapis lazuli, enchanted_book and cooked cod to craft an enchanted cod.\nThen in the mid night (17840<=DayTime<=18160), let your cat sit on the Enchantment Table, put the enchanted cod on your off hand and use Cat Stick to attack another player.\nIf every things fine, your cat will get 15 second Wither effect in level 3, and the another player will be your neko.\nIf the state with another player is not right, you will get some message Whether the rite is successful or not, your cod will be shrink.\n",
+  "commands.toneko.default_rite": "Use lapis lazuli, enchanted_book and cooked cod to craft an enchanted cod.\nThen in the mid night (17840<=DayTime<=18160), let your cat sit on the Enchantment Table, put the enchanted cod on your off hand and use Cat Stick to attack another player.\nIf every things fine, your cat will get 15 second Wither effect in level 3, and the another player will be your neko.\nIf the state with another player is not right, you will get some message Whether the rite is successful or not, your cod will be shrink.\n",
   "commands.toneko.removed_neko_state": "You are not a neko now",
   "commands.toneko.get_owner.request_info": "%s want let you be their owner",
   "to_neko.cat_stick": "Cat Stick",
@@ -43,11 +43,11 @@
   "commands.toneko.get_owner.already": "This player is already your owner",
   "commands.toneko.set_exp.not_connected": "These tow players (or same player) is not connected",
   "commands.toneko.get_pet_phrase.info": "%s has pet phrase with %s",
-  "command.toneko.disabled_rite": "The neko rite is been disabled or config is wrong",
+  "commands.toneko.disabled_rite": "The neko rite is been disabled or config is wrong",
   "commands.toneko.get_neko.request_info": "%s want let you be their neko",
   "commands.toneko.cannot_be_own_neko_or_owner": "Cannot be own neko or owner",
-  "item.to_neko.tail": "Tail",
-  "item.to_neko.ears": "Ears",
-  "item.to_neko.dyed_ears": "Dyed Ears",
-  "item.to_neko.dyed_tail": "Dyed Tail"
+  "item.toneko.tail": "Tail",
+  "item.toneko.ears": "Ears",
+  "item.toneko.dyed_ears": "Dyed Ears",
+  "item.toneko.dyed_tail": "Dyed Tail"
 }

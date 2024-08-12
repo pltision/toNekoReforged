@@ -18,7 +18,7 @@
   "commands.toneko.set_pet_phrase.only_neko": "只能修改猫娘的口癖",
   "commands.toneko.request.send_request_info": "已将请求发送至%s",
   "commands.toneko.get_neko.neko_cannot_have": "猫娘不能拥有其他猫娘",
-  "command.toneko.default_rite": "使用青金石、任意附魔书和熟鳕鱼合成一条附魔鳕鱼。然后在午夜（17840<=DayTime<=18160）时，将你驯服的猫放在附魔台方块上，副手手持鳕鱼，主手手持撅猫棒攻击附魔台附近的玩家。\n若条件成立，被攻击的玩家将会变成你的猫娘，猫将受到15秒的凋零III效果。若检测另一个玩家的猫娘关系时有异常，你将会收到报错喵~\n此外，无论仪式是否完成，鳕鱼都会消耗喵。\n",
+  "commands.toneko.default_rite": "使用青金石、任意附魔书和熟鳕鱼合成一条附魔鳕鱼。然后在午夜（17840<=DayTime<=18160）时，将你驯服的猫放在附魔台方块上，副手手持鳕鱼，主手手持撅猫棒攻击附魔台附近的玩家。\n若条件成立，被攻击的玩家将会变成你的猫娘，猫将受到15秒的凋零III效果。若检测另一个玩家的猫娘关系时有异常，你将会收到报错喵~\n此外，无论仪式是否完成，鳕鱼都会消耗喵。\n",
   "commands.toneko.removed_neko_state": "你现在不是猫娘了",
   "commands.toneko.get_owner.request_info": "%s想让你成为他的主人",
   "to_neko.cat_stick": "撅猫棒",
@@ -43,11 +43,11 @@
   "commands.toneko.get_owner.already": "这个玩家已经是你的主人了",
   "commands.toneko.set_exp.not_connected": "这两个（或同个）玩家没有建立关系",
   "commands.toneko.get_pet_phrase.info": "%s的口癖为%s",
-  "command.toneko.disabled_rite": "变猫仪式并未启用或配置文件错误",
+  "commands.toneko.disabled_rite": "变猫仪式并未启用或配置文件错误",
   "commands.toneko.get_neko.request_info": "%s想让你成为他的猫娘",
   "commands.toneko.cannot_be_own_neko_or_owner": "不能成为自己的主人或猫娘",
-  "item.to_neko.tail": "尾巴",
-  "item.to_neko.ears": "耳朵",
-  "item.to_neko.dyed_ears": "染色耳朵",
-  "item.to_neko.dyed_tail": "染色尾巴"
+  "item.toneko.tail": "尾巴",
+  "item.toneko.ears": "耳朵",
+  "item.toneko.dyed_ears": "染色耳朵",
+  "item.toneko.dyed_tail": "染色尾巴"
 }

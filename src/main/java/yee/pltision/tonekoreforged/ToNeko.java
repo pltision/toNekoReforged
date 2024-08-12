@@ -2,8 +2,6 @@ package yee.pltision.tonekoreforged;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +36,7 @@ import java.util.function.Consumer;
 public class ToNeko
 {
     // Define mod id in a common place for everything to reference
-    public static final String MODID = "to_neko";
+    public static final String MODID = "toneko";
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 

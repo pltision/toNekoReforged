@@ -1,5 +1,5 @@
 {
-  "type": "to_neko:crafting_dying_translate",
-  "clean": "to_neko:tail",
-  "dyed": "to_neko:dyed_tail"
+  "type": "toneko:crafting_dying_translate",
+  "clean": "toneko:tail",
+  "dyed": "toneko:dyed_tail"
 }

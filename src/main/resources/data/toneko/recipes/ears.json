@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "toneko:neko_armor",
+  "key": {
+    "P": {
+      "item": "minecraft:pink_wool"
+    },
+    "#": {
+      "tag": "minecraft:wool"
+    }
+  },
+  "pattern": [
+    "# #",
+    "P#P"
+  ],
+  "result": {
+    "item": "toneko:ears"
+  }
+}
