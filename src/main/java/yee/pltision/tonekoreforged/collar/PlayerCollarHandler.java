@@ -3,7 +3,7 @@ package yee.pltision.tonekoreforged.collar;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-public class PlayerCollarCapability implements CollarCapability {
+public class PlayerCollarHandler implements CollarHandler {
     ItemStack collarItem;
     CollarState collarState;
 
@@ -14,7 +14,7 @@ public class PlayerCollarCapability implements CollarCapability {
 
     @Override
     public ItemStack getCollarSlot() {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override

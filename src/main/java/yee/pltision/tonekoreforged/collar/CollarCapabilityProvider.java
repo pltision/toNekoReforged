@@ -2,7 +2,6 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -29,11 +28,11 @@ import java.util.List;
 
 @Mod.EventBusSubscriber
 public class CollarCapabilityProvider implements ICapabilityProvider {
-    public static final Capability<CollarCapability> COLLAR_RECORD = CapabilityManager.get(new CapabilityToken<>(){});
-    public final LazyOptional<CollarCapability> optional;
+    public static final Capability<CollarHandler> COLLAR_RECORD = CapabilityManager.get(new CapabilityToken<>(){});
+    public final LazyOptional<CollarHandler> optional;
 
     public CollarCapabilityProvider(Player player){
-        optional= LazyOptional.of(()->new CollarCapability() {
+        optional= LazyOptional.of(()->new CollarHandler() {
             final CollarState state=new CollarState() {
                 final List<CollarBaubleState> baubles=List.of(new CollarBaubleState() {
                     @Override
@@ -78,7 +77,7 @@ public class CollarCapabilityProvider implements ICapabilityProvider {
 
             @Override
             public ItemStack getCollarSlot() {
-                return null;
+                return ItemStack.EMPTY;
             }
 
             @Override
@@ -98,7 +97,7 @@ public class CollarCapabilityProvider implements ICapabilityProvider {
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == COLLAR_RECORD ? optional.cast():LazyOptional.empty();
     }
-    public static CollarCapability FALLBACK_CAPABILITY=new CollarCapability() {
+    public static CollarHandler FALLBACK_CAPABILITY=new CollarHandler() {
         @Override
         public CollarState getState() {
             return null;

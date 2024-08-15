@@ -79,14 +79,7 @@ public class PetPhrase implements Cloneable {
     }
 
     public static int filterLastBracket(String text){
-        class BracketCloseRecord {
-            final BracketPair bracket;
-            final int index;
-            BracketCloseRecord(BracketPair bracket, int index) {
-                this.bracket=bracket;
-                this.index = index;
-            }
-        }
+        record BracketCloseRecord(BracketPair bracket,int index){}
 
         int index=text.length();
 

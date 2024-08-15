@@ -1,6 +1,8 @@
 package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,4 +20,8 @@ public interface CollarState extends MenuProvider {
     @OnlyIn(Dist.CLIENT)
     @Nullable
     <E> CollarRenderHelper<E,?> getCollarRenderHelper();
+
+    default boolean canTake(Player player){
+        return true;
+    }
 }

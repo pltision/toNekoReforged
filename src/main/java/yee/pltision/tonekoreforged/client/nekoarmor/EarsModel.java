@@ -24,14 +24,13 @@ public class EarsModel extends EntityModel<Entity> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 //    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "ears_- converted"), "main");
 
-//    private final ModelPart ears;
-    private final ModelPart head;
     private final ModelPart ears;
     private final ModelPart colorFur;
     private final ModelPart colorInside;
 
     public EarsModel(ModelPart root) {
-        this.head = root.getChild("head");
+        //    private final ModelPart ears;
+        ModelPart head = root.getChild("head");
         this.ears = head.getChild("ears");
         this.colorFur = head.getChild("color_fur");
         this.colorInside = head.getChild("color_inside");

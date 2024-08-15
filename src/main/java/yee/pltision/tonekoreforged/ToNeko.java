@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
@@ -13,6 +15,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -23,8 +27,11 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
+import yee.pltision.tonekoreforged.collar.CollarHandler;
+import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
@@ -110,6 +117,18 @@ public class ToNeko
 
     public static ResourceLocation location(String name){
         return new ResourceLocation(MODID,name);
+    }
+
+    public static CollarHandler getCollarHandler(@Nullable Player player){
+        return  player==null? null:
+                ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_RECORD);
+    }
+
+    public static <C> C getCapability(LivingEntity entity, Capability<C> cap){
+        LazyOptional<C> capability=entity.getCapability(cap,null);
+        return capability.isPresent()?
+                capability.orElseThrow(()->new RuntimeException("LazyOptional is peresent but still throw exception!"))
+                : null;
     }
 
 }
