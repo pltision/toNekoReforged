@@ -37,7 +37,7 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
     @Override
     public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity, float neverMind1, float neverMind2, float neverMind3, float neverMind4, float neverMind5, float neverMind6) {
 
-        entity.getCapability(CollarCapabilityProvider.COLLAR_RECORD).ifPresent(cap->{
+        entity.getCapability(CollarCapabilityProvider.COLLAR_HANDLER).ifPresent(cap->{
             CollarState state= cap.getState();
             CollarRenderHelper<LivingEntity,?> collarRenderHelper;
             if(state!=null&&(collarRenderHelper= state.getCollarRenderHelper())!=null&& collarRenderHelper.isTrueModel(getParentModel())) {

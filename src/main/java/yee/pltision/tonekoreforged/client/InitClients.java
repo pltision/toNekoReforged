@@ -1,5 +1,6 @@
 package yee.pltision.tonekoreforged.client;
 
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -7,6 +8,7 @@ import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.client.collar.CollarLayout;
 import yee.pltision.tonekoreforged.client.nekoarmor.ArmorModelInstances;
 
 import static yee.pltision.tonekoreforged.ToNeko.MODID;
@@ -22,13 +24,13 @@ public class InitClients {
 
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event){
-        /*System.out.println("开始添加Layers");
+        System.out.println("开始添加Layers");
         for(String skin:event.getSkins()){
             if(event.getSkin(skin) instanceof  PlayerRenderer playerRenderer) {
                 System.out.println("找到了"+playerRenderer);
                 playerRenderer.addLayer(new CollarLayout<>(playerRenderer));
             }
-        }*/
+        }
         ArmorModelInstances.initInstance(event.getContext());
     }
 

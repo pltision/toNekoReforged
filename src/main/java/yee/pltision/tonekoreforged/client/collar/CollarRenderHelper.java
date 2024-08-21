@@ -11,7 +11,6 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
-@OnlyIn(Dist.CLIENT)
 public interface CollarRenderHelper<E,M extends Model>
 {
     boolean isTrueModel(Model model);

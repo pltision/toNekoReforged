@@ -21,6 +21,6 @@ public class CollarMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player p_38874_) {
-        return p_38874_.getCapability(CollarCapabilityProvider.COLLAR_RECORD).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY).getState()==this.state;
+        return p_38874_.getCapability(CollarCapabilityProvider.COLLAR_HANDLER).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY).getState()==this.state;
     }
 }

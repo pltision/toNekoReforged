@@ -30,10 +30,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
-import yee.pltision.tonekoreforged.collar.CollarHandler;
+import yee.pltision.tonekoreforged.collar.CollarItem;
+import yee.pltision.tonekoreforged.collar.CollarStateHandler;
 import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
+import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
 import java.util.function.Consumer;
@@ -88,6 +90,8 @@ public class ToNeko
         }
     });
 
+    public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new CollarItem(new Item.Properties()));
+
     public ToNeko()
     {
 
@@ -101,6 +105,8 @@ public class ToNeko
 
         ITEMS.register(modEventBus);
         RECIPE_SERIALIZER.register(modEventBus);
+
+        NekoNetworks.register();
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -119,9 +125,12 @@ public class ToNeko
         return new ResourceLocation(MODID,name);
     }
 
-    public static CollarHandler getCollarHandler(@Nullable Player player){
+    public static CollarStateHandler getLocalPlayerCollar(@Nullable Player player){
         return  player==null? null:
-                ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_RECORD);
+                ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
+    }
+    public static CollarStateHandler getCollar(LivingEntity player){
+        return ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
     }
 
     public static <C> C getCapability(LivingEntity entity, Capability<C> cap){

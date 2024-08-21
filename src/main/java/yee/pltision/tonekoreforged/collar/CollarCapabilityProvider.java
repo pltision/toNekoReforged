@@ -1,11 +1,10 @@
 package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -18,103 +17,37 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
-import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
-import yee.pltision.tonekoreforged.client.collar.CollarRenderer;
-import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
-import yee.pltision.tonekoreforged.client.collar.BellRenderer;
-
-import java.util.List;
 
 @Mod.EventBusSubscriber
 public class CollarCapabilityProvider implements ICapabilityProvider {
-    public static final Capability<CollarHandler> COLLAR_RECORD = CapabilityManager.get(new CapabilityToken<>(){});
-    public final LazyOptional<CollarHandler> optional;
+    public static final Capability<CollarStateHandler> COLLAR_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
+    public final LazyOptional<CollarStateHandler> optional;
 
     public CollarCapabilityProvider(Player player){
-        optional= LazyOptional.of(()->new CollarHandler() {
-            final CollarState state=new CollarState() {
-                final List<CollarBaubleState> baubles=List.of(new CollarBaubleState() {
-                    @Override
-                    public ItemStack asItem() {
-                        return null;
-                    }
-
-                    @Override
-                    public <T> CollarBaubleRenderer<T,?> getRenderer(T entity, CollarState collar) {
-                        return (CollarBaubleRenderer<T,?>) BellRenderer.INSTANT;
-                    }
-                });
-                @Override
-                public List<CollarBaubleState> baubles() {
-                    return baubles;
-                }
-
-                @Override
-                public ItemStack asItem() {
-                    return null;
-                }
-
-                @Override
-                public <E> CollarRenderHelper<E, ?> getCollarRenderHelper() {
-                    return (CollarRenderHelper<E, ?>) CollarRenderer.INSTANT;
-                }
-
-                @Override
-                public Component getDisplayName() {
-                    return null;
-                }
-
-                @Nullable
-                @Override
-                public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
-                    return null;
-                }
-            };
-            @Override
-            public CollarState getState() {
-                return state;            }
-
-            @Override
-            public ItemStack getCollarSlot() {
-                return ItemStack.EMPTY;
-            }
-
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
-            }
-
-            @Override
-            public void setCollarSlot(ItemStack item) {
-
-            }
-        });
+        optional= LazyOptional.of(PlayerCollarStateHandler::new);
+        if(player instanceof ServerPlayer){
+            optional.orElse(FALLBACK_CAPABILITY).setCollarSlot(player,new ItemStack(ToNeko.COLLAR.get()));
+        }
     }
 
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        return cap == COLLAR_RECORD ? optional.cast():LazyOptional.empty();
+        return cap == COLLAR_HANDLER ? optional.cast():LazyOptional.empty();
     }
-    public static CollarHandler FALLBACK_CAPABILITY=new CollarHandler() {
+    public static CollarStateHandler FALLBACK_CAPABILITY=new CollarStateHandler() {
         @Override
         public CollarState getState() {
             return null;
         }
 
         @Override
-        public ItemStack getCollarSlot() {
-            return ItemStack.EMPTY;
-        }
-
-        @Override
-        public boolean mayPlace(ItemStack stack) {
+        public boolean mayReplace(LivingEntity entity, ItemStack stack) {
             return false;
         }
 
         @Override
-        public void setCollarSlot(ItemStack item) {
+        public void setCollarSlot(LivingEntity entity, ItemStack item) {
         }
     };
 
