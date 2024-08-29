@@ -44,8 +44,8 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
                 ((CollarRenderHelper)collarRenderHelper).render(stack, source, idkInt, entity, neverMind1, neverMind2, neverMind3, neverMind4, neverMind5, neverMind6, getParentModel());
                 int i=0;
                 for(CollarBaubleState baubleState:cap.getState().baubles()){
-                    CollarBaubleRenderer<LivingEntity,?> collarBaubleRenderer=baubleState.getRenderer(entity,cap.getState());
-                    if(collarBaubleRenderer!=null) {
+                    CollarBaubleRenderer<LivingEntity,?> collarBaubleRenderer;
+                    if(baubleState!=null&&(collarBaubleRenderer=baubleState.getRenderer(entity,cap.getState()))!=null) {
                         Model castedModel=collarBaubleRenderer.tryCastModel(getParentModel());
                         if(castedModel!=null)
                             ((CollarBaubleRenderer)collarBaubleRenderer).render(stack, source, idkInt, entity, neverMind1, neverMind2, neverMind3, neverMind4, neverMind5, neverMind6, cap.getState(), collarRenderHelper, i, castedModel);

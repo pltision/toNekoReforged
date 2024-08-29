@@ -1,5 +1,6 @@
 package yee.pltision.tonekoreforged.client;
 
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.world.item.DyeableLeatherItem;
 import net.minecraftforge.api.distmarker.Dist;
@@ -7,7 +8,9 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.client.collar.BasicCollarScreen;
 import yee.pltision.tonekoreforged.client.collar.CollarLayout;
 import yee.pltision.tonekoreforged.client.nekoarmor.ArmorModelInstances;
 
@@ -37,6 +40,12 @@ public class InitClients {
     @SubscribeEvent
     public static void initItemColors(RegisterColorHandlersEvent.Item event){
         event.register((p_92708_, p_92709_) -> p_92709_ > 0 ? -1 : ((DyeableLeatherItem)p_92708_.getItem()).getColor(p_92708_), ToNeko.DYED_EARS.get(),ToNeko.DYED_TAIL.get());
+    }
+
+    @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event)
+    {
+        MenuScreens.register(ToNeko.BASIC_COLLAR_MENU.get(), BasicCollarScreen::new);
     }
 }
 

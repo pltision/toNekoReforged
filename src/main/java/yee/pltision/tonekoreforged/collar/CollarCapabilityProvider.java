@@ -2,6 +2,7 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,11 +18,16 @@ import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
 
 @Mod.EventBusSubscriber
 public class CollarCapabilityProvider implements ICapabilityProvider {
-    public static final Capability<CollarStateHandler> COLLAR_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
-    public final LazyOptional<CollarStateHandler> optional;
+    public static final Capability<CollarSlotHandler> COLLAR_HANDLER = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<CollarStateHandlerItem> COLLAR_HANDLER_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<CollarBaubleHandel> COLLAR_BAUBLE_HANDEL_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
+    public static final Capability<MenuProvider> MENU_PROVIDER_ITEM = CapabilityManager.get(new CapabilityToken<>(){});
+
+    public final LazyOptional<CollarSlotHandler> optional;
 
     public CollarCapabilityProvider(Player player){
         optional= LazyOptional.of(PlayerCollarStateHandler::new);
@@ -35,10 +41,15 @@ public class CollarCapabilityProvider implements ICapabilityProvider {
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return cap == COLLAR_HANDLER ? optional.cast():LazyOptional.empty();
     }
-    public static CollarStateHandler FALLBACK_CAPABILITY=new CollarStateHandler() {
+    public static CollarSlotHandler FALLBACK_CAPABILITY=new CollarSlotHandler() {
         @Override
         public CollarState getState() {
             return null;
+        }
+
+        @Override
+        public ItemStack getCollarItem() {
+            return ItemStack.EMPTY;
         }
 
         @Override

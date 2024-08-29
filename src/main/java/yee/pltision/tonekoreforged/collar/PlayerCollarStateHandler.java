@@ -1,12 +1,21 @@
 package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import yee.pltision.tonekoreforged.ToNeko;
 
-public class PlayerCollarStateHandler implements CollarStateHandler {
+public class PlayerCollarStateHandler implements CollarSlotHandler {
     CollarState collarState;
+    ItemStack item;
+
+    public PlayerCollarStateHandler(){
+        item=ItemStack.EMPTY;
+    }
+
+    public PlayerCollarStateHandler(ItemStack item){
+
+    }
 
     @Override
     public @Nullable CollarState getState() {
@@ -14,21 +23,25 @@ public class PlayerCollarStateHandler implements CollarStateHandler {
     }
 
     @Override
-    public boolean mayReplace(LivingEntity entity, ItemStack stack) {
-        if(getState()==null)
-            return stack.getItem() instanceof CollarItem || stack.isEmpty();
-        else return getState().canTake(entity);
+    public ItemStack getCollarItem() {
+        return CollarStateHandler.addTagToItem(getState(),item);
     }
 
     @Override
     public void setCollarSlot(LivingEntity entity, ItemStack item) {
-        Item itemClass= item.getItem();
-        if(itemClass instanceof CollarItem collar){
-            collarState=collar.asState(item);
+        CollarStateHandlerItem handler= ToNeko.getItemCollarState(item);
+        if(handler!=null){
+            this.collarState= handler.getState();
+            this.item=item;
+            if(collarState!=null){
+                collarState.entityInit(entity);
+            }
         }
         else {
-            collarState=null;
+            this.collarState=null;
+            this.item=ItemStack.EMPTY;
         }
     }
+
 
 }

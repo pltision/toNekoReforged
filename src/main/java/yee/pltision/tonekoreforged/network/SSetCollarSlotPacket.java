@@ -3,13 +3,12 @@ package yee.pltision.tonekoreforged.network;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.collar.CollarStateHandler;
+import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 
 import java.util.function.Supplier;
 
@@ -44,7 +43,7 @@ public class SSetCollarSlotPacket {
             DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
         });
         ctx.get().setPacketHandled(true);
-    };
+    }
     public static void handelPacket(SSetCollarSlotPacket msg, ServerPlayer player){
 
         player.resetLastActionTime();
@@ -58,12 +57,13 @@ public class SSetCollarSlotPacket {
             } else {
                 int i = msg.slotNum;
 
-                CollarStateHandler collar = ToNeko.getLocalPlayerCollar(player);
+                CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(player);
                 if (collar != null) {
                     ItemStack carried=player.containerMenu.getCarried();
                     if(i==-1){
                         if(collar.mayReplace(player,carried)){
-                            player.containerMenu.setCarried(collar.getCollarSlot());
+//                            ItemStack collarItem=collar.getCollarItem();
+                            player.containerMenu.setCarried(collar.getCollarItem());
                             collar.setCollarSlot(player,carried);
                         }
 

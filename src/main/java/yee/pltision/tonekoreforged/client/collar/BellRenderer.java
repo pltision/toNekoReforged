@@ -6,6 +6,7 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -150,4 +151,13 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
         consumer.vertex(idk4f, x, y, z).color(255, 255, 255, 255).uv(uvx, uvy).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(idkInt).normal(idk3f, rx, ry, rz).endVertex();
     }
 
+    @Override
+    public CompoundTag serializeNBT() {
+        return new CompoundTag();
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag nbt) {
+
+    }
 }

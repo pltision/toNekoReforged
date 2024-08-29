@@ -103,8 +103,8 @@ public class Config {
     static int defaultPetPhraseIgnoreAfter(){return useChinese?0:2;}
 
     static {
-        BUILDER.comment("Default pet phrase will change with your locale. if is getLanguage() return \"zh\" it will use chinese, else use english.")
-                .comment("默认的口癖会随着你的区域更改。如果getLanguage()返回\"zh\"它会使用中文，否则使用英文。");
+        BUILDER.comment("Default pet phrase will change with your locale. If getLanguage() return \"zh\" it will use chinese, else use english.")
+                .comment("默认的口癖会随着你的区域更改。如果getLanguage()返回\"zh\"它会使用中文，否则使用英文。").comment("");
     }
 
     private static final ForgeConfigSpec.ConfigValue<String> DEFAULT_PET_PHRASE = BUILDER
@@ -128,7 +128,7 @@ public class Config {
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
             .define("petPhrase.defaultPetPhraseIgnoreAfter", defaultPetPhraseIgnoreAfter());
 
-    /*//TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
+    /*//NOT_TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
     Pair<BracketPair,ForgeConfigSpec> pair=BUILDER.configure(builder->{
         builder.tr
         return new BracketPair("","");

@@ -1,28 +1,27 @@
 package yee.pltision.tonekoreforged;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.DyeableArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
@@ -30,9 +29,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
-import yee.pltision.tonekoreforged.collar.CollarItem;
-import yee.pltision.tonekoreforged.collar.CollarStateHandler;
-import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
+import yee.pltision.tonekoreforged.collar.*;
+import yee.pltision.tonekoreforged.collar.bauble.BellItem;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
@@ -51,6 +51,9 @@ public class ToNeko
 
     public static final DeferredRegister<Item> ITEMS=DeferredRegister.create(Registries.ITEM,MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZER=DeferredRegister.create(Registries.RECIPE_SERIALIZER,MODID);
+    public static final DeferredRegister<MenuType<?>> MENUS=DeferredRegister.create(Registries.MENU,MODID);
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS=DeferredRegister.create(Registries.SOUND_EVENT,MODID);
+
     public static final RegistryObject<RecipeSerializer<DyingTranslateRecipe>> DYE_TRANSLATE_RECIPE=RECIPE_SERIALIZER.register("crafting_dying_translate",()->
             DyingTranslateRecipe.Serializer.INSTANCE
     );
@@ -90,7 +93,11 @@ public class ToNeko
         }
     });
 
-    public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new CollarItem(new Item.Properties()));
+    public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
+    public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
+
+    public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
 
     public ToNeko()
     {
@@ -105,38 +112,48 @@ public class ToNeko
 
         ITEMS.register(modEventBus);
         RECIPE_SERIALIZER.register(modEventBus);
+        MENUS.register(modEventBus);
+        SOUND_EVENTS.register(modEventBus);
 
         NekoNetworks.register();
-    }
-
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
-        @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
-            // Some client setup code
-            LOGGER.info("HELLO FROM CLIENT SETUP");
-            LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
-        }
     }
 
     public static ResourceLocation location(String name){
         return new ResourceLocation(MODID,name);
     }
 
-    public static CollarStateHandler getLocalPlayerCollar(@Nullable Player player){
+    public static CollarBaubleHandel getCollarBaubleHandel(ItemStack item){
+        return ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_BAUBLE_HANDEL_ITEM);
+    }
+    public static CollarBaubleState getCollarBaubleState(ItemStack item){
+        CollarBaubleHandel handler= ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_BAUBLE_HANDEL_ITEM);
+        return handler==null?null:handler.getBaubleState();
+    }
+    public static CollarStateHandlerItem getItemCollarState(ItemStack item){
+        return ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_HANDLER_ITEM);
+    }
+    public static CollarSlotHandler getLocalPlayerCollar(@Nullable Player player){
         return  player==null? null:
                 ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
     }
-    public static CollarStateHandler getCollar(LivingEntity player){
+    public static CollarState getCollarState(LivingEntity player){
+        CollarSlotHandler handler= ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
+        return handler==null?null:handler.getState();
+    }
+    public static CollarSlotHandler getCollar(LivingEntity player){
         return ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
     }
 
     public static <C> C getCapability(LivingEntity entity, Capability<C> cap){
         LazyOptional<C> capability=entity.getCapability(cap,null);
         return capability.isPresent()?
-                capability.orElseThrow(()->new RuntimeException("LazyOptional is peresent but still throw exception!"))
+                capability.orElseThrow(()->new RuntimeException("LazyOptional is present but still throw exception!"))
+                : null;
+    }
+    public static <C> C getCapability(ItemStack item, Capability<C> cap){
+        LazyOptional<C> capability=item.getCapability(cap,null);
+        return capability.isPresent()?
+                capability.orElseThrow(()->new RuntimeException("LazyOptional is present but still throw exception!"))
                 : null;
     }
 

@@ -1,0 +1,37 @@
+{
+  "item.bell.ding": {
+    "sounds": [
+      {
+        "name": "toneko:bell_ding_2",
+        "volume": 0.1,
+        "pitch": 1,
+        "weight": 1,
+        "stream": false,
+        "attenuation_distance": 16,
+        "preload": false,
+        "type": "file"
+      },
+      {
+        "name": "toneko:bell_ding_1",
+        "volume": 0.1,
+        "pitch": 1,
+        "weight": 1,
+        "stream": false,
+        "attenuation_distance": 16,
+        "preload": false,
+        "type": "file"
+      },
+      {
+        "name": "toneko:bell_ding_3",
+        "volume": 0.1,
+        "pitch": 1,
+        "weight": 1,
+        "stream": false,
+        "attenuation_distance": 16,
+        "preload": false,
+        "type": "file"
+      }
+
+    ]
+  }
+}

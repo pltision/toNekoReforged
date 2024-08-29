@@ -32,7 +32,7 @@ import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 
 @SuppressWarnings("resource")
 @Mod.EventBusSubscriber
-public class Events {
+public class NekoStateEventListeners {
 
     @SubscribeEvent
     public static void modifyRecipe(PlayerEvent.ItemCraftedEvent event){

@@ -3,8 +3,6 @@ package yee.pltision.tonekoreforged.client.collar;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Quaternionf;
@@ -19,4 +17,7 @@ public interface CollarRenderHelper<E,M extends Model>
 
     void getTiePos(E entity, CollarState state, M model, int slot, Vector3f top, Vector3f button, Matrix3f transform, Quaternionf rotate);
 
+    default <A,B extends Model> CollarRenderHelper<A,B> cast(){
+        return (CollarRenderHelper<A, B>) this;
+    }
 }

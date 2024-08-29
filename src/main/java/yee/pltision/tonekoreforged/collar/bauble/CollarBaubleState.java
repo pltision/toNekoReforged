@@ -1,19 +1,39 @@
 package yee.pltision.tonekoreforged.collar.bauble;
 
-import net.minecraft.client.model.Model;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
-public interface CollarBaubleState {
-    default boolean isTrueModel(Model model){return true;}
+public interface CollarBaubleState extends INBTSerializable<CompoundTag> {
+    String COLLAR_BAUBLE_TAG="CollarBauble";
 
     ItemStack asItem();
 
-    @OnlyIn(Dist.CLIENT)
     @Nullable
-    <T> CollarBaubleRenderer<T,?> getRenderer(T entity, CollarState collar);
+    default  <T> CollarBaubleRenderer<T,?> getRenderer(T entity, CollarState collar){
+        return null;
+    }
+
+    default void entityTick(LivingEntity entity){
+    }
+
+    default void entityInit(LivingEntity entity, CollarState state, int slot){
+    }
+
+    @Override
+    default CompoundTag serializeNBT(){
+        return new CompoundTag();
+    }
+
+    @Override
+    default void deserializeNBT(CompoundTag nbt){}
+
+    default boolean mayPlace(Object slotAccessor,int slot){
+        return true;
+    }
+
 }
