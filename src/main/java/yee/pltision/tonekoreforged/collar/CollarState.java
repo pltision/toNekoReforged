@@ -2,6 +2,7 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,7 +17,6 @@ import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
 
 public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag>, Container {
     String COLLAR_TAG_NAME="CollarItem";
@@ -28,7 +28,7 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         return null;
     }
 
-    default boolean canTake(LivingEntity player){
+    default boolean canTake(@Nullable ServerPlayer taker, LivingEntity entity){
         return true;
     }
 
@@ -74,14 +74,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         for(CollarBaubleState state:baubles()){
             if(state!=null)
                 state.entityTick(entity);
-        }
-    }
-
-    default void entityInit(LivingEntity entity){
-        for(ListIterator<CollarBaubleState> it=baubles().listIterator();it.hasNext();){
-            CollarBaubleState bauble=it.next();
-            if(bauble!=null)
-                bauble.entityInit(entity,this,it.nextIndex());
         }
     }
 

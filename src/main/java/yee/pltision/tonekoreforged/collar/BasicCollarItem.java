@@ -20,7 +20,6 @@ public class BasicCollarItem extends Item implements CollarItem{
     }
 
     public CollarState asState(ItemStack item){
-        System.out.println("createState");
         return new BasicCollarState(item);
     }
 

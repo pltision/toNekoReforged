@@ -28,8 +28,7 @@ public class CCollarStateChangePacket {
 
     public static CCollarStateChangePacket tryBuild(LivingEntity entity){
         CollarStateHandler handler= ToNeko.getCollar(entity);
-        return handler==null?null:
-                new CCollarStateChangePacket(entity.getId(),handler.getCollarItem());
+        return new CCollarStateChangePacket(entity.getId(),handler.getCollarItem());
     }
 
     public static void encode(CCollarStateChangePacket packet, FriendlyByteBuf buf){

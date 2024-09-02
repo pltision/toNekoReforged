@@ -28,14 +28,11 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
 
     public static final BellRenderer<Entity,?> INSTANT=new BellRenderer<>();
 
-    public static Vector3f VERTEX=new Vector3f(1,1,1);
+    public static Vector3f VERTEX=new Vector3f(0.875f,0.875f,0.875f);
 
     @Override
     public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity, float walking, float speed, float neverMind3, float neverMind4, float neverMind5, float neverMind6, CollarState collarState, CollarRenderHelper<E,M> renderHelper, int slot, M model) {
-//        System.out.println(walking+"\t"+ speed);
-
         stack.pushPose();
-
         PoseStack.Pose pose = stack.last();
 
         VertexConsumer vertexconsumer = source.getBuffer(RENDER_TYPE);
@@ -44,21 +41,26 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
         Vector3f bottom=new Vector3f();
         Vector3f move=new Vector3f();
         Matrix3f transform=new Matrix3f();
-        Quaternionf rotate=new Quaternionf();
+        Quaternionf collarRotate=new Quaternionf();
 
-        renderHelper.getTiePos(entity,collarState,model,slot,top,bottom,transform, rotate);
+        renderHelper.getTiePos(entity,collarState,model,slot,top,bottom,transform, collarRotate);
+        //top已无用
 
-        rotate.rotateX((-Mth.sin(model.head.xRot)+Mth.sin(model.body.xRot)+0.25f)*Mth.PI/4);
-        rotate.rotateX(Mth.abs(-Mth.sin(walking/2)*Mth.PI/4)*speed);//摆动
+        float headRotate= top.set(model.head.xRot,0,0).rotate(collarRotate).x();
+        float bodyRotate= top.set(model.body.xRot,0,0).rotate(collarRotate).x();
 
-        Vector3f afterMove=new Vector3f(0, .5f,-Mth.sin(model.head.xRot)*0.5f-Math.max(Mth.sin(model.head.xRot),0)).mul(ENTITY_SCALE);
+        Vector3f afterMove=new Vector3f(0, .375f,Mth.sin(headRotate)*0.5f-Math.max(Mth.sin(-headRotate),0))
+                .mul(ENTITY_SCALE)
+                /*.rotate(collarRotate)*/;
+
+        collarRotate.rotateX((Mth.sin(headRotate)-Mth.sin(bodyRotate)+0.25f)*Mth.PI/4);
+        collarRotate.rotateX(Mth.abs(-Mth.sin(walking/2)*Mth.PI/4)*speed);  //摆动
 
         move.set(bottom);
-//        bottom.add(top.mul(-1));
-//        move.add(bottom.mul(.5f));
+        //bottom已无用
 
         cube(pose,vertexconsumer,idkInt,
-                VERTEX,transform,afterMove,rotate,move,
+                VERTEX,transform,afterMove,collarRotate,move,
                 new float[][]{
                         {3/16f,3/16f},
                         {0/16f,3/16f},
@@ -73,7 +75,7 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
 
 
     public static void cube(PoseStack.Pose pose,VertexConsumer vertexconsumer,int idkInt,
-                            Vector3f vertex,Matrix3f cubeRotate, Vector3f afterMove, Quaternionf afterTransform, Vector3f move,
+                            Vector3f vertex,Matrix3f cubeRotate, Vector3f afterMove, Quaternionf collarRotate, Vector3f move,
                             float[][] uvStarts, float uvSize
     ){
         Vector3f compute3f=new Vector3f();
@@ -83,28 +85,28 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
 
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[0][0], uvStarts[0][1], uvStarts[0][0] + uvSize, uvStarts[0][1] + uvSize});
         faceRotate.rotateY(Mth.PI/2);
 
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[1][0], uvStarts[1][1], uvStarts[1][0] + uvSize, uvStarts[1][1] + uvSize});
         faceRotate.rotateY(Mth.PI/2);
 
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[2][0], uvStarts[2][1], uvStarts[2][0] + uvSize, uvStarts[2][1] + uvSize});
         faceRotate.rotateY(Mth.PI/2);
 
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[3][0], uvStarts[3][1], uvStarts[3][0] + uvSize, uvStarts[3][1] + uvSize});
         faceRotate.rotateY(Mth.PI/2);
@@ -112,21 +114,21 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
         faceRotate.rotateX(Mth.PI/2);
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[4][0], uvStarts[4][1], uvStarts[4][0] + uvSize, uvStarts[4][1] + uvSize});
 
         faceRotate.rotateX(Mth.PI);
         face(pose.pose(),pose.normal(),vertexconsumer,idkInt,
                 computeVertex,faceRotate,cubeRotate,compute3f,
-                afterMove,afterTransform,move,
+                afterMove,collarRotate,move,
                 computeNormal.set(0,0,-1).rotate(faceRotate).mul(cubeRotate),
                 new float[]{uvStarts[5][0], uvStarts[5][1], uvStarts[5][0] + uvSize, uvStarts[5][1] + uvSize});
     }
 
     public static void face(Matrix4f idk4f, Matrix3f idk3f, VertexConsumer vertexconsumer, int idkInt,
                             Vector3f vertex, Quaternionf faceRotate, Matrix3f cubeRotate, Vector3f compute3f,
-                            Vector3f afterMove, Quaternionf afterTransform, Vector3f move,Vector3f computeNormal,
+                            Vector3f afterMove, Quaternionf collarRotate, Vector3f move,Vector3f computeNormal,
                             float[] uvs
     ){
         for(int i=0;i<4;i++) {
@@ -134,7 +136,7 @@ public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implement
             compute3f.rotate(faceRotate);
             compute3f.mul(ENTITY_SCALE);
             compute3f.add(afterMove);
-            compute3f.rotate(afterTransform);
+            compute3f.rotate(collarRotate);
             compute3f.mul(cubeRotate);
             compute3f.add(move);
             vertex(idk4f,idk3f,vertexconsumer,idkInt,

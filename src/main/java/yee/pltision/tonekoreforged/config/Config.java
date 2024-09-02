@@ -128,12 +128,25 @@ public class Config {
             .comment("程序会用你剩下的词与文本的最后一个词进行比较，如果它们相等，程序就不会修改原文本。")
             .define("petPhrase.defaultPetPhraseIgnoreAfter", defaultPetPhraseIgnoreAfter());
 
+    private static final ForgeConfigSpec.BooleanValue ENABLE_ROB_SHEAR = BUILDER
+            .comment("Enable Rob Shear enchantment.")
+            .comment("启用剥取附魔。")
+            .define("robShear.enable", true);
+    private static final ForgeConfigSpec.BooleanValue ONLY_OWNER_CAN_SHEAR_NEKO = BUILDER
+            .comment("If true, only one's owner can use Rob Shear enchantment to them.")
+            .comment("如果为true，只有猫娘的主人可以对其使用剥取附魔。")
+            .define("robShear.onlyOwnerCanShearNeko", true);
+    private static final ForgeConfigSpec.BooleanValue DISPENSER_CAN_USE = BUILDER
+            .comment("If true, dispenser can ues a shear with rob shear to player.")
+            .comment("如果为true，发射器可以对玩家使用带有剥取附魔的剪刀。")
+            .define("robShear.dispenserCanUseRobShear", true);
+
+
     /*//NOT_TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
     Pair<BracketPair,ForgeConfigSpec> pair=BUILDER.configure(builder->{
         builder.tr
         return new BracketPair("","");
     });*/
-
 
     public static final Map<String,ForgeConfigSpec.ConfigValue<String>> CONFIG_LANG_MAP=ConfigLang.initDefaultLangMap();
 
@@ -158,6 +171,11 @@ public class Config {
 
     public static String configNekoRite;
     public static Supplier<Component> usingRite=Lang.DISABLED_NEKO_RITE::component;
+
+    public static boolean enableRobShear;
+    public static boolean onlyOwnerCanShearNeko;
+    public static boolean dispenserCanUseRobShear;
+
 
     public static final Supplier<Component> DEFAULT_RITE=Lang.DEFAULT_NEKO_RITE_GUILD::component;
 
@@ -196,6 +214,10 @@ public class Config {
         ConfigLang.initConfigLangInstants();
 
         if(OUTPUT_LANGUAGE_FILE.get())ConfigLang.outLang();
+
+        enableRobShear=ENABLE_ROB_SHEAR.get();
+        dispenserCanUseRobShear=DISPENSER_CAN_USE.get()&&enableRobShear;
+        onlyOwnerCanShearNeko= ONLY_OWNER_CAN_SHEAR_NEKO.get();
 
     }
 

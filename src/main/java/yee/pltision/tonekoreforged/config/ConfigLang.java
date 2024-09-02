@@ -56,7 +56,6 @@ public class ConfigLang {
         for (Map.Entry<String, ForgeConfigSpec.ConfigValue<String>> entry: Config.CONFIG_LANG_MAP.entrySet()) {
             WAIT_FOR_INTI.computeIfPresent(entry.getKey(),(k,o)->{
                 o.config=entry.getValue().get();
-                System.out.println(entry.getValue().get());
                 return o;
             });
         }

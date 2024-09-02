@@ -64,7 +64,7 @@ public class SSetCollarSlotPacket {
                         if(collar.mayReplace(player,carried)){
 //                            ItemStack collarItem=collar.getCollarItem();
                             player.containerMenu.setCarried(collar.getCollarItem());
-                            collar.setCollarSlot(player,carried);
+                            collar.setCollarSlotAndSend(player,carried);
                         }
 
                 }

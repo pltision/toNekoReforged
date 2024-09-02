@@ -27,10 +27,8 @@ public class InitClients {
 
     @SubscribeEvent
     public static void addLayers(EntityRenderersEvent.AddLayers event){
-        System.out.println("开始添加Layers");
         for(String skin:event.getSkins()){
             if(event.getSkin(skin) instanceof  PlayerRenderer playerRenderer) {
-                System.out.println("找到了"+playerRenderer);
                 playerRenderer.addLayer(new CollarLayout<>(playerRenderer));
             }
         }

@@ -2,6 +2,7 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 
@@ -28,20 +29,16 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
     }
 
     @Override
-    public void setCollarSlot(LivingEntity entity, ItemStack item) {
+    public void setCollarSlot(ItemStack item) {
         CollarStateHandlerItem handler= ToNeko.getItemCollarState(item);
         if(handler!=null){
             this.collarState= handler.getState();
             this.item=item;
-            if(collarState!=null){
-                collarState.entityInit(entity);
-            }
         }
         else {
             this.collarState=null;
             this.item=ItemStack.EMPTY;
         }
     }
-
 
 }

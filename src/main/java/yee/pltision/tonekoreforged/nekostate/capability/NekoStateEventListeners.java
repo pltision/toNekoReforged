@@ -68,13 +68,6 @@ public class NekoStateEventListeners {
         }
     }
 
-    /*@SubscribeEvent
-    public static void interact(PlayerInteractEvent.EntityInteract event){
-        if(event.getTarget()instanceof ServerPlayer otherPlayer){
-
-        }
-    }*/
-
     public static final float LN21=(float) Math.log(20+1);
     public static void catStick(final Level level, final Player player, final Player otherPlayer, ItemStack item){
         if(isEnchantmentFish(player.getOffhandItem())){

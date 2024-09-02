@@ -34,7 +34,7 @@ public class CommandTester {
         if(!Config.playerCanHaveMultipleNekos&& !NekoStateApi.getNekos(test).isEmpty()) //不能有多个猫娘
             return CommandExceptions.GET_NEKO_CANNOT_MULTIPLE.create();
 
-        System.out.println(NekoStateApi.containsNeko(test,neko.getUUID()));
+//        System.out.println(NekoStateApi.containsNeko(test,neko.getUUID()));
 
         return null;
     }

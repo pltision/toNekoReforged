@@ -18,7 +18,6 @@ public class NekoActionUtil {
      */
     public static boolean isCatStick(ItemStack test){
         if(test.getItem()!= Items.STICK)return false;
-//        System.out.println("test.getItem()== Items.STICK "+test);
         CompoundTag tag= test.getTagElement("ToNeko");
         return tag!=null&&tag.getBoolean("catStick");
     }

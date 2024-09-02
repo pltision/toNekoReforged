@@ -25,6 +25,7 @@ import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.collar.CollarStateHandler;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
+import yee.pltision.tonekoreforged.network.SSetCollarSlotCreativePacket;
 import yee.pltision.tonekoreforged.network.SSetCollarSlotPacket;
 
 @Mod.EventBusSubscriber(modid = MODID, /*bus = Mod.EventBusSubscriber.Bus.MOD, */value = Dist.CLIENT)
@@ -52,8 +53,11 @@ public class CollarSlotScreenListeners{
                     ItemStack carried=screen.getMenu().getCarried();
                     if(collar.mayReplace(player,carried)){
                         screen.getMenu().setCarried(collar.getCollarItem());
-                        collar.setCollarSlot(player,carried);
-                        NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotPacket(screen.getMenu().containerId,-1));
+                        collar.setCollarSlot(carried);
+                        if (Minecraft.getInstance().gameMode != null && Minecraft.getInstance().gameMode.hasInfiniteItems())
+                            NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotCreativePacket(carried));
+                        else
+                            NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotPacket(screen.getMenu().containerId, -1));
                         event.setCanceled(true);
                         screen.setDragging(false);
                         replacedCollarSlot=true;

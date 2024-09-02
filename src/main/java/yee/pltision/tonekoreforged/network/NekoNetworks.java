@@ -16,6 +16,7 @@ public class NekoNetworks {
     public static void register(){
         int i=0;
         INSTANCE.registerMessage(i++, CCollarStateChangePacket.class, CCollarStateChangePacket::encode,CCollarStateChangePacket::new, CCollarStateChangePacket::handle);
-        INSTANCE.registerMessage(i/*++*/, SSetCollarSlotPacket.class, SSetCollarSlotPacket::encode,SSetCollarSlotPacket::new, SSetCollarSlotPacket::handle);
+        INSTANCE.registerMessage(i++, SSetCollarSlotPacket.class, SSetCollarSlotPacket::encode,SSetCollarSlotPacket::new, SSetCollarSlotPacket::handle);
+        INSTANCE.registerMessage(i/*++*/, SSetCollarSlotCreativePacket.class, SSetCollarSlotCreativePacket::encode,SSetCollarSlotCreativePacket::new, SSetCollarSlotCreativePacket::handle);
     }
 }

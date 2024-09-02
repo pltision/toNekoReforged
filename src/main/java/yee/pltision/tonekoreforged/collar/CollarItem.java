@@ -38,7 +38,6 @@ public interface CollarItem extends IForgeItem,MenuProviderItem{
                 }
                 @Override
                 public CollarState getState() {
-                    System.out.println("getState "+state);
                     return state;
                 }
 

@@ -50,5 +50,8 @@
   "item.toneko.ears": "Ears",
   "item.toneko.dyed_ears": "Dyed Ears",
   "item.toneko.dyed_tail": "Dyed Tail",
-  "container.toneko.basic_collar": "Collar"
+  "container.toneko.basic_collar": "Collar",
+  "item.toneko.collar": "Collar",
+  "item.toneko.bell": "Collar Bell",
+  "enchantment.toneko.rob_shear": "Rob Shear"
 }

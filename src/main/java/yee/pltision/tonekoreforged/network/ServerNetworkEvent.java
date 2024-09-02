@@ -14,12 +14,11 @@ public class ServerNetworkEvent {
 
     @SubscribeEvent
     public static void trackingEntity(PlayerEvent.StartTracking event){
-        CollarSlotHandler handler;
 //        System.out.println("yee2");
         if(
-                event.getTarget() instanceof LivingEntity entity &&
-                (handler= ToNeko.getCollar(entity))!=null
+                event.getTarget() instanceof LivingEntity entity
         ){
+            CollarSlotHandler handler= ToNeko.getCollar(entity);
             ItemStack item=handler.getCollarItem();
             if( ( ! item.isEmpty() ) &&event.getEntity() instanceof ServerPlayer player) {
                 handler.sendToClient(player,entity);
@@ -28,11 +27,10 @@ public class ServerNetworkEvent {
     }
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
-        CollarSlotHandler handler;
         if(
-                event.getEntity() instanceof ServerPlayer player&&
-                        (handler= ToNeko.getCollar(player))!=null
+                event.getEntity() instanceof ServerPlayer player
         ){
+            CollarSlotHandler handler= ToNeko.getCollar(player);
             handler.sendToClient(player,player);
         }
     }

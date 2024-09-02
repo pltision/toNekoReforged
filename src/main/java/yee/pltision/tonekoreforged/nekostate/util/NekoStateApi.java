@@ -53,7 +53,6 @@ public class NekoStateApi {
     }
 
     public static boolean containsNeko(Player owner,UUID other){
-        System.out.println(getNekos(owner));
         return getNekos(owner).contains(other);
     }
 

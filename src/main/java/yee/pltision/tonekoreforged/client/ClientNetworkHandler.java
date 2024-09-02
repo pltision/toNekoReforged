@@ -16,12 +16,11 @@ public class ClientNetworkHandler {
         // Do stuff
         Player player=Minecraft.getInstance().player;
         if(player!=null){
-            CollarSlotHandler collar;
             if (
                     player.level().getEntity(msg.entity) instanceof LivingEntity entity
-                            && (collar = ToNeko.getCollar(entity)) != null
             ) {
-                collar.setCollarSlot(entity, msg.item);
+                CollarSlotHandler collar= ToNeko.getCollar(entity);
+                collar.setCollarSlot(msg.item);
             }
         }
     }

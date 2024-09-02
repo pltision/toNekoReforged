@@ -71,7 +71,6 @@ public class PetPhrase implements Cloneable {
                 text.substring(insertPhraseIndex-(ignoreCharacterStart-ignoreAfter/*有效长度*/),insertPhraseIndex)
                         .equals(phrase.substring(ignoreAfter,ignoreCharacterStart)) ) //如果text最后的有效部分与口癖的有效部分匹配 "ab".substring(2,2)合法
             return text;
-//        System.out.println("\""+text.substring(insertPhraseIndex-(ignoreCharacterStart-ignoreAfter),insertPhraseIndex)+"\" \""+phrase.substring(ignoreAfter,ignoreCharacterStart)+"\"");
 
         if(insertPhraseIndex==text.length()) //如果没有忽略的
             return text.substring(0,insertPhraseIndex)+phrase;

@@ -40,11 +40,9 @@ public class BellItem extends Item implements CollarBaubleItem{
             @Override
             public void entityTick(LivingEntity entity) {
                 if(entity.level().isClientSide&&entity.walkAnimation.speed()>0.5f) {
-                    System.out.println(entity.walkAnimation.speed());
                     if( Math.abs(entity.tickCount-soundNextTick) > 40 ){
                         soundNextTick=entity.level().random.nextInt(40);
                     }
-                    System.out.println(entity instanceof Player player&&player.isSprinting());
                     if(entity.tickCount>=soundNextTick&&!entity.isUnderWater()){
                         int addTime;
                         if(

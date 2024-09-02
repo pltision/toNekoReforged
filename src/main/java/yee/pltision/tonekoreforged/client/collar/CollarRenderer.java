@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -91,7 +92,7 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
         Vector3f compute3f=new Vector3f();
 
         Vector3f normal=new Vector3f();
-        Quaternionf normalRotate=new Quaternionf();
+//        Quaternionf normalRotate=new Quaternionf();
 
         //后
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
@@ -114,7 +115,7 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
         //左
         face(compute2f,compute3f,posestack$pose,vertexconsumer,idkInt,
                 new float[]{0/16f,3/16f,4/16f,4/16f},
-                SIZE,LEFT_FONT,LEFT_BACK,
+                SIZE,LEFT_BACK,LEFT_FONT,
                 move,afterMove,d3transform,normal.set(0,-1,0).rotate(rotate));
 
         stack.popPose();
@@ -130,17 +131,49 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
         Vector2f compute2f=new Vector2f();
         Vector3f afterMove=getBodyMove(model);
         Vector3f move=getMove(model);
-        switch (slot){
-            case 0->{
+        switch (slot) {
+            case 0 -> {
                 compute2f.set(SIZE).mul(LEFT_BACK);
-                positionRotate.rotateY((float) Math.PI);
-                compute2f.add(1.5f,0);
-                top.set(compute2f.x(),-1,compute2f.y());
-                button.set(compute2f.x(),0,compute2f.y());
-                transformVector(top,move,transform,afterMove);
-                transformVector(button,move,transform,afterMove);
+                compute2f.add(1.5f, 0);
+                positionRotate.rotateY(Mth.PI);
+            }
+            case 2 -> {
+                if(state.baubles().get(3)==null){
+                    compute2f.set(SIZE).mul(RIGHT_FONT);
+                    compute2f.add(-2f, 0);
+                }
+                else {
+                    compute2f.set(SIZE).mul(RIGHT_FONT);
+                    compute2f.add(-1.5f, 0);
+                }
+                //positionRotate.rotateY(0);
+            }
+            case 3 -> {
+                if(state.baubles().get(2)==null){
+                    compute2f.set(SIZE).mul(LEFT_FONT);
+                    compute2f.add(2f, 0);
+                }
+                else {
+                    compute2f.set(SIZE).mul(LEFT_FONT);
+                    compute2f.add(1.5f, 0);
+                }
+                //positionRotate.rotateY(0);
+            }
+            case 1 -> {
+                compute2f.set(SIZE).y=0;
+                compute2f.mul(RIGHT_FONT);
+                positionRotate.rotateY(Mth.HALF_PI);
+            }
+            case 4 -> {
+                compute2f.set(SIZE).y=0;
+                compute2f.mul(LEFT_FONT);
+                positionRotate.rotateY(-Mth.HALF_PI);
             }
         }
+        top.set(compute2f.x(),-1,compute2f.y());
+        button.set(compute2f.x(),0,compute2f.y());
+        transformVector(top,move,transform,afterMove);
+        transformVector(button,move,transform,afterMove);
     }
     public static void face(Vector2f compute2f, Vector3f compute3f, PoseStack.Pose pose, VertexConsumer vertexconsumer, int idkInt,
                             float[] uv,
