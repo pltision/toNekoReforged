@@ -18,8 +18,9 @@ import org.joml.Vector3f;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
-import static yee.pltision.tonekoreforged.RendererUtils.*;
-import static yee.pltision.tonekoreforged.Vector3fUtils.*;
+import static yee.pltision.tonekoreforged.RendererUtils.UV_INDEXES;
+import static yee.pltision.tonekoreforged.Vector3fUtils.ENTITY_SCALE;
+import static yee.pltision.tonekoreforged.Vector3fUtils.ROT_Z;
 
 
 public class BellRenderer<E extends Entity,M extends HumanoidModel<?>> implements CollarBaubleRenderer<E,M> {

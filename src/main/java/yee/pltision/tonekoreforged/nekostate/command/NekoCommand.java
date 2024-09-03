@@ -24,8 +24,8 @@ import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 import yee.pltision.tonekoreforged.event.ToNekoCommandEvent;
+import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 import yee.pltision.tonekoreforged.nekostate.object.NekoRequest;
 import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 
@@ -195,11 +195,11 @@ public class NekoCommand {
             NekoRequest.trySendAndReturn(context, player, neko, (source, sender, accept) -> {
                 CommandSyntaxException e = CommandTester.canAddOwner(accept, sender);
                 if (e != null) throw e;
-                CommandFunctions.getNeko(source, sender, accept);
+                CommandFunctions.getNeko(sender, accept);
             }, Lang.GET_NEKO_REQUEST.component(player.getName()));
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(neko.getName()), false);
         } else {
-            CommandFunctions.getNeko(context, player, neko);
+            CommandFunctions.getNeko(player, neko);
         }
 
         return 0;
@@ -220,11 +220,11 @@ public class NekoCommand {
             NekoRequest.trySendAndReturn(context, player, owner, (source, sender, accept) -> {
                 CommandSyntaxException e = CommandTester.canAddNeko(accept, sender);
                 if (e != null) throw e;
-                CommandFunctions.getOwner(source, sender, accept);
+                CommandFunctions.getOwner(sender, accept);
             }, Lang.GET_OWNER_REQUEST.component(player.getName()));
 //            context.sendSuccess(() -> Lang.SEND_REQUEST_INFO.component().append(owner.getName()), false);
         } else {
-            CommandFunctions.getOwner(context, player, owner);
+            CommandFunctions.getOwner(player, owner);
         }
 
         return 0;

@@ -7,21 +7,21 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.config.Lang;
-import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 import yee.pltision.tonekoreforged.nekostate.util.NekoConnectUtil;
+import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 
 import java.util.UUID;
 
 public class CommandFunctions {
 
-    public static void getNeko(CommandSourceStack source, ServerPlayer player, ServerPlayer neko){
+    public static void getNeko(ServerPlayer player, ServerPlayer neko){
         if(NekoConnectUtil.getNeko(player,neko)){
             player.sendSystemMessage(Lang.GET_NEKO_INFO.component(neko.getName()));
             neko.sendSystemMessage(Lang.GET_OWNER_INFO.component(player.getName())); //向猫娘发送
         }
     }
 
-    public static void getOwner(CommandSourceStack source, ServerPlayer player, ServerPlayer owner){
+    public static void getOwner(ServerPlayer player, ServerPlayer owner){
         if(NekoConnectUtil.getOwner(player,owner)){
             player.sendSystemMessage(Lang.GET_OWNER_INFO.component(owner.getName()));
             owner.sendSystemMessage(Lang.GET_NEKO_INFO.component(player.getName()));

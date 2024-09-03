@@ -17,9 +17,6 @@ import net.minecraftforge.client.event.ContainerScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import static yee.pltision.tonekoreforged.ToNeko.MODID;
-
 import org.joml.Vector2i;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
@@ -27,6 +24,8 @@ import yee.pltision.tonekoreforged.collar.CollarStateHandler;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.network.SSetCollarSlotCreativePacket;
 import yee.pltision.tonekoreforged.network.SSetCollarSlotPacket;
+
+import static yee.pltision.tonekoreforged.ToNeko.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, /*bus = Mod.EventBusSubscriber.Bus.MOD, */value = Dist.CLIENT)
 public class CollarSlotScreenListeners{

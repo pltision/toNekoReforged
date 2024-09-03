@@ -7,7 +7,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,7 +32,7 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
     public final LazyOptional<CollarSlotHandler> optional;
     public PlayerCollarStateHandler handler;
 
-    public CollarCapabilityProvider(LivingEntity player){
+    public CollarCapabilityProvider(){
         optional= LazyOptional.of(this::createHandle);
         /*if(player instanceof ServerPlayer){
             optional.orElse(FALLBACK_CAPABILITY).setCollarSlot(player,new ItemStack(ToNeko.COLLAR.get()));
@@ -68,8 +71,8 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
 
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
-        if(event.getObject()instanceof Player player){
-            event.addCapability(ToNeko.location("collar_state"), new CollarCapabilityProvider(player));
+        if(event.getObject()instanceof Player){
+            event.addCapability(ToNeko.location("collar_state"), new CollarCapabilityProvider());
         }
     }
 

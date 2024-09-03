@@ -2,7 +2,6 @@ package yee.pltision.tonekoreforged.nekostate.capability;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -125,8 +124,10 @@ public class NekoCapability implements ICapabilityProvider {
     public static void saveOverworld(LevelEvent.Save event){
         try {
 //            System.out.println("喵");
-            if(Config.saveNekoStatesWhenSaveOverworld&&!event.getLevel().isClientSide()&&event.getLevel()==event.getLevel().getServer().overworld()){
-                saveNekoStates(event.getLevel().getServer());
+            if(Config.saveNekoStatesWhenSaveOverworld){
+                MinecraftServer server=event.getLevel().getServer();
+                if(server!=null&& !event.getLevel().isClientSide()&&event.getLevel()==server.overworld())
+                    saveNekoStates(server);
             }
         }
         catch (Exception e){

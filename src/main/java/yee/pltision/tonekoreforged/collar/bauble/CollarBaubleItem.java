@@ -11,7 +11,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.collar.*;
+import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
+import yee.pltision.tonekoreforged.collar.MenuProviderItem;
 
 public interface CollarBaubleItem extends MenuProviderItem {
     CollarBaubleState asCollarBaubleState(ItemStack stack);

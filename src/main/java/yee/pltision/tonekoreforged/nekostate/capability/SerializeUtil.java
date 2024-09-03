@@ -1,14 +1,17 @@
 package yee.pltision.tonekoreforged.nekostate.capability;
 
 import com.google.common.base.Function;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.nekostate.common.NekoRecord;
 import yee.pltision.tonekoreforged.nekostate.common.NekoState;
 import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 import yee.pltision.tonekoreforged.nekostate.object.NekoRecordObject;
 
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 
 public class SerializeUtil {
     public static CompoundTag petPhrase(PetPhrase phrase){

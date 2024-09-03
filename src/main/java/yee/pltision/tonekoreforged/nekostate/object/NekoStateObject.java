@@ -10,7 +10,9 @@ import yee.pltision.tonekoreforged.nekostate.common.NekoRecord;
 import yee.pltision.tonekoreforged.nekostate.common.NekoState;
 import yee.pltision.tonekoreforged.nekostate.common.PetPhrase;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 public class NekoStateObject implements NekoState {

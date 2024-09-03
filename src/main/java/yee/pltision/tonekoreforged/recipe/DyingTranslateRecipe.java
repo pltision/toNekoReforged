@@ -1,10 +1,7 @@
 package yee.pltision.tonekoreforged.recipe;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -13,19 +10,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
+import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +89,6 @@ public class DyingTranslateRecipe extends CustomRecipe {
     public @NotNull ItemStack assemble(CraftingContainer container, @NotNull RegistryAccess access) {
         boolean type=false;
         ItemStack item=ItemStack.EMPTY;
-        ItemStack water=ItemStack.EMPTY;
         List<DyeItem> dyes=new ArrayList<>(8);
 
         for(int j = 0; j < container.getContainerSize(); ++j) {
@@ -111,7 +107,6 @@ public class DyingTranslateRecipe extends CustomRecipe {
                     if(cap.orElseThrow(()->new RuntimeException("LazyOptional is persent but still throw"))
                             .drain(BUCKET_OF_WATER, IFluidHandler.FluidAction.SIMULATE).getAmount()>=FluidType.BUCKET_VOLUME){
                         type=true;
-                        water=itemstack;
                     }
                 }
                 if (itemstack.getItem()instanceof DyeItem dye) {

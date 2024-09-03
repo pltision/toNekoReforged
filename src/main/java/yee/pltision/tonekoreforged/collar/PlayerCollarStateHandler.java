@@ -1,8 +1,6 @@
 package yee.pltision.tonekoreforged.collar;
 
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 
@@ -12,10 +10,6 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
 
     public PlayerCollarStateHandler(){
         item=ItemStack.EMPTY;
-    }
-
-    public PlayerCollarStateHandler(ItemStack item){
-
     }
 
     @Override
