@@ -18,6 +18,7 @@ import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Vector2i;
+import org.lwjgl.glfw.GLFW;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.collar.CollarStateHandler;
@@ -50,10 +51,18 @@ public class CollarSlotScreenListeners{
                 CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(screen.getMinecraft().player);
                 if (collar != null) {
                     ItemStack carried=screen.getMenu().getCarried();
-                    if(collar.mayReplace(player,carried)){
+                    if (screen instanceof CreativeModeInventoryScreen && event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && carried.isEmpty()) {
+                        if(carried.isEmpty()){
+                            ItemStack collarItem=collar.getCollarItem();
+                            if(!collarItem.isEmpty()){
+                                screen.getMenu().setCarried(collarItem.copy());
+                            }
+                        }
+                    }
+                    else if(collar.mayReplace(player,carried)){
                         screen.getMenu().setCarried(collar.getCollarItem());
                         collar.setCollarSlot(carried);
-                        if (Minecraft.getInstance().gameMode != null && Minecraft.getInstance().gameMode.hasInfiniteItems())
+                        if (screen instanceof CreativeModeInventoryScreen/*Minecraft.getInstance().gameMode != null && Minecraft.getInstance().gameMode.hasInfiniteItems()*/)
                             NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotCreativePacket(carried));
                         else
                             NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotPacket(screen.getMenu().containerId, -1));
@@ -79,13 +88,13 @@ public class CollarSlotScreenListeners{
 //        debugOutScreenPos(event);
         failed:
         {
+            CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(event.getContainerScreen().getMinecraft().player);
+            if(collar==null|| collar.disableSlotUi()) break failed;
+
             Vector2i pos=getHeadSlotPos(event.getContainerScreen());
             if (pos == null) break failed;
             if(event.getContainerScreen()instanceof CreativeModeInventoryScreen screen&& !screen.isInventoryOpen())
                 break failed;
-
-            CollarStateHandler collar = ToNeko.getLocalPlayerCollar(event.getContainerScreen().getMinecraft().player);
-            if(collar==null) break failed;
 
             int x= event.getMouseX(), y= event.getMouseY();
             if(isInHeadSlot(x,y,pos.x-1,pos.y-1))

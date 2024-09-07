@@ -36,4 +36,5 @@ public interface CollarSlotHandler extends CollarStateHandler{
             state.entityTick(entity);
         }
     }
+    default boolean disableSlotUi(){return true;}
 }

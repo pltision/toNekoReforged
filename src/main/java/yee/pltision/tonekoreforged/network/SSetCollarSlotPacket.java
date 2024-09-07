@@ -37,7 +37,7 @@ public class SSetCollarSlotPacket {
     public static void handle(SSetCollarSlotPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null) return;
+            if (player == null|| ToNeko.getCollar(player).disableSlotUi()) return;
             ServerLevel level = player.serverLevel();
             level.getServer().execute(() -> handelPacket(msg,player));
             DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));

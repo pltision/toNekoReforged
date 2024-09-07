@@ -7,10 +7,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.capabilities.CapabilityToken;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
+import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.collar.lead.LeadItemHandel;
 
 @Mod.EventBusSubscriber
@@ -71,8 +69,11 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
 
     @SubscribeEvent
     public static void registryCapability(AttachCapabilitiesEvent<Entity> event){
-        if(event.getObject()instanceof Player){
-            event.addCapability(ToNeko.location("collar_state"), new CollarCapabilityProvider());
+        if(event.getObject()instanceof Player entity){
+            ICapabilityProvider provider=null;
+            if (ToNeko.useCuriosApi()) provider = CuriosInterface.tryCreateCuriosHandel(entity);
+            if(provider==null)provider=new CollarCapabilityProvider();
+            event.addCapability(ToNeko.location("collar_state"), provider);
         }
     }
 

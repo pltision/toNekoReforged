@@ -24,7 +24,7 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
 
     @Override
     public void setCollarSlot(ItemStack item) {
-        CollarStateHandlerItem handler= ToNeko.getItemCollarState(item);
+        CollarStateHandlerItem handler= ToNeko.getItemCollarHandel(item);
         if(handler!=null){
             this.collarState= handler.getState();
             this.item=item;
@@ -35,4 +35,8 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
         }
     }
 
+    @Override
+    public boolean disableSlotUi() {
+        return false;
+    }
 }

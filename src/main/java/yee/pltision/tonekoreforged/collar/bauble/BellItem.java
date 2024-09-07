@@ -61,7 +61,7 @@ public class BellItem extends Item implements CollarBaubleItem{
                             addTime*=2+entity.level().random.nextInt(1);
 
                         soundNextTick=entity.tickCount+addTime;
-                        entity.level().playSound(Minecraft.getInstance().player, entity.getX(), entity.getY(), entity.getZ(), ToNeko.BELL_SOUND.get(), entity.getSoundSource(), entity.walkAnimation.speed()*entity.walkAnimation.speed()*(entity==Minecraft.getInstance().player?1/2f:1f ), 1.0F);
+                        entity.level().playSound(Minecraft.getInstance().player, entity.getX(), entity.getY(), entity.getZ(), ToNeko.BELL_SOUND.get(), entity.getSoundSource(), entity.walkAnimation.speed()*entity.walkAnimation.speed()*(entity==Minecraft.getInstance().player?1/4f:2/3f ), 1.0F);
                     }
                 }
             }
@@ -79,10 +79,10 @@ public class BellItem extends Item implements CollarBaubleItem{
             }
         };
     }
-    @Override
+    /*@Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
         return CollarBaubleItem.super.use(p_41432_, p_41433_, p_41434_);
-    }
+    }*/
 
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {

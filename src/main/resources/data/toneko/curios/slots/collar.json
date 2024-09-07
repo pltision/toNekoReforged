@@ -1,0 +1,5 @@
+{
+  "order": 160,
+  "icon": "toneko:slot/empty_collar_slot",
+  "validators": ["curios:tag"]
+}

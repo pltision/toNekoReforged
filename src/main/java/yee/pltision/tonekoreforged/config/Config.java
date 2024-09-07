@@ -141,6 +141,10 @@ public class Config {
             .comment("如果为true，发射器可以对玩家使用带有剥取附魔的剪刀。")
             .define("robShear.dispenserCanUseRobShear", true);
 
+    private static final ForgeConfigSpec.ConfigValue<String> CURIOS_COLLAR_SLOT = BUILDER
+            .comment("Collar slot in Curios.")
+            .comment("项圈在Curios中的槽位。")
+            .define("collar.curiosSlot", "collar");
 
     /*//NOT_TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
     Pair<BracketPair,ForgeConfigSpec> pair=BUILDER.configure(builder->{
@@ -176,6 +180,7 @@ public class Config {
     public static boolean onlyOwnerCanShearNeko;
     public static boolean dispenserCanUseRobShear;
 
+    public static String curiosSlotType;
 
     public static final Supplier<Component> DEFAULT_RITE=Lang.DEFAULT_NEKO_RITE_GUILD::component;
 
@@ -218,6 +223,8 @@ public class Config {
         enableRobShear=ENABLE_ROB_SHEAR.get();
         dispenserCanUseRobShear=DISPENSER_CAN_USE.get()&&enableRobShear;
         onlyOwnerCanShearNeko= ONLY_OWNER_CAN_SHEAR_NEKO.get();
+
+        curiosSlotType= CURIOS_COLLAR_SLOT.get();
 
     }
 

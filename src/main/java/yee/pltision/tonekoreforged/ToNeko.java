@@ -38,18 +38,26 @@ import yee.pltision.tonekoreforged.collar.*;
 import yee.pltision.tonekoreforged.collar.bauble.BellItem;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
+import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
+import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(ToNeko.MODID)
 public class ToNeko
 {
+    static boolean installedCurios;
+
+    public static boolean useCuriosApi(){
+        return installedCurios;
+    }
+
     // Define mod id in a common place for everything to reference
     public static final String MODID = "toneko";
     // Directly reference a slf4j logger
@@ -158,7 +166,7 @@ public class ToNeko
         CollarBaubleHandel handler= ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_BAUBLE_HANDEL_ITEM);
         return handler==null?null:handler.getBaubleState();
     }
-    public static CollarStateHandlerItem getItemCollarState(ItemStack item){
+    public static CollarStateHandlerItem getItemCollarHandel(ItemStack item){
         return ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_HANDLER_ITEM);
     }
     public static CollarSlotHandler getLocalPlayerCollar(@Nullable Player player){
@@ -197,6 +205,16 @@ public class ToNeko
                 return behavior.dispense(blockSource, item);
             });
         }
+
+        try {
+            Class<?> curiosCapability=Class.forName("top.theillusivec4.curios.api.CuriosCapability");
+            Field field=curiosCapability.getField("ITEM");
+            CuriosInterface.curiosItemCapability= (Capability<?>) field.get(null);
+
+            installedCurios =true;
+        } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | ClassCastException ignored) {
+        }
+
     }
 
 }

@@ -53,5 +53,6 @@
   "container.toneko.basic_collar": "Collar",
   "item.toneko.collar": "Collar",
   "item.toneko.bell": "Collar Bell",
-  "enchantment.toneko.rob_shear": "Rob Shear"
+  "enchantment.toneko.rob_shear": "Rob Shear",
+  "curios.identifier.collar": "Collar"
 }

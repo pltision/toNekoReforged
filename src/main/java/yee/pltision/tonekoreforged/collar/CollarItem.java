@@ -13,6 +13,10 @@ import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
+
+import java.util.function.Supplier;
 
 public interface CollarItem extends IForgeItem,MenuProviderItem{
 
@@ -23,13 +27,24 @@ public interface CollarItem extends IForgeItem,MenuProviderItem{
 
     default ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ICapabilityProvider() {
+            final Supplier<CollarState> state=new Supplier<>() {
+                boolean uncreated =true;
+                CollarState state;
+                @Override
+                public CollarState get() {
+                    if(uncreated) {
+                        uncreated =false;
+                        state=asState(stack);
+                    }
+                    return state;
+                }
+            };
+            final LazyOptional<?> curiosOptional= ToNeko.useCuriosApi()? CuriosInterface.createCollarItemOptional(stack,state):LazyOptional.empty();
             final LazyOptional<CollarStateHandlerItem> optional=LazyOptional.of(()->new CollarStateHandlerItem() {
-                final CollarState state=asState(stack);
-
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int p_39954_, @NotNull Inventory p_39955_, @NotNull Player p_39956_) {
-                    return state==null?null: getMenu(p_39954_,p_39955_,p_39956_,state,stack);
+                    return state.get()==null?null: getMenu(p_39954_,p_39955_,p_39956_,state.get(),stack);
                 }
 
                 @Override
@@ -38,16 +53,17 @@ public interface CollarItem extends IForgeItem,MenuProviderItem{
                 }
                 @Override
                 public CollarState getState() {
-                    return state;
+                    return state.get();
                 }
 
                 @Override
                 public ItemStack getCollarItem() {
-                    return CollarStateHandler.addTagToItem(state,stack);
+                    return CollarStateHandler.addTagToItem(state.get(),stack);
                 }
             });
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+                if(cap==CuriosInterface.curiosItemCapability) return curiosOptional.cast();
                 return cap==CollarCapabilityProvider.COLLAR_HANDLER_ITEM||cap==CollarCapabilityProvider.MENU_PROVIDER_ITEM?optional.cast():LazyOptional.empty();
             }
         };
