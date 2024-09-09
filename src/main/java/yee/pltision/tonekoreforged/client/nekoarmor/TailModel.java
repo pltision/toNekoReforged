@@ -23,6 +23,10 @@ public class TailModel extends Model {
     final HumanoidModel<?> parent;
     final LivingEntity entity;
 
+    public static TailModel getTailModel(LivingEntity entity, HumanoidModel<?> parent){
+        return new TailModel(entity,parent);
+    }
+
     public TailModel(LivingEntity entity,HumanoidModel<?> parent) {
         super(parent::renderType);
         this.parent=parent;

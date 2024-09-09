@@ -65,6 +65,8 @@ toneko nekoRite
 - Tail and ears, they can be dye.
 - I also want to make some clothing, but I think modeling them is too hard for me, nah.
 
+Baubles can use on armor equipment slots, also they can use in Curios.
+
 ### Collar
 I am adding a functional collar, maybe that's the differential.
 - You can craft it whit some leather and iron, use can open a menu to add some bauble in it.

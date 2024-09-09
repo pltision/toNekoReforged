@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.collar.bauble;
+package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.collar.MenuProviderItem;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 public interface CollarBaubleItem extends MenuProviderItem {
     CollarBaubleState asCollarBaubleState(ItemStack stack);

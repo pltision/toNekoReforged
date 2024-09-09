@@ -12,14 +12,13 @@ public interface NekoArmorClientItemExtensions {
     IClientItemExtensions TAIL=new IClientItemExtensions() {
         @Override
         public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-            return new TailModel(livingEntity,original);
+            return TailModel.getTailModel(livingEntity,original);
         }
     };
     IClientItemExtensions EARS=new IClientItemExtensions() {
         @Override
         public @NotNull Model getGenericArmorModel(LivingEntity livingEntity, ItemStack itemStack, EquipmentSlot equipmentSlot, HumanoidModel<?> original) {
-            ArmorModelInstances.EARS.copyPropertiesTo(original);
-            return ArmorModelInstances.EARS;
+            return EarsModel.getEarsModel(original);
         }
     };
 }

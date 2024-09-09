@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.collar;
+package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -13,6 +13,8 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.BasicCollarState;
+import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
+import yee.pltision.tonekoreforged.collar.CollarState;
 
 public class BasicCollarItem extends Item implements CollarItem{
     public BasicCollarItem(Properties p_41383_) {

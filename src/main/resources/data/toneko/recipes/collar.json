@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "toneko:collar",
+  "key": {
+    "#": {
+      "item": "minecraft:leather"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "#I#"
+  ],
+  "result": {
+    "item": "toneko:collar"
+  }
+}

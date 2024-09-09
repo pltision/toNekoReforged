@@ -13,6 +13,8 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -26,6 +28,11 @@ public class EarsModel extends EntityModel<Entity> {
     private final ModelPart ears;
     private final ModelPart colorFur;
     private final ModelPart colorInside;
+
+    public static EarsModel getEarsModel(HumanoidModel<?> original){
+        ArmorModelInstances.EARS.copyPropertiesTo(original);
+        return ArmorModelInstances.EARS;
+    }
 
     public EarsModel(ModelPart root) {
         //    private final ModelPart ears;

@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.collar;
+package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,11 +14,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.collar.*;
 import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
 
 import java.util.function.Supplier;
 
-public interface CollarItem extends IForgeItem,MenuProviderItem{
+public interface CollarItem extends IForgeItem, MenuProviderItem {
 
     //内部使用，获取CollarState应使用能力系统。
     CollarState asState(ItemStack item);
@@ -64,7 +65,7 @@ public interface CollarItem extends IForgeItem,MenuProviderItem{
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
                 if(cap==CuriosInterface.curiosItemCapability) return curiosOptional.cast();
-                return cap==CollarCapabilityProvider.COLLAR_HANDLER_ITEM||cap==CollarCapabilityProvider.MENU_PROVIDER_ITEM?optional.cast():LazyOptional.empty();
+                return cap== CollarCapabilityProvider.COLLAR_HANDLER_ITEM||cap==CollarCapabilityProvider.MENU_PROVIDER_ITEM?optional.cast():LazyOptional.empty();
             }
         };
     }

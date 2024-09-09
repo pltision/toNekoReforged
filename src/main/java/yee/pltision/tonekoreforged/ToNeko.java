@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -35,7 +37,8 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
 import yee.pltision.tonekoreforged.collar.*;
-import yee.pltision.tonekoreforged.collar.bauble.BellItem;
+import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
+import yee.pltision.tonekoreforged.item.collar.BellItem;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
@@ -54,6 +57,9 @@ public class ToNeko
 {
     static boolean installedCurios;
 
+    public static boolean installedCurios(){
+        return installedCurios;
+    }
     public static boolean useCuriosApi(){
         return installedCurios;
     }
@@ -117,6 +123,8 @@ public class ToNeko
 
     public static final EnchantmentCategory SHEARS=EnchantmentCategory.create("shears",item -> item instanceof ShearsItem);
 
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+
     public static class PublicDispenserBlock extends DispenserBlock{
         public PublicDispenserBlock(Properties p_52664_) {
             super(p_52664_);
@@ -132,6 +140,19 @@ public class ToNeko
     //剥取
     public static final RegistryObject<Enchantment> ROB_SHEAR =ENCHANTMENTS.register("rob_shear",()->new RobShearEnchantment(Enchantment.Rarity.VERY_RARE,SHEARS, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
 
+    public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("tab", () -> CreativeModeTab.builder()
+            .withTabsBefore(CreativeModeTabs.COMBAT)
+            .icon(() -> TAIL.get().getDefaultInstance())
+            .title(Component.translatable("itemGroup.toneko"))
+            .displayItems((parameters, output) -> {
+                output.accept(EARS.get());
+                output.accept(DYED_EARS.get());
+                output.accept(TAIL.get());
+                output.accept(DYED_TAIL.get());
+                output.accept(COLLAR.get());
+                output.accept(BELL.get());
+                output.accept(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(ROB_SHEAR.get(),1)));
+            }).build());
 
     public ToNeko()
     {
@@ -150,6 +171,7 @@ public class ToNeko
         SOUND_EVENTS.register(modEventBus);
         BLOCKS.register(modEventBus);
         ENCHANTMENTS.register(modEventBus);
+        CREATIVE_MODE_TABS.register(modEventBus);
 
         NekoNetworks.register();
         modEventBus.addListener(ToNeko::afterComplete);
@@ -214,6 +236,8 @@ public class ToNeko
             installedCurios =true;
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | ClassCastException ignored) {
         }
+        if(installedCurios())
+            CuriosInterface.registryRenderers();
 
     }
 
