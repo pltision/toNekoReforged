@@ -64,7 +64,7 @@ public interface CollarItem extends IForgeItem, MenuProviderItem {
             });
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                if(cap==CuriosInterface.curiosItemCapability) return curiosOptional.cast();
+                if(cap==ToNeko.curiosItemCapability) return curiosOptional.cast();
                 return cap== CollarCapabilityProvider.COLLAR_HANDLER_ITEM||cap==CollarCapabilityProvider.MENU_PROVIDER_ITEM?optional.cast():LazyOptional.empty();
             }
         };

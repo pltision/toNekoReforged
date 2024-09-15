@@ -30,7 +30,6 @@ import yee.pltision.tonekoreforged.config.Config;
 import java.util.function.Supplier;
 
 public class CuriosInterface {
-    public static Capability<?> curiosItemCapability;
 
     public static ICapabilityProvider tryCreateCuriosHandel(LivingEntity entity){
 

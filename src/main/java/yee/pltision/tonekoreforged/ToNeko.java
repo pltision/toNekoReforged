@@ -56,6 +56,7 @@ import java.util.function.Consumer;
 public class ToNeko
 {
     static boolean installedCurios;
+    public static Capability<?> curiosItemCapability;
 
     public static boolean installedCurios(){
         return installedCurios;
@@ -199,8 +200,8 @@ public class ToNeko
         CollarSlotHandler handler= ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
         return handler==null?null:handler.getState();
     }
-    public static @NotNull CollarSlotHandler getCollar(LivingEntity player){
-        return player.getCapability(CollarCapabilityProvider.COLLAR_HANDLER,null).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY);
+    public static @NotNull CollarSlotHandler getCollar(LivingEntity entity){
+        return entity.getCapability(CollarCapabilityProvider.COLLAR_HANDLER,null).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY);
     }
 
     public static <C> C getCapability(LivingEntity entity, Capability<C> cap){
@@ -231,9 +232,8 @@ public class ToNeko
         try {
             Class<?> curiosCapability=Class.forName("top.theillusivec4.curios.api.CuriosCapability");
             Field field=curiosCapability.getField("ITEM");
-            CuriosInterface.curiosItemCapability= (Capability<?>) field.get(null);
 
-            installedCurios =true;
+            curiosItemCapability =(Capability<?>) field.get(null);
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | ClassCastException ignored) {
         }
         if(installedCurios())

@@ -20,7 +20,10 @@ public interface CollarSlotHandler extends CollarStateHandler{
 
     default void setCollarSlotAndSend(LivingEntity entity, ItemStack item){
         this.setCollarSlot(item);
-        NekoNetworks.INSTANCE.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity), new CCollarStateChangePacket(entity.getId(), getCollarItem()));
+        NekoNetworks.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity),
+                new CCollarStateChangePacket(entity.getId(), getCollarItem())
+        );
 //        if(entity instanceof ServerPlayer player)
 //            sendToClient(player,player);
     }
@@ -48,12 +51,18 @@ public interface CollarSlotHandler extends CollarStateHandler{
             if (!item.isEmpty()) {
                 return entity.spawnAtLocation(item);
             }
+            setCollarSlot(ItemStack.EMPTY);
         }
         return null;
     }
     default boolean cloneWhenRespawn(LivingEntity entity){
         CollarState state=getState();
-        return state!=null&& !(entity instanceof Player && entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || state.doDropWhenDeath(entity));
+        return state!=null&& (
+                !(
+                        entity instanceof Player && !entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)
+                )
+                || !state.doDropWhenDeath(entity)
+        );
     }
 
 }

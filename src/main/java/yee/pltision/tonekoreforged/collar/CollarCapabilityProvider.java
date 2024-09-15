@@ -13,12 +13,15 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
 import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.collar.lead.LeadItemHandel;
+import yee.pltision.tonekoreforged.network.CCollarStateChangePacket;
+import yee.pltision.tonekoreforged.network.NekoNetworks;
 
 @Mod.EventBusSubscriber
 public class CollarCapabilityProvider implements ICapabilitySerializable<CompoundTag> {
@@ -101,14 +104,25 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
 
     @SubscribeEvent
     public static void clone(PlayerEvent.Clone event){
-        CollarSlotHandler handler= ToNeko.getCollar(event.getOriginal());
-        event.getOriginal().getCapability(COLLAR_HANDLER).ifPresent(origin->{
-            if(!event.isWasDeath() || handler.cloneWhenRespawn(event.getOriginal())){
-                event.getEntity().getCapability(COLLAR_HANDLER).ifPresent(
+//        System.out.println(event.getOriginal().getCapability(COLLAR_HANDLER,null)+" "+event.getEntity().getCapability(COLLAR_HANDLER,null)+" "+LazyOptional.empty());
+        event.getOriginal().reviveCaps();
+        event.getOriginal().getCapability(COLLAR_HANDLER,null).ifPresent(origin->{
+            if(!event.isWasDeath() || origin.cloneWhenRespawn(event.getOriginal())){
+                event.getEntity().getCapability(COLLAR_HANDLER,null).ifPresent(
                         cap->cap.setCollarSlot(origin.getCollarItem())
                 );
             }
         });
+        event.getOriginal().invalidateCaps();
+    }
 
+    @SubscribeEvent
+    public static void respawn(PlayerEvent.PlayerRespawnEvent event){
+        event.getEntity().getCapability(COLLAR_HANDLER,null).ifPresent(cap->
+                NekoNetworks.INSTANCE.send(
+                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity),
+                        new CCollarStateChangePacket(event.getEntity().getId(), cap.getCollarItem())
+                )
+        );
     }
 }

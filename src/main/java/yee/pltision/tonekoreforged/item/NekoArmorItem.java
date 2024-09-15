@@ -22,17 +22,11 @@ public class NekoArmorItem extends ArmorItem {
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ICapabilityProvider() {
-            final LazyOptional<?> optional=ToNeko.installedCurios()?LazyOptional.of(()-> new ICurio() {
-                @Override
-                public ItemStack getStack() {
-                    return null;
-                }
-
-            }):LazyOptional.empty();
+            final LazyOptional<?> optional=ToNeko.installedCurios()?LazyOptional.of(()-> (ICurio) () -> stack):LazyOptional.empty();
 
             @Override
             public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-                return cap== CuriosInterface.curiosItemCapability?optional.cast():LazyOptional.empty();
+                return cap== ToNeko.curiosItemCapability?optional.cast():LazyOptional.empty();
             }
 
         };

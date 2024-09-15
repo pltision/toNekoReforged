@@ -141,6 +141,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
     }
 
     default boolean doDropWhenDeath(LivingEntity entity){
-        return false;
+        return true;
     }
 }
