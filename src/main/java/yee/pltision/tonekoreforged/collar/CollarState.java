@@ -139,4 +139,8 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
     default int getMaxStackSize() {
         return 1;
     }
+
+    default boolean doDropWhenDeath(LivingEntity entity){
+        return false;
+    }
 }

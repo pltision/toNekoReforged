@@ -3,9 +3,12 @@ package yee.pltision.tonekoreforged.collar;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,5 +53,20 @@ public class CollarStateEventListeners {
 
         }
     }
+
+    @SubscribeEvent
+    public static void dropItems(LivingDropsEvent event){
+        LivingEntity entity=event.getEntity();
+
+        if (entity instanceof Player && entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+            return;
+
+        CollarSlotHandler handler=ToNeko.getCollar(entity);
+        ItemEntity itemEntity= handler.dropWhenDeath(entity);
+        if(itemEntity!=null)
+            event.getDrops().add(itemEntity);
+
+    }
+
 
 }

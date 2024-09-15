@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +78,7 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
         }
     }
 
+
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag main=new CompoundTag();
@@ -94,7 +96,19 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
         CollarSlotHandler handler= optional.resolve().orElse(null); //调用optional也是为了以防万一
         if (handler != null) {
             handler.setCollarSlot(ItemStack.of(main.getCompound("collar")));
-
         }
+    }
+
+    @SubscribeEvent
+    public static void clone(PlayerEvent.Clone event){
+        CollarSlotHandler handler= ToNeko.getCollar(event.getOriginal());
+        event.getOriginal().getCapability(COLLAR_HANDLER).ifPresent(origin->{
+            if(!event.isWasDeath() || handler.cloneWhenRespawn(event.getOriginal())){
+                event.getEntity().getCapability(COLLAR_HANDLER).ifPresent(
+                        cap->cap.setCollarSlot(origin.getCollarItem())
+                );
+            }
+        });
+
     }
 }

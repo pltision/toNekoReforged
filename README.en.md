@@ -1,5 +1,5 @@
 ## Description
-Complete rewrite of toNeko that can turns the player into a catgirl in Forge or NeoForge, and add a bit of fun to the game.
+Complete rewrite of toNeko that can turns the player into a catgirl in Forge or NeoForge, add a bit of fun to the game.
 
 Now the mod is not enough a rewrite, I also want to add something different in it.
 
