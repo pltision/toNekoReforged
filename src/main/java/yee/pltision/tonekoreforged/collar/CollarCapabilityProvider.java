@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
-import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
+import yee.pltision.tonekoreforged.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.collar.lead.LeadItemHandel;
 import yee.pltision.tonekoreforged.network.CCollarStateChangePacket;
 import yee.pltision.tonekoreforged.network.NekoNetworks;

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.*;
-import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
+import yee.pltision.tonekoreforged.curios.CuriosInterface;
 
 import java.util.function.Supplier;
 

@@ -41,7 +41,7 @@ import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
 import yee.pltision.tonekoreforged.item.collar.BellItem;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
-import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
+import yee.pltision.tonekoreforged.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;

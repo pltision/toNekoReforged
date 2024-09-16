@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.collar.curios;
+package yee.pltision.tonekoreforged.curios;
 
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;

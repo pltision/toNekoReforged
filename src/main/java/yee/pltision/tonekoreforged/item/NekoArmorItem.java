@@ -12,7 +12,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.capability.ICurio;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.collar.curios.CuriosInterface;
 
 public class NekoArmorItem extends ArmorItem {
     public NekoArmorItem(ArmorMaterial p_40386_, Type p_266831_, Properties p_40388_) {
