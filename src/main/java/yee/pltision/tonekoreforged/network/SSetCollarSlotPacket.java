@@ -4,8 +4,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
@@ -40,14 +38,14 @@ public class SSetCollarSlotPacket {
             if (player == null|| ToNeko.getCollar(player).disableSlotUi()) return;
             ServerLevel level = player.serverLevel();
             level.getServer().execute(() -> handelPacket(msg,player));
-            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
+//            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
         });
         ctx.get().setPacketHandled(true);
     }
     public static void handelPacket(SSetCollarSlotPacket msg, ServerPlayer player){
+//        try{
 
         player.resetLastActionTime();
-//        System.out.println(player.containerMenu.containerId+" "+ msg.containerId);
         if (player.containerMenu.containerId == msg.containerId)
         {
             if (player.isSpectator()) {
@@ -68,27 +66,14 @@ public class SSetCollarSlotPacket {
                         }
 
                 }
-                /*if (!player.containerMenu.isValidSlotIndex(i)) {
-                    ToNeko.LOGGER.debug("Player {} clicked invalid slot index: {}, available slots: {}", player.getName(), i, player.containerMenu.slots.size());
-                } else {
-                    boolean flag = msg.getStateId() != player.containerMenu.getStateId();
-                    player.containerMenu.suppressRemoteUpdates();
-                    player.containerMenu.clicked(i, msg.getButtonNum(), msg.getClickType(), player);
-
-                    for(Int2ObjectMap.Entry<ItemStack> entry : Int2ObjectMaps.fastIterable(msg.getChangedSlots())) {
-                        player.containerMenu.setRemoteSlotNoCopy(entry.getIntKey(), entry.getValue());
-                    }
-
-                    player.containerMenu.setRemoteCarried(msg.getCarriedItem());
-                    player.containerMenu.resumeRemoteUpdates();
-                    if (flag) {
-                        player.containerMenu.broadcastFullState();
-                    } else {
-                        player.containerMenu.broadcastChanges();
-                    }*/
 
                 }
             }
         }
+
+//        }
+//        catch (Exception e){
+//            ToNeko.LOGGER.error("[ToNeko Debug] {}", e.toString());
+//        }
     }
 }

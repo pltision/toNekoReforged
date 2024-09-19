@@ -64,8 +64,10 @@ public class CollarSlotScreenListeners{
                         collar.setCollarSlot(carried);
                         if (screen instanceof CreativeModeInventoryScreen/*Minecraft.getInstance().gameMode != null && Minecraft.getInstance().gameMode.hasInfiniteItems()*/)
                             NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotCreativePacket(carried));
-                        else
+                        else{
                             NekoNetworks.INSTANCE.sendToServer(new SSetCollarSlotPacket(screen.getMenu().containerId, -1));
+
+                        }
                         event.setCanceled(true);
                         screen.setDragging(false);
                         replacedCollarSlot=true;

@@ -10,7 +10,9 @@ import net.minecraft.world.level.Level;
 import yee.pltision.tonekoreforged.ToNeko;
 
 public interface MenuProviderItem {
-    default InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    
+    //neoforge/forge不知为何把我接口中的内容也mapping了
+    default InteractionResultHolder<ItemStack> menuProviderItem$use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack=player.getItemInHand(hand);
         if (level.isClientSide) {
             return InteractionResultHolder.success(itemStack);

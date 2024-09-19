@@ -1,14 +1,23 @@
 package yee.pltision.tonekoreforged.collar.bauble;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
+import yee.pltision.tonekoreforged.client.collar.InitCollarScreenContext;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
-public interface CollarBaubleState extends INBTSerializable<CompoundTag> {
+import java.util.function.Consumer;
+
+public interface CollarBaubleState extends INBTSerializable<CompoundTag>, MenuProvider {
     String COLLAR_BAUBLE_TAG="CollarBauble";
 
     ItemStack asItem();
@@ -32,8 +41,22 @@ public interface CollarBaubleState extends INBTSerializable<CompoundTag> {
     @Override
     default void deserializeNBT(CompoundTag nbt){}
 
-    default boolean mayPlace(Object slotAccessor,int slot){
+    default boolean mayPlace(BaublesAccessor baublesAccessor,Object slotAccessor,int slot){
         return true;
     }
 
+    default Consumer<InitCollarScreenContext> initScreenButtonConsumer(){
+        return v->{};
+    }
+
+    @Override
+    default @NotNull Component getDisplayName(){
+        return Component.empty();
+    }
+
+    @Nullable
+    @Override
+    default AbstractContainerMenu createMenu(int p_39954_, @NotNull Inventory p_39955_, @NotNull Player p_39956_) {
+        return null;
+    }
 }

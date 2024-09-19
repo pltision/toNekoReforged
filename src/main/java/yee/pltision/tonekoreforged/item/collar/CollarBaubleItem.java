@@ -2,10 +2,11 @@ package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -18,9 +19,6 @@ import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 public interface CollarBaubleItem extends MenuProviderItem {
     CollarBaubleState asCollarBaubleState(ItemStack stack);
-    default AbstractContainerMenu getMenu(int id, @NotNull Inventory inventory, @NotNull Player player,CollarBaubleState state,ItemStack item){
-        return null;
-    }
 
     default ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new ICapabilityProvider() {
@@ -45,4 +43,8 @@ public interface CollarBaubleItem extends MenuProviderItem {
         };
     }
 
+    @Override
+    default InteractionResultHolder<ItemStack> menuProviderItem$use(Level level, Player player, InteractionHand hand) {
+        return MenuProviderItem.super.menuProviderItem$use(level, player, hand);
+    }
 }

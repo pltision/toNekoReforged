@@ -11,10 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.collar.bauble.BaublesAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.BorderBaubleSlotAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleSlot;
 
-public class BasicCollarMenu extends AbstractContainerMenu {
+import java.util.Set;
+
+public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu {
     public static final int SLOT_SIZE=5;
 
 //    CollarStateHandler handler;
@@ -40,8 +43,9 @@ public class BasicCollarMenu extends AbstractContainerMenu {
     }
     public void initSlots(Inventory inventory){
         checkContainerSize(container,SLOT_SIZE);
+        BaublesAccessor baublesAccessor=BaublesAccessor.of(container);
         for(int i=0;i<container.getContainerSize();i++){
-            addSlot(new CollarBaubleSlot(container,i,26+i*27,22, SlotAccessor.INSTANCE));
+            addSlot(new CollarBaubleSlot(container,i,26+i*27,22,baublesAccessor ,SlotAccessor.INSTANCE));
         }
 
         for(int i = 0; i < 3; ++i) {
@@ -95,27 +99,31 @@ public class BasicCollarMenu extends AbstractContainerMenu {
             CollarStateHandler.addTagToItem(state,item);
         }
     }
+
+    @Override
+    public BaublesAccessor createBaubleAccessor() {
+        return BaublesAccessor.of(container);
+    }
+
     public static class SlotAccessor implements BorderBaubleSlotAccessor {
         public static final SlotAccessor INSTANCE=new SlotAccessor();
 
-        @Override
-        public boolean isFontSideSlot(int slot) {
-            return slot==0;
-        }
+        public static final Set<Integer> FONT=Set.of(0);
+        public static final Set<Integer> LEFT=Set.of(1);
+        public static final Set<Integer> BACK=Set.of(2,3);
+        public static final Set<Integer> RIGHT=Set.of(4);
 
-        @Override
-        public boolean isLeftSideSlot(int slot) {
-            return slot==1;
+        public Set<Integer> fontSideSlots(){
+            return FONT;
         }
-
-        @Override
-        public boolean isBackSideSlot(int slot) {
-            return slot==2||slot==3;
+        public Set<Integer> leftSideSlots(){
+            return LEFT;
         }
-
-        @Override
-        public boolean isRightSideSlot(int slot) {
-            return slot==4;
+        public Set<Integer> backSideSlots(){
+            return BACK;
+        }
+        public Set<Integer> rightSideSlots(){
+            return RIGHT;
         }
     }
 }

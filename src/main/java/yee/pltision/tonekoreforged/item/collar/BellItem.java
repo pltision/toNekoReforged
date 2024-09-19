@@ -15,6 +15,7 @@ import yee.pltision.tonekoreforged.client.collar.BellRenderer;
 import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
 import yee.pltision.tonekoreforged.collar.CollarState;
 import yee.pltision.tonekoreforged.collar.bauble.AbstractCollarBaubleState;
+import yee.pltision.tonekoreforged.collar.bauble.BaublesAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.BorderBaubleSlotAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
@@ -71,10 +72,10 @@ public class BellItem extends Item implements CollarBaubleItem{
             }
 
             @Override
-            public boolean mayPlace(Object slotAccessor, int slot) {
+            public boolean mayPlace(BaublesAccessor baublesAccessor, Object slotAccessor, int slot) {
                 return slotAccessor instanceof BorderBaubleSlotAccessor accessor?
-                        accessor.isFontSideSlot(slot)||accessor.isBackSideSlot(slot)
-                        : super.mayPlace(slotAccessor,slot);
+                        accessor.fontSideSlots().contains(slot)||accessor.backSideSlots().contains(slot)
+                        : super.mayPlace(baublesAccessor, slotAccessor,slot);
             }
         };
     }

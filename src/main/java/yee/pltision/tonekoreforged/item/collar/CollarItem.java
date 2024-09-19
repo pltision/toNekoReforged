@@ -69,4 +69,5 @@ public interface CollarItem extends IForgeItem, MenuProviderItem {
             }
         };
     }
+
 }

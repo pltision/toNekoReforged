@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
 import yee.pltision.tonekoreforged.collar.*;
+import yee.pltision.tonekoreforged.collar.bauble.TeleporterMenu;
 import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
 import yee.pltision.tonekoreforged.item.collar.BellItem;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
@@ -45,6 +46,7 @@ import yee.pltision.tonekoreforged.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
+import yee.pltision.tonekoreforged.item.collar.TeleporterItem;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
@@ -118,9 +120,11 @@ public class ToNeko
 
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
+//    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_blot",()->new TeleporterItem(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 
     public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
+    public static final RegistryObject<MenuType<TeleporterMenu>> ENDER_BLOT_MENU=MENUS.register("end_blot",()-> new MenuType<>(TeleporterMenu::new, FeatureFlagSet.of()));
 
     public static final EnchantmentCategory SHEARS=EnchantmentCategory.create("shears",item -> item instanceof ShearsItem);
 

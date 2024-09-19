@@ -13,15 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
+import yee.pltision.tonekoreforged.collar.bauble.BaublesAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 import java.util.Collections;
-import java.util.List;
 
-public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag>, Container {
+public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag>, Container, BaublesAccessor {
     String COLLAR_TAG_NAME="CollarItem";
-
-    List<CollarBaubleState> baubles();
 
     @Nullable
     default  <E> CollarRenderHelper<E,?> getCollarRenderHelper(){
@@ -77,6 +75,9 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         }
     }
 
+    default boolean doDropWhenDeath(LivingEntity entity){
+        return true;
+    }
 
     // --- 容器 ---
 
@@ -140,7 +141,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         return 1;
     }
 
-    default boolean doDropWhenDeath(LivingEntity entity){
-        return true;
-    }
+    // ^^^ 容器 ^^^
+
 }

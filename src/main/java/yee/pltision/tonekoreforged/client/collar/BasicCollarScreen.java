@@ -4,7 +4,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
@@ -24,10 +26,35 @@ public class BasicCollarScreen extends AbstractContainerScreen<BasicCollarMenu> 
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
+//    Collection<AbstractButton> buttons=new LinkedList<>();
+
+    @Override
+    protected void init() {
+        super.init();
+        InitCollarScreenContext.acceptInit(this, this::addRenderableWidget);
+    }
+
+
     @Override
     protected void renderBg(@NotNull GuiGraphics p_283065_, float p_97788_, int p_97789_, int p_97790_) {
         p_283065_.blit(INVENTORY_LOCATION,leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
 
+    }
+
+    Container container=getMenu().getSlot(0).container;
+    ItemStack[] containerItems=new ItemStack[container.getContainerSize()];
+    @Override
+    public void render(@NotNull GuiGraphics p_283479_, int p_283661_, int p_281248_, float p_281886_) {
+        //有点生草的检测，懒了喵
+        boolean changed=false;
+        for(int i=0;i<containerItems.length;i++){
+            changed|=container.getItem(i).equals(containerItems[i]);
+            containerItems[i]=container.getItem(i);
+        }
+        if(changed)
+            this.repositionElements();
+
+        super.render(p_283479_, p_283661_, p_281248_, p_281886_);
     }
 
 }
