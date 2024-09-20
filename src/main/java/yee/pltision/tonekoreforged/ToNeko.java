@@ -120,11 +120,11 @@ public class ToNeko
 
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
-//    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_blot",()->new TeleporterItem(new Item.Properties()));
+    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new TeleporterItem(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 
     public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
-    public static final RegistryObject<MenuType<TeleporterMenu>> ENDER_BLOT_MENU=MENUS.register("end_blot",()-> new MenuType<>(TeleporterMenu::new, FeatureFlagSet.of()));
+    public static final RegistryObject<MenuType<TeleporterMenu>> ENDER_BLOT_MENU=MENUS.register("end_bolt",()-> new MenuType<>(TeleporterMenu::new, FeatureFlagSet.of()));
 
     public static final EnchantmentCategory SHEARS=EnchantmentCategory.create("shears",item -> item instanceof ShearsItem);
 

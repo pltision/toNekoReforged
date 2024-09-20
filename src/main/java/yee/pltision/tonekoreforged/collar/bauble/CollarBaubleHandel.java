@@ -5,13 +5,11 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface CollarBaubleHandel extends MenuProvider {
     CollarBaubleState getBaubleState();
-    ItemStack getCollarBaubleItem();
 
     @Override
     default @NotNull Component getDisplayName(){
@@ -25,4 +23,5 @@ public interface CollarBaubleHandel extends MenuProvider {
         CollarBaubleState state=getBaubleState();
         return state==null?null:state.createMenu(p_39954_,p_39955_,p_39956_);
     }
+
 }
