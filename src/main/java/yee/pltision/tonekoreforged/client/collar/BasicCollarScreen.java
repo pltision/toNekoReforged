@@ -17,7 +17,7 @@ import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 public class BasicCollarScreen extends AbstractContainerScreen<BasicCollarMenu> {
     public static final ResourceLocation INVENTORY_LOCATION = ToNeko.location("textures/gui/basic_collar_menu.png");
     public BasicCollarScreen(BasicCollarMenu p_97741_, Inventory p_97742_, Component p_97743_) {
-        super(p_97741_, p_97742_, Component.translatable("container.toneko.basic_collar"));
+        super(p_97741_, p_97742_, p_97743_);
         this.imageWidth=178;
         this.imageHeight=148;
         this.titleLabelX = 10;
@@ -54,7 +54,9 @@ public class BasicCollarScreen extends AbstractContainerScreen<BasicCollarMenu> 
         if(changed)
             this.repositionElements();
 
+        this.renderBackground(p_283479_);
         super.render(p_283479_, p_283661_, p_281248_, p_281886_);
+        this.renderTooltip(p_283479_, p_283661_, p_281248_);
     }
 
 }

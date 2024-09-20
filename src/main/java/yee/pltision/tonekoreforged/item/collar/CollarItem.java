@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.extensions.IForgeItem;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +18,7 @@ import yee.pltision.tonekoreforged.curios.CuriosInterface;
 
 import java.util.function.Supplier;
 
-public interface CollarItem extends IForgeItem, MenuProviderItem {
+public interface CollarItem extends MenuProviderItem {
 
     //内部使用，获取CollarState应使用能力系统。
     CollarState asState(ItemStack item);
@@ -50,7 +49,7 @@ public interface CollarItem extends IForgeItem, MenuProviderItem {
 
                 @Override
                 public @NotNull Component getDisplayName() {
-                    return Component.literal("项圈");
+                    return stack.getHoverName();
                 }
                 @Override
                 public CollarState getState() {

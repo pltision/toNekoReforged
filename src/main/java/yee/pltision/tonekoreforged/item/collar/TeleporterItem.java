@@ -56,12 +56,32 @@ public class TeleporterItem extends Item implements CollarBaubleItem{
         };
     }
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> menuProviderItem$use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
         return CollarBaubleItem.super.menuProviderItem$use(p_41432_, p_41433_, p_41434_);
     }
 
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return CollarBaubleItem.super.initCapabilities(stack, nbt);
+        return new CapabilitySerializable<CompoundTag,TeleporterState>(this, stack) {
+            /*{
+                if(nbt!=null){
+                    ifPresent(s-> s.set(0,nbt.getInt("values")));
+                }
+            }*/
+            @Override
+            public CompoundTag serializeNBT() {
+                CompoundTag main=new CompoundTag();
+
+                ifPresent(s-> main.putInt("values",s.get(0)));
+
+                return main;
+            }
+
+            @Override
+            public void deserializeNBT(CompoundTag nbt) {
+                ifPresent(s-> s.set(0,nbt.getInt("values")));
+            }
+
+        };
     }
 }

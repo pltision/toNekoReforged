@@ -1,6 +1,5 @@
 package yee.pltision.tonekoreforged.collar.bauble;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,7 +7,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
@@ -17,7 +15,7 @@ import yee.pltision.tonekoreforged.collar.CollarState;
 
 import java.util.function.Consumer;
 
-public interface CollarBaubleState extends INBTSerializable<CompoundTag>, MenuProvider {
+public interface CollarBaubleState extends MenuProvider {
     String COLLAR_BAUBLE_TAG="CollarBauble";
 
     ItemStack asItem();
@@ -33,13 +31,13 @@ public interface CollarBaubleState extends INBTSerializable<CompoundTag>, MenuPr
     default void entityInit(LivingEntity entity, CollarState state, int slot){
     }
 
-    @Override
+    /*@Override
     default CompoundTag serializeNBT(){
         return new CompoundTag();
     }
 
     @Override
-    default void deserializeNBT(CompoundTag nbt){}
+    default void deserializeNBT(CompoundTag nbt){}*/
 
     default boolean mayPlace(BaublesAccessor baublesAccessor,Object slotAccessor,int slot){
         return true;

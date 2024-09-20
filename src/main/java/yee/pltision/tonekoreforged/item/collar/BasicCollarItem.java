@@ -36,7 +36,7 @@ public class BasicCollarItem extends Item implements CollarItem{
     }
 
 
-    public @NotNull InteractionResultHolder<ItemStack> m_7203_(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
         return CollarItem.super.menuProviderItem$use(p_41432_, p_41433_, p_41434_);
     }
 }

@@ -49,5 +49,13 @@ public class TeleporterScreen extends AbstractContainerScreen<TeleporterMenu> {
 //        BufferUploader.drawWithShader(consumer.end());
 
         graphics.blit(INVENTORY_LOCATION,leftPos, topPos, 0, 0, this.imageWidth, this.imageHeight);
+
+    }
+
+    @Override
+    public void render(@NotNull GuiGraphics p_283479_, int p_283661_, int p_281248_, float p_281886_) {
+        this.renderBackground(p_283479_);
+        super.render(p_283479_, p_283661_, p_281248_, p_281886_);
+        this.renderTooltip(p_283479_, p_283661_, p_281248_);
     }
 }

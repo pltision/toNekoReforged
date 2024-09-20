@@ -1,6 +1,5 @@
 package yee.pltision.tonekoreforged.collar.bauble;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -104,18 +103,7 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
         this.entity=entity;
     }
 
-    @Override
-    public CompoundTag serializeNBT() {
-        CompoundTag main=super.serializeNBT();
-        main.putInt("values",enderPearls);
-        return main;
-    }
 
-    @Override
-    public void deserializeNBT(CompoundTag nbt) {
-        super.deserializeNBT(nbt);
-        enderPearls= nbt.getInt("values");
-    }
 
     public ItemStack getCanTake(){
         return output;
@@ -133,7 +121,10 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
     }
 
     @Override
-    public void set(int p_39285_, int p_39286_) {
+    public void set(int slot, int num) {
+        if(slot==0)
+            enderPearls=num;
+        else maxCount=num;
     }
 
     @Override
