@@ -29,31 +29,7 @@ public class TeleporterItem extends Item implements CollarBaubleItem{
     }
 
     public CollarBaubleState asCollarBaubleState(ItemStack item) {
-        return new TeleporterState(item) {
-            CollarState state;
-
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public <T> CollarBaubleRenderer<T, ?> getRenderer(T entity, CollarState collar) {
-                return BellRenderer.INSTANT.cast();
-            }
-
-            @Override
-            public @NotNull AbstractContainerMenu createMenu(int p_39954_, @NotNull Inventory p_39955_, @NotNull Player p_39956_) {
-                return new TeleporterMenu(p_39954_,p_39955_,this);
-            }
-
-            @OnlyIn(Dist.CLIENT)
-            public Consumer<InitCollarScreenContext> initScreenButtonConsumer(){
-                return InitCollarScreenContext::addOpenMenuButton;
-            }
-
-            @Override
-            public void entityInit(LivingEntity entity, CollarState state, int slot) {
-                this.state=state;
-                super.entityInit(entity, state, slot);
-            }
-        };
+        return new TeleporterState(item);
     }
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
@@ -63,11 +39,6 @@ public class TeleporterItem extends Item implements CollarBaubleItem{
     @Override
     public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
         return new CapabilitySerializable<CompoundTag,TeleporterState>(this, stack) {
-            /*{
-                if(nbt!=null){
-                    ifPresent(s-> s.set(0,nbt.getInt("values")));
-                }
-            }*/
             @Override
             public CompoundTag serializeNBT() {
                 CompoundTag main=new CompoundTag();
@@ -82,6 +53,6 @@ public class TeleporterItem extends Item implements CollarBaubleItem{
                 ifPresent(s-> s.set(0,nbt.getInt("values")));
             }
 
-        };
+        }/*new CapabilityProvider(this, stack)*/;
     }
 }

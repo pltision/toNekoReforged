@@ -28,7 +28,7 @@ public interface CollarBaubleState extends MenuProvider {
     default void entityTick(LivingEntity entity){
     }
 
-    default void entityInit(LivingEntity entity, CollarState state, int slot){
+    default void initEntity(@Nullable LivingEntity entity, CollarState state, int slot){
     }
 
     /*@Override

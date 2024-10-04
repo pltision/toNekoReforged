@@ -55,5 +55,6 @@
   "item.toneko.bell": "铃铛",
   "enchantment.toneko.rob_shear": "剥取",
   "curios.identifier.collar": "项圈",
-  "itemGroup.toneko": "toNekoReforged"
+  "itemGroup.toneko": "toNekoReforged",
+  "gui.toneko.entity'sCollar": "%s的项圈"
 }

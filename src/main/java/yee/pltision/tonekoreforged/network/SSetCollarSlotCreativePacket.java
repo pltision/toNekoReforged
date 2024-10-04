@@ -1,12 +1,15 @@
 package yee.pltision.tonekoreforged.network;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
+import yee.pltision.tonekoreforged.collar.CollarState;
 
 import java.util.function.Supplier;
 
@@ -22,7 +25,7 @@ public class SSetCollarSlotCreativePacket {
     }
 
     public static void encode(SSetCollarSlotCreativePacket packet, FriendlyByteBuf buf){
-        buf.writeItem(packet.item);
+        buf.writeItemStack(packet.item,false);
     }
 
     // In Packet class

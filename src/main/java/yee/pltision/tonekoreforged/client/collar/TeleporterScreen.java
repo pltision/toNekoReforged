@@ -26,24 +26,20 @@ public class TeleporterScreen extends AbstractContainerScreen<TeleporterMenu> {
 
     @Override
     protected void renderBg(@NotNull GuiGraphics graphics, float p_97788_, int p_97789_, int p_97790_) {
-//        RenderSystem.setShaderTexture(0, TheEndPortalRenderer.END_SKY_LOCATION);
-//        RenderSystem.setShader(GameRenderer::getRendertypeEndGatewayShader);
         Matrix4f matrix4f = graphics.pose().last().pose();
-//        consumer.begin(RenderType.endGateway().mode(),RenderType.endGateway().format());
         graphics.blit(INVENTORY_LOCATION,leftPos, topPos, 0, this.imageHeight, this.imageWidth, 256-this.imageHeight);
 
         float maxWidth=142-34;
         float width=getMenu().containerData.get(1)==0?0:getMenu().containerData.get(0)*maxWidth/getMenu().containerData.get(1);
 
-        RenderSystem.runAsFancy(() -> {
-            BufferBuilder consumer= (BufferBuilder)graphics.bufferSource().getBuffer(RenderType.endGateway());
+        VertexConsumer consumer= graphics.bufferSource().getBuffer(RenderType.endGateway());
 
-            //这玩意要求有正反顺序
-            consumer.vertex(matrix4f,getGuiLeft()+34,  getGuiTop()+23,0    )/*.uv(0, 0)*/.endVertex();
-            consumer.vertex(matrix4f,getGuiLeft()+34,  getGuiTop()+34,0    )/*.uv(0, 1)*/.endVertex();
-            consumer.vertex(matrix4f,getGuiLeft()+34+width, getGuiTop()+34,0    )/*.uv(1, 1)*/.endVertex();
-            consumer.vertex(matrix4f,getGuiLeft()+34+width, getGuiTop()+23,0    )/*.uv(1, 0)*/.endVertex();
-        });
+        //这玩意有要求正反顺序
+        consumer.vertex(matrix4f,getGuiLeft()+34,  getGuiTop()+23,0    )/*.uv(0, 0)*/.endVertex();
+        consumer.vertex(matrix4f,getGuiLeft()+34,  getGuiTop()+34,0    )/*.uv(0, 1)*/.endVertex();
+        consumer.vertex(matrix4f,getGuiLeft()+34+width, getGuiTop()+34,0    )/*.uv(1, 1)*/.endVertex();
+        consumer.vertex(matrix4f,getGuiLeft()+34+width, getGuiTop()+23,0    )/*.uv(1, 0)*/.endVertex();
+
         graphics.flush();
 
 //        BufferUploader.drawWithShader(consumer.end());

@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 
@@ -60,9 +61,12 @@ public class SSetCollarSlotPacket {
                     ItemStack carried=player.containerMenu.getCarried();
                     if(i==-1){
                         if(collar.mayReplace(player,carried)){
-//                            ItemStack collarItem=collar.getCollarItem();
                             player.containerMenu.setCarried(collar.getCollarItem());
-                            collar.setCollarSlotAndSend(player,carried);
+                            collar.setCollarSlot(carried);
+                            NekoNetworks.INSTANCE.send(
+                                    PacketDistributor.TRACKING_ENTITY.with(()->player),
+                                    new CCollarStateChangePacket(player.getId(), carried)
+                            );
                         }
 
                 }

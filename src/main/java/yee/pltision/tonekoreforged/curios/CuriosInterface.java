@@ -31,15 +31,15 @@ public class CuriosInterface {
 
     public static ICapabilityProvider tryCreateCuriosHandel(LivingEntity entity){
 
-        return new CuriosCollarCapabilityProvider(new Supplier<ICurioStacksHandler>() {
+        return new CuriosCollarCapabilityProvider(new Supplier<>() {
             ICurioStacksHandler handler;
 
             @Override
             public ICurioStacksHandler get() {
-                if(handler==null){
-                    ICuriosItemHandler curiosItemHandler=ToNeko.getCapability(entity,CuriosCapability.INVENTORY);
-                    if(curiosItemHandler!=null){
-                        handler= curiosItemHandler.getCurios().get(Config.curiosSlotType);
+                if (handler == null) {
+                    ICuriosItemHandler curiosItemHandler = ToNeko.getCapability(entity, CuriosCapability.INVENTORY);
+                    if (curiosItemHandler != null) {
+                        handler = curiosItemHandler.getCurios().get(Config.curiosSlotType);
                     }
                 }
                 return handler;
@@ -59,6 +59,12 @@ public class CuriosInterface {
             public boolean canUnequip(SlotContext slotContext) {
                 if(slotContext.entity()instanceof ServerPlayer serverPlayer) state.get().canTake(serverPlayer,slotContext.entity());
                 return state.get().canTake(null,slotContext.entity());
+            }
+
+            @Override
+            public void onEquip(SlotContext slotContext, ItemStack prevStack) {
+                ICurio.super.onEquip(slotContext, prevStack);
+                state.get().initEntity(slotContext.entity());
             }
         });
     }

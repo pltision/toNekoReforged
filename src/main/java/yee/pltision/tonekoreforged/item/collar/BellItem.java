@@ -67,7 +67,7 @@ public class BellItem extends Item implements CollarBaubleItem{
             }
 
             @Override
-            public void entityInit(LivingEntity entity, CollarState state, int slot) {
+            public void initEntity(@Nullable LivingEntity entity, CollarState state, int slot) {
                 this.slot=slot;
             }
 

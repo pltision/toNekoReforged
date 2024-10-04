@@ -11,7 +11,6 @@ import yee.pltision.tonekoreforged.ToNeko;
 
 public interface MenuProviderItem {
     
-    //neoforge/forge不知为何把我接口中的内容也mapping了
     default InteractionResultHolder<ItemStack> menuProviderItem$use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack=player.getItemInHand(hand);
         if (level.isClientSide) {

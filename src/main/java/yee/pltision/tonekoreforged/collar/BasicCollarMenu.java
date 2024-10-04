@@ -1,6 +1,10 @@
 package yee.pltision.tonekoreforged.collar;
 
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +20,7 @@ import yee.pltision.tonekoreforged.collar.bauble.BorderBaubleSlotAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleSlot;
 
 import java.util.Set;
+import java.util.function.Function;
 
 public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu {
     public static final int SLOT_SIZE=5;
@@ -24,7 +29,11 @@ public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu
     CollarState state;
     Container container;
     //如果非空则为物品创建
-    @Nullable ItemStack item;
+//    @Nullable ItemStack item;
+    @Nullable Function<Player,Boolean> validChecker;
+    Runnable broadcastChanges=()->{};
+    int itemSlot=-1;
+    ServerPlayer player;
 
     protected BasicCollarMenu(@Nullable MenuType<?> p_38851_, int p_38852_) {
         super(p_38851_, p_38852_);
@@ -34,12 +43,19 @@ public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu
         this.container=new SimpleContainer(SLOT_SIZE);
         initSlots(inventory);
     }
-    public BasicCollarMenu(int p_38852_, Inventory inventory, @NotNull CollarState state, @Nullable ItemStack item) {
+    public BasicCollarMenu(int p_38852_, Inventory inventory, @NotNull CollarState state, @Nullable Function<Player,Boolean> validChecker) {
         super(ToNeko.BASIC_COLLAR_MENU.get(), p_38852_);
         this.state=state;
-        this.item=item;
+//        this.item=item;
+        this.validChecker=validChecker;
         container=state;
         initSlots(inventory);
+    }
+    public BasicCollarMenu(int p_38852_, Inventory inventory, @NotNull CollarState state, ItemStack item) {
+        this(p_38852_, inventory, state,
+                p-> !item.isEmpty() && item.getCapability(CollarCapabilityProvider.COLLAR_HANDLER_ITEM).isPresent() //我看Useful-Backpacks是这么做的
+        );
+        broadcastChanges=()-> CollarStateHandler.addTagToItem(state, item);
     }
     public void initSlots(Inventory inventory){
         checkContainerSize(container,SLOT_SIZE);
@@ -57,7 +73,9 @@ public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu
         for(int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(inventory, i, 9 + i * 18, 124));
         }
+
     }
+
 
     //抄自漏斗
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int slotId) {
@@ -86,18 +104,13 @@ public class BasicCollarMenu extends AbstractContainerMenu implements CollarMenu
 
     @Override
     public boolean stillValid(@NotNull Player p_38874_) {
-        if(item==null)
-            return p_38874_.getCapability(CollarCapabilityProvider.COLLAR_HANDLER).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY).getState()==this.state;
-        else
-            return !item.isEmpty() && item.getCapability(CollarCapabilityProvider.COLLAR_HANDLER_ITEM).isPresent();//我看Useful-Backpacks是这么做的
+        return validChecker!=null&&validChecker.apply(p_38874_);
     }
 
     @Override
     public void broadcastChanges() {
         super.broadcastChanges();
-        if(item!=null&&state!=null){
-            CollarStateHandler.addTagToItem(state,item);
-        }
+        broadcastChanges.run();
     }
 
     @Override

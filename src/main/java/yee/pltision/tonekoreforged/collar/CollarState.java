@@ -2,13 +2,15 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
@@ -18,7 +20,7 @@ import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 import java.util.Collections;
 
-public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag>, Container, BaublesAccessor {
+public interface CollarState extends Container, BaublesAccessor {
     String COLLAR_TAG_NAME="CollarItem";
 
     @Nullable
@@ -34,7 +36,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         item.addTagElement(COLLAR_TAG_NAME,serializeNBT());
     }
 
-    @Override
     default CompoundTag serializeNBT() {
         CompoundTag main=new CompoundTag();
 
@@ -50,7 +51,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         return main;
     }
 
-    @Override
     default void deserializeNBT(CompoundTag nbt) {
         ListTag baubles= nbt.getList("baubles", CompoundTag.TAG_COMPOUND);
 
@@ -75,9 +75,41 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
         }
     }
 
+    default void initEntity(LivingEntity entity){
+        for(var it=baubles().listIterator();it.hasNext();){
+            CollarBaubleState bauble=it.next();
+            if(bauble!=null)
+                bauble.initEntity(entity,this,it.nextIndex());
+        }
+    }
+
     default boolean doDropWhenDeath(LivingEntity entity){
         return true;
     }
+
+    static void createCollarOnEntityMenu(ServerPlayer player,LivingEntity entityWearCollar){
+        CollarState state=ToNeko.getCollarState(entityWearCollar);
+        if(state!=null){
+            player.openMenu(new MenuProvider() {
+                @Override
+                public Component getDisplayName() {
+                    return state.getCompoundOnEntity(entityWearCollar);
+                }
+
+                @Nullable
+                @Override
+                public AbstractContainerMenu createMenu(int p_39954_, Inventory p_39955_, Player p_39956_) {
+                    return null;
+                }
+            });
+        }
+    }
+
+    default Component getCompoundOnEntity(LivingEntity entity){
+        return Component.translatable("gui.toneko.entity'sCollar",entity.getName());
+    }
+
+    AbstractContainerMenu createMenuOnEntity(int id, Inventory inventory, Player player,LivingEntity entity);
 
     // --- 容器 ---
 
@@ -142,5 +174,6 @@ public interface CollarState extends MenuProvider , INBTSerializable<CompoundTag
     }
 
     // ^^^ 容器 ^^^
+
 
 }

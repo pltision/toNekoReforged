@@ -1,8 +1,11 @@
 package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.BasicCollarState;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
+import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
 public class BasicCollarItem extends Item implements CollarItem{
@@ -26,8 +30,18 @@ public class BasicCollarItem extends Item implements CollarItem{
     }
 
     @Override
-    public AbstractContainerMenu getMenu(int id, @NotNull Inventory inventory, @NotNull Player player, CollarState state, ItemStack item) {
-        return new BasicCollarMenu(id,inventory,state,item);
+    public MenuProvider createMenuProvider(CollarState state, ItemStack item, InteractionHand hand) {
+        return new MenuProvider() {
+            public @NotNull Component getDisplayName() {
+                return item.getHoverName();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player p_39956_) {
+                return new BasicCollarMenu(id,inventory,state,item);
+            }
+        };
+
     }
 
     @Override
@@ -37,6 +51,6 @@ public class BasicCollarItem extends Item implements CollarItem{
 
 
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level p_41432_, @NotNull Player p_41433_, @NotNull InteractionHand p_41434_) {
-        return CollarItem.super.menuProviderItem$use(p_41432_, p_41433_, p_41434_);
+        return CollarItem.super.use(p_41432_, p_41433_, p_41434_);
     }
 }

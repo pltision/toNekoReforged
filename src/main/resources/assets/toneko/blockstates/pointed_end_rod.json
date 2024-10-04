@@ -1,0 +1,39 @@
+{
+  "variants": {
+    "thickness=base,vertical_direction=down": {
+      "model": "toneko:block/pointed_end_rod_middle",
+      "x": 180
+    },
+    "thickness=base,vertical_direction=up": {
+      "model": "toneko:block/pointed_end_rod_middle"
+    },
+    "thickness=frustum,vertical_direction=down": {
+      "model": "toneko:block/pointed_end_rod_middle",
+      "x": 180
+    },
+    "thickness=frustum,vertical_direction=up": {
+      "model": "toneko:block/pointed_end_rod_middle"
+    },
+    "thickness=middle,vertical_direction=down": {
+      "model": "toneko:block/pointed_end_rod_middle",
+      "x": 180
+    },
+    "thickness=middle,vertical_direction=up": {
+      "model": "toneko:block/pointed_end_rod_middle"
+    },
+    "thickness=tip_merge,vertical_direction=down": {
+      "model": "minecraft:block/end_rod",
+      "x": 180
+    },
+    "thickness=tip_merge,vertical_direction=up": {
+      "model": "minecraft:block/end_rod"
+    },
+    "thickness=tip,vertical_direction=down": {
+      "model": "toneko:block/pointed_end_rod_tip",
+      "x": 180
+    },
+    "thickness=tip,vertical_direction=up": {
+      "model": "toneko:block/pointed_end_rod_tip"
+    }
+  }
+}

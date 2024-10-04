@@ -56,5 +56,6 @@
   "enchantment.toneko.rob_shear": "Rob Shear",
   "curios.identifier.collar": "Collar",
   "itemGroup.toneko": "toNekoReforged",
-  "gui.toneko.openCollarBaubleMenu": "Open Collar Bauble Menu"
+  "gui.toneko.openCollarBaubleMenu": "Open Collar Bauble Menu",
+  "gui.toneko.entity'sCollar": "Collar On %s"
 }

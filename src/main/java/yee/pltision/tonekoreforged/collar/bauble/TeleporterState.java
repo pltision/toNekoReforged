@@ -2,13 +2,21 @@ package yee.pltision.tonekoreforged.collar.bauble;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.client.collar.InitCollarScreenContext;
 import yee.pltision.tonekoreforged.collar.CollarState;
+
+import java.util.function.Consumer;
 
 public class TeleporterState extends AbstractCollarBaubleState implements Container, ContainerData {
 
@@ -97,8 +105,8 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
     }
 
     @Override
-    public void entityInit(LivingEntity entity, CollarState state, int slot) {
-        super.entityInit(entity, state, slot);
+    public void initEntity(@Nullable LivingEntity entity, CollarState state, int slot) {
+        super.initEntity(entity, state, slot);
         this.state=state;
         this.entity=entity;
     }
@@ -130,5 +138,15 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
     @Override
     public int getCount() {
         return 2;
+    }
+
+    @Override
+    public @NotNull AbstractContainerMenu createMenu(int p_39954_, @NotNull Inventory p_39955_, @NotNull Player p_39956_) {
+        return new TeleporterMenu(p_39954_,p_39955_,this);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public Consumer<InitCollarScreenContext> initScreenButtonConsumer(){
+        return InitCollarScreenContext::addOpenMenuButton;
     }
 }
