@@ -35,22 +35,29 @@ public class CollarLayout<E extends LivingEntity, M extends HumanoidModel<E>> ex
     }
 
     @Override
-    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity, float neverMind1, float neverMind2, float neverMind3, float neverMind4, float neverMind5, float neverMind6) {
+    public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity,
+                       float position, float speed, float partialTick, float bob, float headRotateYFromBody, float xRot
+    ) {
 
         entity.getCapability(CollarCapabilityProvider.COLLAR_HANDLER).ifPresent(cap->{
             CollarState state= cap.getState();
             CollarRenderHelper<LivingEntity,?> collarRenderHelper;
-            if(state!=null&&(collarRenderHelper= state.getCollarRenderHelper())!=null&& collarRenderHelper.isTrueModel(getParentModel())) {
-                ((CollarRenderHelper)collarRenderHelper).render(stack, source, idkInt, entity, neverMind1, neverMind2, neverMind3, neverMind4, neverMind5, neverMind6, getParentModel());
-                int i=0;
+            if(state!=null&&(collarRenderHelper= state.getCollarRenderHelper())!=null&& collarRenderHelper.canUseModel(getParentModel())) {
+                collarRenderHelper.cast().render(stack, source, idkInt, entity,state, position, speed, partialTick, bob, headRotateYFromBody, xRot, getParentModel());
+                int slot=0;
                 for(CollarBaubleState baubleState:cap.getState().baubles()){
                     CollarBaubleRenderer<LivingEntity,?> collarBaubleRenderer;
                     if(baubleState!=null&&(collarBaubleRenderer=baubleState.getRenderer(entity,cap.getState()))!=null) {
                         Model castedModel=collarBaubleRenderer.tryCastModel(getParentModel());
-                        if(castedModel!=null)
-                            ((CollarBaubleRenderer)collarBaubleRenderer).render(stack, source, idkInt, entity, neverMind1, neverMind2, neverMind3, neverMind4, neverMind5, neverMind6, cap.getState(), collarRenderHelper, i, castedModel);
+                        if(castedModel!=null) {
+                            collarBaubleRenderer.cast().renderBeforePushStack(stack, source, idkInt, entity, position, speed, partialTick, bob, headRotateYFromBody, xRot, cap.getState(), collarRenderHelper.cast(), slot, castedModel);
+                            stack.pushPose();
+                            collarRenderHelper.cast().setStack(stack, idkInt, entity,state,slot, position, speed, partialTick, bob, headRotateYFromBody, xRot, getParentModel());
+                            collarBaubleRenderer.cast().render(stack, source, idkInt, entity, position, speed, partialTick, bob, headRotateYFromBody, xRot, cap.getState(), collarRenderHelper.cast(), slot, castedModel);
+                            stack.popPose();
+                        }
                     }
-                    i++;
+                    slot++;
                 }
             }
         });

@@ -29,7 +29,7 @@ public class BasicCollarState implements CollarState {
 
     @Override
     public <E> CollarRenderHelper<E, ?> getCollarRenderHelper() {
-        return CollarRenderer.INSTANT.cast();
+        return CollarRendererInstances.BASIC_COLLAR_RENDERER.cast();
     }
 
 

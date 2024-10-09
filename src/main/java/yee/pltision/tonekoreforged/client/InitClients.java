@@ -12,6 +12,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.client.collar.BasicCollarScreen;
 import yee.pltision.tonekoreforged.client.collar.CollarLayout;
+import yee.pltision.tonekoreforged.client.collar.CollarRendererInstances;
 import yee.pltision.tonekoreforged.client.collar.TeleporterScreen;
 import yee.pltision.tonekoreforged.client.nekoarmor.ArmorModelInstances;
 
@@ -23,6 +24,7 @@ public class InitClients {
     @SubscribeEvent
     public static void registry(EntityRenderersEvent.RegisterLayerDefinitions event){
         ArmorModelInstances.registry(event);
+        CollarRendererInstances.registry(event);
     }
 
 
@@ -34,6 +36,7 @@ public class InitClients {
             }
         }
         ArmorModelInstances.initInstance(event.getContext());
+        CollarRendererInstances.initInstance(event.getContext());
     }
 
     @SubscribeEvent

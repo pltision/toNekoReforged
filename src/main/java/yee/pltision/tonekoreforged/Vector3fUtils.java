@@ -14,4 +14,8 @@ public class Vector3fUtils {
             1/16f,0,0,
             0,1/16f,0,
             0,0,1/16f);
+    public static Matrix3f ENTITY_SCALE_BACK=new Matrix3f(
+            16f,0,0,
+            0,16f,0,
+            0,0,16f);
 }

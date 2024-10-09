@@ -27,6 +27,8 @@ import yee.pltision.tonekoreforged.config.Config;
 
 import java.util.function.Supplier;
 
+import static yee.pltision.tonekoreforged.collar.CollarStateHandler.addTagToItem;
+
 public class CuriosInterface {
 
     public static ICapabilityProvider tryCreateCuriosHandel(LivingEntity entity){
@@ -52,7 +54,7 @@ public class CuriosInterface {
         else return LazyOptional.of(()->new ICurio() {
             @Override
             public ItemStack getStack() {
-                return stack;
+                return addTagToItem(state.get(),stack);
             }
 
             @Override
@@ -66,6 +68,7 @@ public class CuriosInterface {
                 ICurio.super.onEquip(slotContext, prevStack);
                 state.get().initEntity(slotContext.entity());
             }
+
         });
     }
 

@@ -50,7 +50,7 @@ import yee.pltision.tonekoreforged.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
-import yee.pltision.tonekoreforged.item.collar.TeleporterItem;
+import yee.pltision.tonekoreforged.item.collar.EnderBoltItem;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
@@ -124,7 +124,7 @@ public class ToNeko
 
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
-    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new TeleporterItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new EnderBoltItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLead(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 

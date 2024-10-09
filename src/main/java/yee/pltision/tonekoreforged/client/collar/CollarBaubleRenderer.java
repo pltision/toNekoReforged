@@ -15,11 +15,16 @@ import yee.pltision.tonekoreforged.collar.CollarState;
 public interface CollarBaubleRenderer<E,M extends Model> extends INBTSerializable<CompoundTag> {
     default @Nullable M tryCastModel(Model model){return (M)model;}
 
-    default void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity, float neverMind1, float neverMind2, float neverMind3, float neverMind4, float neverMind5, float neverMind6, CollarState collarState, CollarRenderHelper<E,M> renderHelper,int slot,M model){
-        render(stack,source,idkInt,entity,collarState,renderHelper,slot, model);
+    default void renderBeforePushStack(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity,
+                                       float position, float speed, float partialTick, float bob, float headRotateYFromBody, float xRot,
+                                       CollarState collarState, CollarRenderHelper<E,M> renderHelper, int slot, M model){
     }
 
-    default void render(PoseStack stack, MultiBufferSource source, int idkInt, E entity,CollarState collarState, CollarRenderHelper<E,M> renderHelper,int slot,M model){}
+
+    default void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int idkInt, @NotNull E entity,
+                                       float position, float speed, float partialTick, float bob, float headRotateYFromBody, float xRot,
+                                       CollarState collarState, CollarRenderHelper<E,M> renderHelper, int slot, M model){
+    }
 
     default <A,B extends Model> CollarBaubleRenderer<A,B> cast(){
         return (CollarBaubleRenderer<A, B>) this;
