@@ -1,9 +1,10 @@
 package yee.pltision.tonekoreforged.collar.bauble;
 
 import net.minecraft.world.Container;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.List;
 
 public interface BaublesAccessor {
     List<CollarBaubleState> baubles();
@@ -27,12 +28,12 @@ public interface BaublesAccessor {
 
             @Override
             public CollarBaubleState get(int index) {
-                return ToNeko.getCollarBaubleState(container.getItem(index));
+                return ToNekoCapabilityHelper.getCollarBaubleState(container.getItem(index));
             }
 
             @Override
             public CollarBaubleState set(int index, CollarBaubleState element) {
-                CollarBaubleState origin=ToNeko.getCollarBaubleState(container.getItem(index));
+                CollarBaubleState origin=ToNekoCapabilityHelper.getCollarBaubleState(container.getItem(index));
                 container.setItem(index,element.asItem());
                 return origin;
             }

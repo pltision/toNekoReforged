@@ -12,7 +12,6 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.client.collar.model.EnderBoltModel;
 import yee.pltision.tonekoreforged.collar.CollarState;
@@ -21,8 +20,6 @@ import yee.pltision.tonekoreforged.collar.CollarState;
 public class EnderBoltRenderer<E extends Entity,M extends HumanoidModel<?>> implements CollarBaubleRenderer<E,M> {
     public static final ResourceLocation RING = ToNeko.location("textures/entity/ender_bolt.png");
     public static final RenderType RENDER_TYPE = RenderType.entityCutoutNoCull(RING);
-
-    public static Vector3f VERTEX=new Vector3f(0.875f,0.875f,0.875f);
 
     EnderBoltModel enderBoltModel;
 
@@ -34,8 +31,9 @@ public class EnderBoltRenderer<E extends Entity,M extends HumanoidModel<?>> impl
     public void render(@NotNull PoseStack stack, @NotNull MultiBufferSource source, int light, @NotNull E entity,
                                       float position, float speed, float partialTick, float bob, float headRotateYFromBody, float xRot,
                                       CollarState collarState, CollarRenderHelper<E,M> renderHelper, int slot, M model) {
-        enderBoltModel.root.xScale=enderBoltModel.root.yScale=enderBoltModel.root.zScale=0.75f;
+        enderBoltModel.main.xScale=enderBoltModel.main.yScale=enderBoltModel.main.zScale=enderBoltModel.portal.xScale=enderBoltModel.portal.yScale=enderBoltModel.portal.zScale=0.875f;
         enderBoltModel.renderToBuffer(stack,source.getBuffer(RENDER_TYPE),light,OverlayTexture.NO_OVERLAY,1,1,1,1);
+        enderBoltModel.renderPortal(stack,source.getBuffer(RenderType.endGateway()),light,OverlayTexture.NO_OVERLAY,1,1,1,1);
     }
 
     public static void vertex(Matrix4f idk4f, Matrix3f idk3f, VertexConsumer consumer, int idkInt,

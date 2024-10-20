@@ -8,8 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.*;
@@ -25,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -35,21 +32,18 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.block.PointedEndRod;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
-import yee.pltision.tonekoreforged.collar.*;
+import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 import yee.pltision.tonekoreforged.collar.bauble.TeleporterMenu;
-import yee.pltision.tonekoreforged.item.EnderLead;
+import yee.pltision.tonekoreforged.config.Config;
+import yee.pltision.tonekoreforged.curios.CuriosInterface;
+import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
+import yee.pltision.tonekoreforged.item.EnderLeadItem;
+import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
 import yee.pltision.tonekoreforged.item.collar.BellItem;
-import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleHandel;
-import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
-import yee.pltision.tonekoreforged.curios.CuriosInterface;
-import yee.pltision.tonekoreforged.config.Config;
-import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
-import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.item.collar.EnderBoltItem;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
@@ -125,7 +119,7 @@ public class ToNeko
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
     public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new EnderBoltItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLead(new Item.Properties()));
+    public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLeadItem(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 
     public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
@@ -150,7 +144,7 @@ public class ToNeko
     //剥取
     public static final RegistryObject<Enchantment> ROB_SHEAR =ENCHANTMENTS.register("rob_shear",()->new RobShearEnchantment(Enchantment.Rarity.VERY_RARE,SHEARS, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
 
-    public static final RegistryObject<PointedDripstoneBlock> POINTED_END_ROD =BLOCKS.register("pointed_end_rod",()->new PointedEndRod(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
+    public static final RegistryObject<PointedEndRod> POINTED_END_ROD =BLOCKS.register("pointed_end_rod",()->new PointedEndRod(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
     public static final RegistryObject<Item> POINTED_END_ROD_ITEM=ITEMS.register("pointed_end_rod",()->new BlockItem(POINTED_END_ROD.get(),new Item.Properties()));
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("tab", () -> CreativeModeTab.builder()
@@ -195,45 +189,6 @@ public class ToNeko
 
     public static ResourceLocation location(String name){
         return new ResourceLocation(MODID,name);
-    }
-
-    public static CollarBaubleHandel getCollarBaubleHandel(ItemStack item){
-        return ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_BAUBLE_HANDEL_ITEM);
-    }
-    public static CollarBaubleState getCollarBaubleState(ItemStack item){
-        CollarBaubleHandel handler= ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_BAUBLE_HANDEL_ITEM);
-        return handler==null?null:handler.getBaubleState();
-    }
-    public static CollarStateHandlerItem getItemCollarHandel(ItemStack item){
-        return ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_HANDLER_ITEM);
-    }
-    public static CollarState getItemCollarState(ItemStack item){
-        CollarStateHandlerItem handler= ToNeko.getCapability(item, CollarCapabilityProvider.COLLAR_HANDLER_ITEM);
-        return handler==null?null:handler.getState();
-    }
-    public static CollarSlotHandler getLocalPlayerCollar(@Nullable Player player){
-        return  player==null? null:
-                ToNeko.getCapability(player, CollarCapabilityProvider.COLLAR_HANDLER);
-    }
-    public static CollarState getCollarState(LivingEntity entity){
-        CollarSlotHandler handler= ToNeko.getCapability(entity, CollarCapabilityProvider.COLLAR_HANDLER);
-        return handler==null?null:handler.getState();
-    }
-    public static @NotNull CollarSlotHandler getCollar(LivingEntity entity){
-        return entity.getCapability(CollarCapabilityProvider.COLLAR_HANDLER,null).orElse(CollarCapabilityProvider.FALLBACK_CAPABILITY);
-    }
-
-    public static <C> C getCapability(LivingEntity entity, Capability<C> cap){
-        LazyOptional<C> capability=entity.getCapability(cap,null);
-        return capability.isPresent()?
-                capability.orElseThrow(()->new RuntimeException("LazyOptional is present but still throw exception!"))
-                : null;
-    }
-    public static <C> C getCapability(ItemStack item, Capability<C> cap){
-        LazyOptional<C> capability=item.getCapability(cap,null);
-        return capability.isPresent()?
-                capability.orElseThrow(()->new RuntimeException("LazyOptional is present but still throw exception!"))
-                : null;
     }
 
     public static void afterComplete(FMLLoadCompleteEvent event){

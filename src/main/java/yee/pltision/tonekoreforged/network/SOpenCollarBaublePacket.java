@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarState;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
@@ -32,7 +32,7 @@ public class SOpenCollarBaublePacket {
             if (player == null) return;
             ServerLevel level = player.serverLevel();
             if(player.containerMenu.getSlot(msg.index).container instanceof CollarState){
-                CollarBaubleState state= ToNeko.getCollarBaubleState(player.containerMenu.getSlot(msg.index).getItem());
+                CollarBaubleState state= ToNekoCapabilityHelper.getCollarBaubleState(player.containerMenu.getSlot(msg.index).getItem());
                 if(state!=null){
                     level.getServer().execute(() -> handelPacket(msg,player));
 //                    DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
@@ -44,7 +44,7 @@ public class SOpenCollarBaublePacket {
     }
     public static void handelPacket(SOpenCollarBaublePacket msg, ServerPlayer player){
         if(player.containerMenu.getSlot(msg.index).container instanceof CollarState){
-            CollarBaubleState state= ToNeko.getCollarBaubleState(player.containerMenu.getSlot(msg.index).getItem());
+            CollarBaubleState state= ToNekoCapabilityHelper.getCollarBaubleState(player.containerMenu.getSlot(msg.index).getItem());
             if(state!=null){
                 player.openMenu(state);
             }

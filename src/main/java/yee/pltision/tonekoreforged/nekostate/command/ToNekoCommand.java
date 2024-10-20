@@ -35,7 +35,7 @@ import java.util.UUID;
 
 @SuppressWarnings({"StringConcatenationArgumentToLogCall", "LoggingSimilarMessage", "SameReturnValue"})
 @Mod.EventBusSubscriber
-public class NekoCommand {
+public class ToNekoCommand {
 
     @SubscribeEvent
     public static void register(RegisterCommandsEvent event) {

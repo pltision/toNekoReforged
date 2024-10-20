@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "toneko:ender_lead"
+    }
+  ],
+  "result": {
+    "item": "toneko:ender_lead"
+  }
+}

@@ -24,7 +24,7 @@ public class BellItem extends Item implements CollarBaubleItem{
         super(p_41383_);
     }
 
-    public static final int DING_TICK_WALK=15,DING_TICK_RUN =9,DING_TICK_JUMP=4,DING_RANDOM_WALK=5,DING_RANDOM_RUN=4;
+    public static final int DING_TICK_WALK=20,DING_TICK_RUN =7,DING_TICK_JUMP=6,DING_RANDOM_WALK=5,DING_RANDOM_RUN=3;
 
     public CollarBaubleState asCollarBaubleState(ItemStack item) {
         return new AbstractCollarBaubleState(item) {
@@ -41,7 +41,7 @@ public class BellItem extends Item implements CollarBaubleItem{
             public void entityTick(LivingEntity entity) {
                 if(entity.level().isClientSide&&entity.walkAnimation.speed()>0.5f) {
                     if( Math.abs(entity.tickCount-soundNextTick) > 40 ){
-                        soundNextTick=entity.level().random.nextInt(40);
+                        soundNextTick=entity.getRandom().nextInt(40);
                     }
                     if(entity.tickCount>=soundNextTick&&!entity.isUnderWater()){
                         int addTime;
@@ -50,18 +50,18 @@ public class BellItem extends Item implements CollarBaubleItem{
                                 &&((!entity.onGround())||(entity instanceof Player player&&player.isSprinting()))
                         ){
                             if(entity.onGround())
-                                addTime= DING_TICK_RUN+entity.level().random.nextInt(DING_RANDOM_RUN);
+                                addTime= DING_TICK_RUN+entity.getRandom().nextInt(DING_RANDOM_RUN);
                             else
                                 addTime=DING_TICK_JUMP;
                         }
                         else{
-                            addTime= DING_TICK_WALK+entity.level().random.nextInt(DING_RANDOM_WALK);
+                            addTime= DING_TICK_WALK+entity.getRandom().nextInt(DING_RANDOM_WALK);
                         }
                         if(slot!=0)
-                            addTime*=2+entity.level().random.nextInt(1);
+                            addTime*=2+entity.getRandom().nextInt(1);
 
                         soundNextTick=entity.tickCount+addTime;
-                        entity.level().playSound(Minecraft.getInstance().player, entity.getX(), entity.getY(), entity.getZ(), ToNeko.BELL_SOUND.get(), entity.getSoundSource(), entity.walkAnimation.speed()*entity.walkAnimation.speed()*(entity==Minecraft.getInstance().player?1/4f:2/3f ), 1.0F);
+                        entity.playSound(ToNeko.BELL_SOUND.get(), entity.walkAnimation.speed()*entity.walkAnimation.speed()*entity.walkAnimation.speed()*(entity==Minecraft.getInstance().player?1/3f:1f )*(0.875f+entity.getRandom().nextFloat()*0.125f), 1.0F);
                     }
                 }
             }

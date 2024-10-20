@@ -4,7 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 
 public class CollarBaubleSlot extends Slot {
     Object accessor;
@@ -17,7 +17,7 @@ public class CollarBaubleSlot extends Slot {
 
     @Override
     public boolean mayPlace(@NotNull ItemStack p_40231_) {
-        CollarBaubleState state= ToNeko.getCollarBaubleState(p_40231_);
+        CollarBaubleState state= ToNekoCapabilityHelper.getCollarBaubleState(p_40231_);
         return state!=null&&state.mayPlace(baublesAccessor, accessor, getSlotIndex());
     }
 

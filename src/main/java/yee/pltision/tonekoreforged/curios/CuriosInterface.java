@@ -20,6 +20,7 @@ import top.theillusivec4.curios.api.type.capability.ICurio;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.client.nekoarmor.EarsModel;
 import yee.pltision.tonekoreforged.client.nekoarmor.TailModel;
 import yee.pltision.tonekoreforged.collar.CollarState;
@@ -39,7 +40,7 @@ public class CuriosInterface {
             @Override
             public ICurioStacksHandler get() {
                 if (handler == null) {
-                    ICuriosItemHandler curiosItemHandler = ToNeko.getCapability(entity, CuriosCapability.INVENTORY);
+                    ICuriosItemHandler curiosItemHandler = ToNekoCapabilityHelper.getCapability(entity, CuriosCapability.INVENTORY);
                     if (curiosItemHandler != null) {
                         handler = curiosItemHandler.getCurios().get(Config.curiosSlotType);
                     }

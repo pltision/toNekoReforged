@@ -7,7 +7,7 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 
 public interface MenuProviderItem {
     
@@ -16,7 +16,7 @@ public interface MenuProviderItem {
         if (level.isClientSide) {
             return InteractionResultHolder.success(itemStack);
         } else {
-            MenuProvider handler= ToNeko.getCapability(itemStack,CollarCapabilityProvider.MENU_PROVIDER_ITEM);
+            MenuProvider handler= ToNekoCapabilityHelper.getCapability(itemStack,CollarCapabilityProvider.MENU_PROVIDER_ITEM);
             if (handler!=null) {
                 player.openMenu(handler);
 //                player.awardStat(Stats.OPEN_SHULKER_BOX);

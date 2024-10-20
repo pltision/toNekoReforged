@@ -2,7 +2,7 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 
 public class PlayerCollarStateHandler implements CollarSlotHandler {
     CollarState collarState;
@@ -24,7 +24,7 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
 
     @Override
     public void setCollarSlot(ItemStack item) {
-        CollarStateHandlerItem handler= ToNeko.getItemCollarHandel(item);
+        CollarStateHandlerItem handler= ToNekoCapabilityHelper.getItemCollarHandel(item);
         if(handler!=null){
             this.collarState= handler.getState();
             this.item=item;

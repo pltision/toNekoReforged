@@ -56,5 +56,18 @@
   "enchantment.toneko.rob_shear": "剥取",
   "curios.identifier.collar": "项圈",
   "itemGroup.toneko": "toNekoReforged",
-  "gui.toneko.entity'sCollar": "%s的项圈"
+  "gui.toneko.entity'sCollar": "%s的项圈",
+  "item.toneko.ender_bolt": "末影栓结",
+  "item.toneko.ender_lead": "末影拴绳",
+  "item.toneko.ender_lead.successBinding": "成功绑定到%s！",
+  "item.toneko.ender_lead.teleported": "成功将%s传送到了你的身边！",
+  "item.toneko.ender_lead.invalid": "无法在%s身上找到有效的末影栓节！",
+  "gui.toneko.openCollarBaubleMenu": "打开项圈饰品页面",
+  "item.toneko.ender_lead.teleporting": "正在将%s传送到你身边 ",
+  "item.toneko.ender_lead.entityNotFound": "未找到实体",
+  "item.toneko.ender_lead.noBinding": "对一个实体使用来绑定到它身上",
+  "item.toneko.ender_lead.canceled": "已取消传送",
+  "item.toneko.ender_lead.noTeleporter": "%s身上没有末影栓节",
+  "item.toneko.ender_lead.bindingLore": "已绑定：",
+  "item.toneko.ender_lead.noBindingLore": "(未绑定实体)"
 }

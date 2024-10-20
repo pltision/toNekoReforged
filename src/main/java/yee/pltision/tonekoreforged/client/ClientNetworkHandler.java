@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkEvent;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.network.CCollarStateChangePacket;
 
@@ -19,7 +19,7 @@ public class ClientNetworkHandler {
             if (
                     player.level().getEntity(msg.entity) instanceof LivingEntity entity
             ) {
-                CollarSlotHandler collar= ToNeko.getCollar(entity);
+                CollarSlotHandler collar= ToNekoCapabilityHelper.getCollar(entity);
                 collar.setCollarSlot(msg.item);
             }
         }

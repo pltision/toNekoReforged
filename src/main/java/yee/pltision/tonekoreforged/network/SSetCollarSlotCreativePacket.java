@@ -1,15 +1,12 @@
 package yee.pltision.tonekoreforged.network;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.network.PacketDistributor;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
-import yee.pltision.tonekoreforged.collar.CollarState;
 
 import java.util.function.Supplier;
 
@@ -32,7 +29,7 @@ public class SSetCollarSlotCreativePacket {
     public static void handle(SSetCollarSlotCreativePacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null||!player.isCreative()|| ToNeko.getCollar(player).disableSlotUi()) return;
+            if (player == null||!player.isCreative()|| ToNekoCapabilityHelper.getCollar(player).disableSlotUi()) return;
             ServerLevel level = player.serverLevel();
             level.getServer().execute(() -> handelPacket(msg,player));
 //            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
@@ -41,7 +38,7 @@ public class SSetCollarSlotCreativePacket {
     }
     public static void handelPacket(SSetCollarSlotCreativePacket msg, ServerPlayer player){
         if(player.isCreative()){
-            CollarSlotHandler handler=ToNeko.getCollar(player);
+            CollarSlotHandler handler=ToNekoCapabilityHelper.getCollar(player);
             handler.setCollarSlotAndSend(player,msg.item);
         }
     }

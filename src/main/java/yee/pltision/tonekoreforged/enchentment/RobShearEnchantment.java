@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.config.Config;
 
@@ -97,7 +97,7 @@ public class RobShearEnchantment extends Enchantment {
     }
 
     public static boolean tryShearEntityCollar(ServerLevel level, @Nullable ServerPlayer player, ItemStack shears, LivingEntity target){
-        CollarSlotHandler handler= ToNeko.getCollar(target);
+        CollarSlotHandler handler= ToNekoCapabilityHelper.getCollar(target);
         if(handler.canTake(player, target)){
             ItemStack item=handler.getCollarItem();
             if(player==null)

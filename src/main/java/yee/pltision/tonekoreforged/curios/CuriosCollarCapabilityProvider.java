@@ -9,7 +9,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.collar.CollarStateHandlerItem;
 
@@ -39,7 +39,7 @@ public class CuriosCollarCapabilityProvider implements ICapabilitySerializable<C
     public void deserializeNBT(CompoundTag main) {
         CollarSlotHandler handler= optional.resolve().orElse(null);
         if (handler != null) {
-            CollarStateHandlerItem itemHandel= ToNeko.getItemCollarHandel(ItemStack.of(main.getCompound("collar")));
+            CollarStateHandlerItem itemHandel= ToNekoCapabilityHelper.getItemCollarHandel(ItemStack.of(main.getCompound("collar")));
             if(itemHandel!=null&&itemHandel.getState() != null)
                 handler.setCollarSlot(ItemStack.of(main.getCompound("collar")));
 

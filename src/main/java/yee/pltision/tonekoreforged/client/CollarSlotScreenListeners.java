@@ -20,6 +20,7 @@ import net.minecraftforge.fml.common.Mod;
 import org.joml.Vector2i;
 import org.lwjgl.glfw.GLFW;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 import yee.pltision.tonekoreforged.collar.CollarStateHandler;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
@@ -48,7 +49,7 @@ public class CollarSlotScreenListeners{
         {
             if(isInCollarSlot((int)event.getMouseX(),(int)event.getMouseY(),collarSlotLeft(pos.x)-1,collarSlotTop(pos.y)-1)) {
                 LivingEntity player=screen.getMinecraft().player;
-                CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(screen.getMinecraft().player);
+                CollarSlotHandler collar = ToNekoCapabilityHelper.getLocalPlayerCollar(screen.getMinecraft().player);
                 if (collar != null) {
                     ItemStack carried=screen.getMenu().getCarried();
                     if (screen instanceof CreativeModeInventoryScreen && event.getButton() == GLFW.GLFW_MOUSE_BUTTON_MIDDLE && carried.isEmpty()) {
@@ -89,7 +90,7 @@ public class CollarSlotScreenListeners{
 //        debugOutScreenPos(event);
         failed:
         {
-            CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(event.getContainerScreen().getMinecraft().player);
+            CollarSlotHandler collar = ToNekoCapabilityHelper.getLocalPlayerCollar(event.getContainerScreen().getMinecraft().player);
             if(collar==null|| collar.disableSlotUi()) break failed;
 
             Vector2i pos=getHeadSlotPos(event.getContainerScreen());

@@ -11,12 +11,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.collar.*;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
+import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
+import yee.pltision.tonekoreforged.collar.CollarState;
+import yee.pltision.tonekoreforged.collar.CollarStateHandlerItem;
 import yee.pltision.tonekoreforged.curios.CuriosInterface;
 
 import java.util.function.Supplier;
@@ -67,7 +69,7 @@ public interface CollarItem {
         if (level.isClientSide) {
             return InteractionResultHolder.success(itemStack);
         } else {
-            CollarState state= ToNeko.getItemCollarHandel(itemStack).getState();
+            CollarState state= ToNekoCapabilityHelper.getItemCollarHandel(itemStack).getState();
             MenuProvider handler= createMenuProvider(state,itemStack,hand);
             if (handler!=null) {
                 player.openMenu(handler);

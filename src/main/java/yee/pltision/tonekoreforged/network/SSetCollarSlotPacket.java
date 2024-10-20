@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 
 import java.util.function.Supplier;
@@ -36,7 +37,7 @@ public class SSetCollarSlotPacket {
     public static void handle(SSetCollarSlotPacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null|| ToNeko.getCollar(player).disableSlotUi()) return;
+            if (player == null|| ToNekoCapabilityHelper.getCollar(player).disableSlotUi()) return;
             ServerLevel level = player.serverLevel();
             level.getServer().execute(() -> handelPacket(msg,player));
 //            DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handelPacket(msg,player));
@@ -56,7 +57,7 @@ public class SSetCollarSlotPacket {
             } else {
                 int i = msg.slotNum;
 
-                CollarSlotHandler collar = ToNeko.getLocalPlayerCollar(player);
+                CollarSlotHandler collar = ToNekoCapabilityHelper.getLocalPlayerCollar(player);
                 if (collar != null) {
                     ItemStack carried=player.containerMenu.getCarried();
                     if(i==-1){

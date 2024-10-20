@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.client.ClientNetworkHandler;
 import yee.pltision.tonekoreforged.collar.CollarStateHandler;
 
@@ -27,7 +27,7 @@ public class CCollarStateChangePacket {
     }
 
     public static CCollarStateChangePacket tryBuild(LivingEntity entity){
-        CollarStateHandler handler= ToNeko.getCollar(entity);
+        CollarStateHandler handler= ToNekoCapabilityHelper.getCollar(entity);
         return new CCollarStateChangePacket(entity.getId(),handler.getCollarItem());
     }
 

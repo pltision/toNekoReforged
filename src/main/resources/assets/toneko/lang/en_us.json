@@ -57,5 +57,17 @@
   "curios.identifier.collar": "Collar",
   "itemGroup.toneko": "toNekoReforged",
   "gui.toneko.openCollarBaubleMenu": "Open Collar Bauble Menu",
-  "gui.toneko.entity'sCollar": "Collar On %s"
+  "gui.toneko.entity'sCollar": "Collar On %s",
+  "item.toneko.ender_bolt": "Ender Bolt",
+  "item.toneko.ender_lead": "Ender Lead",
+  "item.toneko.ender_lead.successBinding": "Success binding %s!",
+  "item.toneko.ender_lead.teleported": "Teleported %s to your side!",
+  "item.toneko.ender_lead.invalid": "Cannot found a valid ender bolt on %s!",
+  "item.toneko.ender_lead.teleporting": "Teleporting %s to your side ",
+  "item.toneko.ender_lead.entityNotFound": "Entity not found",
+  "item.toneko.ender_lead.noBinding": "Use on an entity to bind on it",
+  "item.toneko.ender_lead.canceled": "Canceled teleport",
+  "item.toneko.ender_lead.noTeleporter": "There is no ender bolt on %s",
+  "item.toneko.ender_lead.bindingLore": "Binding: ",
+  "item.toneko.ender_lead.noBindingLore": "(No entity binding)"
 }

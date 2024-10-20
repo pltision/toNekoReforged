@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 import yee.pltision.tonekoreforged.collar.CollarState;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
@@ -59,7 +59,7 @@ public class BasicCollarState implements CollarState {
 
     @Override
     public AbstractContainerMenu createMenuOnEntity(int id, Inventory inventory, Player player, LivingEntity entity) {
-        return new BasicCollarMenu(id,inventory,this,p-> ToNeko.getCollar(entity).getState()==this);
+        return new BasicCollarMenu(id,inventory,this,p-> ToNekoCapabilityHelper.getCollar(entity).getState()==this);
     }
 
     public BasicCollarState(){}

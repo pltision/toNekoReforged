@@ -13,7 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.CollarBaubleRenderer;
 import yee.pltision.tonekoreforged.client.collar.CollarRendererInstances;
 import yee.pltision.tonekoreforged.collar.CollarState;
-import yee.pltision.tonekoreforged.collar.bauble.*;
+import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
+import yee.pltision.tonekoreforged.collar.bauble.TeleporterState;
 
 public class EnderBoltItem extends Item implements CollarBaubleItem{
     public EnderBoltItem(Properties p_41383_) {

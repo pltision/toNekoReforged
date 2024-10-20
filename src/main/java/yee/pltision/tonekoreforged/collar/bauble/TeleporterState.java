@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.client.collar.InitCollarScreenContext;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
@@ -24,6 +24,7 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
 
     int enderPearls;
     int maxCount=64;
+    int perConsume=1;
 
     ItemStack input=ItemStack.EMPTY;
     ItemStack output=ItemStack.EMPTY;
@@ -96,7 +97,7 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
 
     @Override
     public boolean stillValid(@NotNull Player p_18946_) {
-        return (state==null||state.stillValid(p_18946_))&&(entity==null|| state== ToNeko.getCollar(entity).getState());
+        return (state==null||state.stillValid(p_18946_))&&(entity==null|| state== ToNekoCapabilityHelper.getCollar(entity).getState());
     }
 
     @Override
@@ -148,5 +149,13 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
     @OnlyIn(Dist.CLIENT)
     public Consumer<InitCollarScreenContext> initScreenButtonConsumer(){
         return InitCollarScreenContext::addOpenMenuButton;
+    }
+
+    public boolean canTeleport(){
+        return enderPearls>0;
+    }
+    public void consume(){
+        if(enderPearls>perConsume)  enderPearls--;
+        else enderPearls=0;
     }
 }

@@ -44,10 +44,7 @@ public class CollarRenderer<E extends LivingEntity,M extends HumanoidModel<E>> i
 
     public static void getRotate(HumanoidModel<?> model,Quaternionf rotate){
         rotate.rotateY(model.head.yRot);
-
-//        rotate.rotateX(model.body.xRot);
-//        rotate.rotateY(model.body.yRot);
-//        rotate.rotateZ(model.body.zRot);
+        rotate.rotateZ(model.head.zRot);
 
         rotate.rotateX((model.head.xRot+model.body.xRot)/3);
     }

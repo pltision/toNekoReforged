@@ -13,7 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
 import yee.pltision.tonekoreforged.collar.bauble.BaublesAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
@@ -57,7 +57,7 @@ public interface CollarState extends Container, BaublesAccessor {
         int size=Math.min(baubles().size(),baubles.size());
         for(int i=0;i<size;i++){
             baubles().set(i,
-                    ToNeko.getCollarBaubleState(ItemStack.of(baubles.getCompound(i)))
+                    ToNekoCapabilityHelper.getCollarBaubleState(ItemStack.of(baubles.getCompound(i)))
             );
         }
 
@@ -88,7 +88,7 @@ public interface CollarState extends Container, BaublesAccessor {
     }
 
     static void createCollarOnEntityMenu(ServerPlayer player,LivingEntity entityWearCollar){
-        CollarState state=ToNeko.getCollarState(entityWearCollar);
+        CollarState state=ToNekoCapabilityHelper.getCollarState(entityWearCollar);
         if(state!=null){
             player.openMenu(new MenuProvider() {
                 @Override
@@ -150,7 +150,7 @@ public interface CollarState extends Container, BaublesAccessor {
 
     @Override
     default void setItem(int slot, @NotNull ItemStack item) {
-        this.baubles().set(slot,ToNeko.getCollarBaubleState(item));
+        this.baubles().set(slot,ToNekoCapabilityHelper.getCollarBaubleState(item));
     }
 
     @Override

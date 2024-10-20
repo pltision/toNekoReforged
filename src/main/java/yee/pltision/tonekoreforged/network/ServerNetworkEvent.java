@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.collar.CollarSlotHandler;
 
 @Mod.EventBusSubscriber
@@ -18,7 +18,7 @@ public class ServerNetworkEvent {
         if(
                 event.getTarget() instanceof LivingEntity entity
         ){
-            CollarSlotHandler handler= ToNeko.getCollar(entity);
+            CollarSlotHandler handler= ToNekoCapabilityHelper.getCollar(entity);
             ItemStack item=handler.getCollarItem();
             if( ( ! item.isEmpty() ) &&event.getEntity() instanceof ServerPlayer player) {
                 handler.sendToClient(player,entity);
@@ -30,7 +30,7 @@ public class ServerNetworkEvent {
         if(
                 event.getEntity() instanceof ServerPlayer player
         ){
-            CollarSlotHandler handler= ToNeko.getCollar(player);
+            CollarSlotHandler handler= ToNekoCapabilityHelper.getCollar(player);
             handler.sendToClient(player,player);
         }
     }

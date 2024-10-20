@@ -14,6 +14,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 
@@ -22,7 +23,7 @@ public class CollarStateEventListeners {
 
     @SubscribeEvent
     public static void livingTick(LivingEvent.LivingTickEvent event){
-        ToNeko.getCollar(event.getEntity()).entityTick(event.getEntity());
+        ToNekoCapabilityHelper.getCollar(event.getEntity()).entityTick(event.getEntity());
     }
 
     @SubscribeEvent
@@ -61,7 +62,7 @@ public class CollarStateEventListeners {
         if (entity instanceof Player && entity.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
             return;
 
-        CollarSlotHandler handler=ToNeko.getCollar(entity);
+        CollarSlotHandler handler=ToNekoCapabilityHelper.getCollar(entity);
         ItemEntity itemEntity= handler.dropWhenDeath(entity);
         if(itemEntity!=null)
             event.getDrops().add(itemEntity);

@@ -2,7 +2,7 @@
   "item.bell.ding": {
     "sounds": [
       {
-        "name": "toneko:bell_ding_2",
+        "name": "toneko:bell2",
         "volume": 0.1,
         "pitch": 1,
         "weight": 1,
@@ -12,7 +12,7 @@
         "type": "file"
       },
       {
-        "name": "toneko:bell_ding_1",
+        "name": "toneko:bell1",
         "volume": 0.1,
         "pitch": 1,
         "weight": 1,
@@ -22,7 +22,7 @@
         "type": "file"
       },
       {
-        "name": "toneko:bell_ding_3",
+        "name": "toneko:bell3",
         "volume": 0.1,
         "pitch": 1,
         "weight": 1,

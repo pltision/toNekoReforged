@@ -2,11 +2,11 @@ package yee.pltision.tonekoreforged.collar.lead;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
 
 public interface LeadItemHandel {
     default boolean canUseOn(LivingEntity entity){
-        return ToNeko.getCollarState(entity)==null;
+        return ToNekoCapabilityHelper.getCollarState(entity)==null;
     }
 
     default boolean canDrop(LivingEntity entity, LivingEntity leader){

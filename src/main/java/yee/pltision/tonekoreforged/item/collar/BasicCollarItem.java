@@ -2,7 +2,6 @@ package yee.pltision.tonekoreforged.item.collar;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.client.collar.BasicCollarState;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
-import yee.pltision.tonekoreforged.collar.CollarCapabilityProvider;
 import yee.pltision.tonekoreforged.collar.CollarState;
 
 public class BasicCollarItem extends Item implements CollarItem{
