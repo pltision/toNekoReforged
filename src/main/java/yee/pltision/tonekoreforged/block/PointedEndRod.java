@@ -3,9 +3,11 @@ package yee.pltision.tonekoreforged.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,11 +21,16 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import yee.pltision.tonekoreforged.ToNeko;
+
+import java.util.LinkedList;
 
 @SuppressWarnings("NullableProblems")
 public class PointedEndRod extends Block implements Fallable, SimpleWaterloggedBlock {
@@ -103,29 +110,29 @@ public class PointedEndRod extends Block implements Fallable, SimpleWaterloggedB
 
     public void fallOn(Level p_154047_, BlockState p_154048_, BlockPos p_154049_, Entity p_154050_, float p_154051_) {
         if (p_154048_.getValue(TIP_DIRECTION) == Direction.UP && p_154048_.getValue(IS_TIP)) {
-            p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, p_154047_.damageSources().stalagmite());
+            p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, ToNeko.damageSource(p_154047_,ToNeko.FALL_ON_END_ROD));
         } else {
             super.fallOn(p_154047_, p_154048_, p_154049_, p_154050_, p_154051_);
         }
 
     }
     public @NotNull DamageSource getFallDamageSource(Entity p_254432_) {
-        return p_254432_.damageSources().fallingStalactite(p_254432_);
+        return ToNeko.damageSource(p_254432_.level(),ToNeko.FALLING_END_ROD,p_254432_);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         LevelAccessor level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Direction direction = context.getNearestLookingVerticalDirection();
-        Direction tipDirection = getCanSurviveDirection(level, pos, direction.getAxis()== Direction.Axis.Y?direction:Direction.DOWN);
-        if (tipDirection == null) {
+        Direction placeDirection = getCanSurviveDirection(level, pos, direction.getAxis()== Direction.Axis.Y?direction:Direction.DOWN);
+        if (placeDirection == null) {
             return null;
         } else {
             return this.defaultBlockState()
-                    .setValue(TIP_DIRECTION, tipDirection.getOpposite())
+                    .setValue(TIP_DIRECTION, placeDirection.getOpposite())
                     .setValue(WATERLOGGED, level.getFluidState(pos).getType() == Fluids.WATER)
-                    .setValue(IS_BASE,!level.getBlockState(pos.relative(direction)).is(this))
-                    .setValue(IS_TIP,!level.getBlockState(pos.relative(direction.getOpposite())).is(this));
+                    .setValue(IS_BASE,!level.getBlockState(pos.relative(placeDirection)).is(this))
+                    .setValue(IS_TIP,!level.getBlockState(pos.relative(placeDirection.getOpposite())).is(this));
         }
     }
 
@@ -152,25 +159,106 @@ public class PointedEndRod extends Block implements Fallable, SimpleWaterloggedB
         }
 
         if (direction == Direction.UP || direction == Direction.DOWN){
-            if(!canSurvive(state,level,pos)){
-                level.scheduleTick(pos, this, state.getValue(TIP_DIRECTION)==Direction.DOWN?2:1);
+            Direction stateDirection=state.getValue(TIP_DIRECTION);
+            if(direction==stateDirection){
+                if(changed.is(this))
+                    return state.setValue(IS_TIP,false);
+                state=state.setValue(IS_TIP,true);
             }
-            if(direction==state.getValue(TIP_DIRECTION)){
-                return state.setValue(IS_TIP,!changed.is(this));
+            else{
+                if(!state.getValue(IS_TIP)){
+                    if(level.getBlockState(pos.relative(stateDirection)).is(this)) {
+                        state = state.setValue(IS_BASE, false).setValue(IS_TIP, !changed.is(this));
+                        if(!changed.is(this)){
+                            state=state.setValue(TIP_DIRECTION, direction);
+                        }
+                    }
+                }
             }
-            /*else{
-                if (state.getValue(IS_BASE)&& !changed.is(this))
-                    return state.setValue(IS_BASE,true);
-            }*/
+            if(state.getValue(IS_TIP)&& !canSurvive(state,level,pos))
+                if(direction==Direction.UP){
+                    level.scheduleTick(pos, this, 1);
+//                    if(changed.is(this))return state;
+                    return state
+                            .setValue(TIP_DIRECTION,Direction.DOWN)
+                            .setValue(IS_BASE,true)
+                            .setValue(IS_TIP,!level.getBlockState(pos.below()).is(this));
+                }
+                else
+                    level.scheduleTick(pos, this, 1);
+
         }
         return state;
     }
 
+    public void tick(BlockState state, ServerLevel p_221866_, BlockPos p_221867_, RandomSource p_221868_) {
+        if(!this.canSurvive(state,p_221866_,p_221867_)){
+            if(state.getValue(IS_BASE)&&state.getValue(TIP_DIRECTION)==Direction.DOWN)
+                spawnFallingStalactite(state,p_221866_,p_221867_);
+            else
+                p_221866_.destroyBlock(p_221867_, true);
+        }
+    }
+
+    void spawnFallingStalactite(BlockState state, Level level, BlockPos pos) {
+        BlockPos.MutableBlockPos foreach = pos.mutable();
+
+        LinkedList<BlockState> states=new LinkedList<>();
+
+        for(BlockState blockstate = state; blockstate.is(this); blockstate = level.getBlockState(foreach)) {
+            if(!blockstate.getValue(IS_TIP))
+                blockstate=blockstate.setValue(TIP_DIRECTION,Direction.DOWN);
+            states.add(blockstate);
+            foreach.move(Direction.DOWN);
+        }
+
+        BlockPos.MutableBlockPos place=pos.mutable();
+        states.forEach(b->{
+            spawnEntity(level,pos,place,b);
+            place.move(Direction.DOWN);
+        });
+
+    }
+
+    void spawnEntity(Level level,BlockPos origin,BlockPos foreach,BlockState state){
+        FallingBlockEntity fallingblockentity = FallingBlockEntity.fall(level, foreach, state);
+        int i = Math.max(1 + origin.getY() - foreach.getY(), 6);
+        fallingblockentity.setHurtsEntities( i, 40);
+
+    }
+
+
     @Override
     public boolean canSurvive(BlockState state, LevelReader levelReader, BlockPos pos) {
+        if(state.getValue(IS_TIP)&&!state.getValue(IS_BASE)) {
+            ChunkAccess chunk = levelReader.getChunk(pos);
+            BlockPos.MutableBlockPos check = pos.mutable();
+
+            Direction direction=state.getValue(TIP_DIRECTION);
+            int moveY=direction.getStepY()*-1;
+            int y=pos.getY();
+            BlockState checkState;
+            while(true){
+                y+=moveY;
+                checkState=chunk.getBlockState(check.setY(y));
+                if(checkState.is(this)){
+                    if(checkState.getValue(IS_BASE)&&checkState.getValue(TIP_DIRECTION)==direction){
+                        return true;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+
         Direction direction=state.getValue(TIP_DIRECTION);
         BlockPos checkPos=pos.relative(direction.getOpposite());
         BlockState checkState=levelReader.getBlockState(checkPos);
         return checkState.is(this) || checkState.isFaceSturdy(levelReader, checkPos, direction);
+    }
+
+    public FluidState getFluidState(BlockState p_154235_) {
+        return p_154235_.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(p_154235_);
     }
 }

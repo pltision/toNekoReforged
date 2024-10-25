@@ -5,8 +5,12 @@ import net.minecraft.core.dispenser.DispenseItemBehavior;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.MenuType;
@@ -15,6 +19,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
@@ -33,6 +38,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import yee.pltision.tonekoreforged.block.PointedEndRod;
+import yee.pltision.tonekoreforged.block.PunjiEndRod;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 import yee.pltision.tonekoreforged.collar.bauble.TeleporterMenu;
@@ -75,6 +81,8 @@ public class ToNeko
     public static final DeferredRegister<MenuType<?>> MENUS=DeferredRegister.create(Registries.MENU,MODID);
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS=DeferredRegister.create(Registries.SOUND_EVENT,MODID);
     public static final DeferredRegister<Enchantment> ENCHANTMENTS=DeferredRegister.create(Registries.ENCHANTMENT,MODID);
+
+    // --- 物品 ---
 
     public static final RegistryObject<RecipeSerializer<DyingTranslateRecipe>> DYE_TRANSLATE_RECIPE=RECIPE_SERIALIZER.register("crafting_dying_translate",()->
             DyingTranslateRecipe.Serializer.INSTANCE
@@ -143,8 +151,23 @@ public class ToNeko
     //剥取
     public static final RegistryObject<Enchantment> ROB_SHEAR =ENCHANTMENTS.register("rob_shear",()->new RobShearEnchantment(Enchantment.Rarity.VERY_RARE,SHEARS, new EquipmentSlot[]{EquipmentSlot.MAINHAND}));
 
+    // --- 方块 ---
+
     public static final RegistryObject<PointedEndRod> POINTED_END_ROD =BLOCKS.register("pointed_end_rod",()->new PointedEndRod(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
     public static final RegistryObject<Item> POINTED_END_ROD_ITEM=ITEMS.register("pointed_end_rod",()->new BlockItem(POINTED_END_ROD.get(),new Item.Properties()));
+
+    public static final RegistryObject<PunjiEndRod> PUNJI_ROD =BLOCKS.register("punji_rod",()->new PunjiEndRod(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
+    public static final RegistryObject<Item> PUNJI_ROD_ITEM=ITEMS.register("punji_rod",()->new BlockItem(PUNJI_ROD.get(),new Item.Properties()));
+
+    public static final ResourceKey<DamageType> FALL_ON_END_ROD = ResourceKey.create(Registries.DAMAGE_TYPE, location("fall_on_end_rod"));
+    public static final ResourceKey<DamageType> FALLING_END_ROD = ResourceKey.create(Registries.DAMAGE_TYPE, location("falling_end_rod"));
+
+    public static DamageSource damageSource(Level level, ResourceKey<DamageType> key){
+        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key));
+    }
+    public static DamageSource damageSource(Level level, ResourceKey<DamageType> key, Entity entity){
+        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key),entity);
+    }
 
     public static final RegistryObject<CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
