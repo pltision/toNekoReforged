@@ -15,9 +15,6 @@ jobs:
   build:
 
     runs-on: windows-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
     - uses: actions/checkout@v4
@@ -31,9 +28,6 @@ jobs:
       
     - name: Setup Gradlee
       uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    -name: Tree
-     uses: tree
 
     - name: Build with Gradle
       run: ./gradlew.bat build
