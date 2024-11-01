@@ -46,3 +46,8 @@ jobs:
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Build Artifacts
+      with:
+        name: toNeko Reforged Mod
+        path: build/libs/*.jar
