@@ -55,7 +55,7 @@
   "item.toneko.bell": "Collar Bell",
   "enchantment.toneko.rob_shear": "Rob Shear",
   "curios.identifier.collar": "Collar",
-  "itemGroup.toneko": "toNekoReforged",
+  "itemGroup.toneko": "toNeko Reforged",
   "gui.toneko.openCollarBaubleMenu": "Open Collar Bauble Menu",
   "gui.toneko.entity'sCollar": "Collar On %s",
   "item.toneko.ender_bolt": "Ender Bolt",
@@ -69,5 +69,11 @@
   "item.toneko.ender_lead.canceled": "Canceled teleport",
   "item.toneko.ender_lead.noTeleporter": "There is no ender bolt on %s",
   "item.toneko.ender_lead.bindingLore": "Binding: ",
-  "item.toneko.ender_lead.noBindingLore": "(No entity binding)"
+  "item.toneko.ender_lead.noBindingLore": "(No entity binding)",
+  "nameFormat.toneko.nameFormatNeko": "Neko %s",
+  "nameFormat.toneko.nameFormatNekoWith1Owners": "Neko %2$s of %1$s",
+  "nameFormat.toneko.nameFormatNekoWith2Owners": "Neko %3$s of %1$s and %2$s",
+  "nameFormat.toneko.nameFormatNekoWith3Owners": "Neko %4$s of %1$s, %2$s and %3$s",
+  "nameFormat.toneko.nameFormatNekoWith4Owners": "Neko %5$s of %1$s, %2$s, %3$s and %4$s",
+  "nameFormat.toneko.nameFormatNekoWith5Owners": "Neko %6$s of %1$s, %2$s, %3$s, %4$s and %5$s"
 }

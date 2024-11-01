@@ -19,9 +19,14 @@ import yee.pltision.tonekoreforged.collar.bauble.BaublesAccessor;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 import java.util.Collections;
+import java.util.List;
 
 public interface CollarState extends Container, BaublesAccessor {
     String COLLAR_TAG_NAME="CollarItem";
+
+    //可能需要写替换饰品的方法而不是直接使用baubles的，以便优化initEntity和unEquip
+    @Override
+    List<CollarBaubleState> baubles();
 
     @Nullable
     default  <E> CollarRenderHelper<E,?> getCollarRenderHelper(){
@@ -80,6 +85,14 @@ public interface CollarState extends Container, BaublesAccessor {
             CollarBaubleState bauble=it.next();
             if(bauble!=null)
                 bauble.initEntity(entity,this,it.nextIndex());
+        }
+    }
+
+    default void unEquip(LivingEntity entity){
+        for(var it=baubles().listIterator();it.hasNext();){
+            CollarBaubleState bauble=it.next();
+            if(bauble!=null)
+                bauble.unEquip(entity,this,it.nextIndex());
         }
     }
 

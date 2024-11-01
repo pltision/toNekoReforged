@@ -77,6 +77,9 @@ public class CollarSlotScreenListeners{
         }
 
     }
+    /*public static int getFastPlaceSlot(AbstractContainerScreen<?> screen){
+
+    }*/
 
     @SubscribeEvent
     public static void cancelRelease(ScreenEvent.MouseButtonReleased.Pre event){

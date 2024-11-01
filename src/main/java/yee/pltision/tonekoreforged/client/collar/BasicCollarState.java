@@ -46,8 +46,12 @@ public class BasicCollarState implements CollarState {
     public void entityTick(LivingEntity entity) {
         for(int i=0,to=/*Math.min(*/baubles.size()/*,lastBaubles.size())*/;i<to;i++){
             CollarBaubleState bauble=baubles.get(i);
-            if(bauble!=null&&bauble==lastBaubles.get(i))
-                bauble.initEntity(entity,this,i);
+            if(bauble!=lastBaubles.get(i))
+                if(bauble==null)
+                    lastBaubles.get(i).unEquip(entity,this,i);
+                else
+                    bauble.initEntity(entity,this,i);
+            lastBaubles.set(i,bauble);
         }
         CollarState.super.entityTick(entity);
     }

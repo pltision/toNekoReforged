@@ -13,7 +13,7 @@ import yee.pltision.tonekoreforged.network.NekoNetworks;
 
 public interface CollarSlotHandler extends CollarStateHandler{
     default boolean mayReplace(LivingEntity entity, ItemStack stack) {
-        return stack.isEmpty()||stack.getCapability(CollarCapabilityProvider.COLLAR_HANDLER_ITEM).isPresent();
+        return ( canTake(null,entity)&&(stack.isEmpty()||stack.getCapability(CollarCapabilityProvider.COLLAR_HANDLER_ITEM).isPresent()) ) ||(entity instanceof Player entityPlayer&&entityPlayer.isCreative());
     }
 
     void setCollarSlot(ItemStack item);
@@ -34,7 +34,7 @@ public interface CollarSlotHandler extends CollarStateHandler{
 
     default boolean canTake(@Nullable ServerPlayer taker,LivingEntity entity){
         CollarState state=getState();
-        return state != null && state.canTake(taker, entity);
+        return state == null || state.canTake(taker, entity);
     }
     default void entityTick(LivingEntity entity){
         CollarState state=getState();

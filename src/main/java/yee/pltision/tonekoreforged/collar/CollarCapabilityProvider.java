@@ -33,16 +33,18 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
 
     public final LazyOptional<CollarSlotHandler> optional;
     public PlayerCollarStateHandler handler;
+    Player player;
 
-    public CollarCapabilityProvider(){
+    public CollarCapabilityProvider(Player player){
         optional= LazyOptional.of(this::createHandle);
+        this.player=player;
         /*if(player instanceof ServerPlayer){
             optional.orElse(FALLBACK_CAPABILITY).setCollarSlot(player,new ItemStack(ToNeko.COLLAR.get()));
         }*/
     }
 
     public PlayerCollarStateHandler createHandle(){
-        handler=new PlayerCollarStateHandler();
+        handler=new PlayerCollarStateHandler(player);
         return handler;
     }
 
@@ -76,7 +78,7 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
         if(event.getObject()instanceof Player entity){
             ICapabilityProvider provider=null;
             if (ToNeko.useCuriosApi()) provider = CuriosInterface.tryCreateCuriosHandel(entity);
-            if(provider==null)provider=new CollarCapabilityProvider();
+            if(provider==null)provider=new CollarCapabilityProvider(entity);
             event.addCapability(ToNeko.location("collar_state"), provider);
         }
     }

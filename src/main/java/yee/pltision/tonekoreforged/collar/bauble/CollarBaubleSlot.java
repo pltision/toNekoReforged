@@ -18,7 +18,7 @@ public class CollarBaubleSlot extends Slot {
     @Override
     public boolean mayPlace(@NotNull ItemStack p_40231_) {
         CollarBaubleState state= ToNekoCapabilityHelper.getCollarBaubleState(p_40231_);
-        return state!=null&&state.mayPlace(baublesAccessor, accessor, getSlotIndex());
+        return state!=null&&state.mayEquip(baublesAccessor, accessor, getSlotIndex());
     }
 
 }

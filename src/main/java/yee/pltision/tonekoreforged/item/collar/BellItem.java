@@ -72,10 +72,10 @@ public class BellItem extends Item implements CollarBaubleItem{
             }
 
             @Override
-            public boolean mayPlace(BaublesAccessor baublesAccessor, Object slotAccessor, int slot) {
+            public boolean mayEquip(BaublesAccessor baublesAccessor, Object slotAccessor, int slot) {
                 return slotAccessor instanceof BorderBaubleSlotAccessor accessor?
                         accessor.fontSideSlots().contains(slot)||accessor.backSideSlots().contains(slot)
-                        : super.mayPlace(baublesAccessor, slotAccessor,slot);
+                        : super.mayEquip(baublesAccessor, slotAccessor,slot);
             }
         };
     }

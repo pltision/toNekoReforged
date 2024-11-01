@@ -29,6 +29,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.datagen.TnDamageType;
 
 import java.util.LinkedList;
 
@@ -50,7 +51,11 @@ public class PointedEndRod extends Block implements Fallable, SimpleWaterloggedB
 
     public PointedEndRod(Properties p_154025_) {
         super(p_154025_);
-        registerDefaultState(defaultBlockState().setValue(IS_BASE,true).setValue(IS_TIP,true));
+        registerDefaultState(defaultBlockState()
+                .setValue(IS_BASE,true)
+                .setValue(IS_TIP,true)
+                .setValue(WATERLOGGED,false)
+        );
     }
 
     //复制自末地烛
@@ -110,14 +115,14 @@ public class PointedEndRod extends Block implements Fallable, SimpleWaterloggedB
 
     public void fallOn(Level p_154047_, BlockState p_154048_, BlockPos p_154049_, Entity p_154050_, float p_154051_) {
         if (p_154048_.getValue(TIP_DIRECTION) == Direction.UP && p_154048_.getValue(IS_TIP)) {
-            p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, ToNeko.damageSource(p_154047_,ToNeko.FALL_ON_END_ROD));
+            p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, ToNeko.damageSource(p_154047_, TnDamageType.FALL_ON_END_ROD));
         } else {
             super.fallOn(p_154047_, p_154048_, p_154049_, p_154050_, p_154051_);
         }
 
     }
     public @NotNull DamageSource getFallDamageSource(Entity p_254432_) {
-        return ToNeko.damageSource(p_254432_.level(),ToNeko.FALLING_END_ROD,p_254432_);
+        return ToNeko.damageSource(p_254432_.level(),TnDamageType.FALLING_END_ROD,p_254432_);
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext context) {

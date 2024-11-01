@@ -107,7 +107,6 @@ public class TeleporterState extends AbstractCollarBaubleState implements Contai
 
     @Override
     public void initEntity(@Nullable LivingEntity entity, CollarState state, int slot) {
-        super.initEntity(entity, state, slot);
         this.state=state;
         this.entity=entity;
     }

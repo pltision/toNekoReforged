@@ -146,6 +146,20 @@ public class Config {
             .comment("项圈在Curios中的槽位。")
             .define("collar.curiosSlot", "collar");
 
+    private static final ForgeConfigSpec.BooleanValue ENABLE_NAME_TAG_MODIFY = BUILDER
+            .comment("If true, players can wear a collar with name tag and modify their display name.")
+            .comment("如果为true，玩家可以戴上带有命名牌的项圈来修改他们在聊天栏显示的名字。")
+            .define("collar.nameTag.enable",true);
+
+    private static final ForgeConfigSpec.ConfigValue<Integer> NAME_TAG_SHOW_OWNER_LIMIT = BUILDER
+            .comment("when players wear a non renamed name tag their will join their owner's name. If owner more then the number, names will not join.")
+            .comment("玩家可以戴上带有未命名的命名牌的项圈时，名字中加入它们主人的名字不超过此值，若超过则不添加主人的名字。")
+            .define("collar.nameTag.limit",3);
+    private static final ForgeConfigSpec.BooleanValue ENABLE_NAME_TAG_COSTUME_PREFIX = BUILDER
+            .comment("If true, players can wear a renamed name tag to add a prefix to their display name.")
+            .comment("如果为true，玩家可以戴上命名的命名牌来让他们聊天栏显示的名字加上前缀。")
+            .define("collar.nameTag.enableCostumePrefix",true);
+
     /*//NOT_TODO: 写括号处理啥的，还有给忽略字符追加括号（算了懒了，不做配置，反正末尾符号优化还不是不能配置
     Pair<BracketPair,ForgeConfigSpec> pair=BUILDER.configure(builder->{
         builder.tr
@@ -183,6 +197,10 @@ public class Config {
     public static String curiosSlotType;
 
     public static final Supplier<Component> DEFAULT_RITE=Lang.DEFAULT_NEKO_RITE_GUILD::component;
+
+    public static boolean enableNameTagModify;
+    public static int nameTagShowOwnerLimit;
+    public static boolean enableNameTagCostumePrefix;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -225,6 +243,10 @@ public class Config {
         onlyOwnerCanShearNeko= ONLY_OWNER_CAN_SHEAR_NEKO.get();
 
         curiosSlotType= CURIOS_COLLAR_SLOT.get();
+
+        enableNameTagModify=ENABLE_NAME_TAG_MODIFY.get();
+        nameTagShowOwnerLimit=NAME_TAG_SHOW_OWNER_LIMIT.get();
+        enableNameTagCostumePrefix=ENABLE_NAME_TAG_COSTUME_PREFIX.get();
 
     }
 

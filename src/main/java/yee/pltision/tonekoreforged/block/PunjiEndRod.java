@@ -22,17 +22,13 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.datagen.TnDamageType;
 
 @SuppressWarnings("NullableProblems")
 public class PunjiEndRod extends Block implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED= BlockStateProperties.WATERLOGGED;
 
-    private static final VoxelShape BASE_SHAPE = Block.box(6.0D, 0.0D, 6.0D, 10.0D, 16.0D, 10.0D);
     private static final VoxelShape BASE_SHAPE_UP = Block.box(5.0D, 0.0D, 5.0D, 11.0D, 11.0D, 11.0D);
-    private static final VoxelShape BASE_SHAPE_DOWN = Block.box(5.0D, 5.0D, 5.0D, 11.0D, 16.0D, 11.0D);
-    private static final VoxelShape TIP_SHAPE_UP = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 11.0D, 9.0D);
-    private static final VoxelShape TIP_SHAPE_DOWN = Block.box(7.0D, 5.0d, 7.0D, 9.0D, 16.0D, 9.0D);
-    private static final VoxelShape MID_SHAPE = Block.box(7.0D, 0.0D, 7.0D, 9.0D, 16.0D, 9.0D);
 
     public PunjiEndRod(Properties p_154025_) {
         super(p_154025_);
@@ -70,7 +66,7 @@ public class PunjiEndRod extends Block implements SimpleWaterloggedBlock {
     }
 
     public void fallOn(Level p_154047_, BlockState p_154048_, BlockPos p_154049_, Entity p_154050_, float p_154051_) {
-        p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, ToNeko.damageSource(p_154047_,ToNeko.FALL_ON_END_ROD));
+        p_154050_.causeFallDamage(p_154051_ + 2.0F, 2.0F, ToNeko.damageSource(p_154047_, TnDamageType.FALL_ON_END_ROD));
     }
     public FluidState getFluidState(BlockState p_154235_) {
         return p_154235_.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(p_154235_);

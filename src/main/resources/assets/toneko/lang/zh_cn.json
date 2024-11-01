@@ -55,7 +55,7 @@
   "item.toneko.bell": "铃铛",
   "enchantment.toneko.rob_shear": "剥取",
   "curios.identifier.collar": "项圈",
-  "itemGroup.toneko": "toNekoReforged",
+  "itemGroup.toneko": "toNeko Reforged",
   "gui.toneko.entity'sCollar": "%s的项圈",
   "item.toneko.ender_bolt": "末影栓结",
   "item.toneko.ender_lead": "末影拴绳",
@@ -69,5 +69,11 @@
   "item.toneko.ender_lead.canceled": "已取消传送",
   "item.toneko.ender_lead.noTeleporter": "%s身上没有末影栓节",
   "item.toneko.ender_lead.bindingLore": "已绑定：",
-  "item.toneko.ender_lead.noBindingLore": "(未绑定实体)"
+  "item.toneko.ender_lead.noBindingLore": "(未绑定实体)",
+  "nameFormat.toneko.nameFormatNeko": "猫娘%s",
+  "nameFormat.toneko.nameFormatNekoWith1Owners": "%s的猫娘%s",
+  "nameFormat.toneko.nameFormatNekoWith2Owners": "%s和%s的猫娘%s",
+  "nameFormat.toneko.nameFormatNekoWith3Owners": "%s和%s还有%s的猫娘%s",
+  "nameFormat.toneko.nameFormatNekoWith4Owners": "%s, %s, %s和%s的猫娘%s",
+  "nameFormat.toneko.nameFormatNekoWith5Owners": "%s, %s, %s, %s和%s的猫娘%s"
 }

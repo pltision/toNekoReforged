@@ -16,8 +16,6 @@ import yee.pltision.tonekoreforged.collar.CollarState;
 import java.util.function.Consumer;
 
 public interface CollarBaubleState extends MenuProvider {
-    String COLLAR_BAUBLE_TAG="CollarBauble";
-
     ItemStack asItem();
 
     @Nullable
@@ -31,6 +29,9 @@ public interface CollarBaubleState extends MenuProvider {
     default void initEntity(@Nullable LivingEntity entity, CollarState state, int slot){
     }
 
+    default void unEquip(LivingEntity entity, CollarState state, int slot){
+    }
+
     /*@Override
     default CompoundTag serializeNBT(){
         return new CompoundTag();
@@ -39,7 +40,7 @@ public interface CollarBaubleState extends MenuProvider {
     @Override
     default void deserializeNBT(CompoundTag nbt){}*/
 
-    default boolean mayPlace(BaublesAccessor baublesAccessor,Object slotAccessor,int slot){
+    default boolean mayEquip(BaublesAccessor baublesAccessor, Object slotAccessor, int slot){
         return true;
     }
 

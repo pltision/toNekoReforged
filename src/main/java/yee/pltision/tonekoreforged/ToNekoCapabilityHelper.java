@@ -55,6 +55,7 @@ public class ToNekoCapabilityHelper {
                 capability.orElseThrow(()->new RuntimeException("LazyOptional is present but still throw exception!"))
                 : null;
     }
+    @SuppressWarnings("unchecked")
     public static <B extends CollarBaubleState> B getBaubleOnEntity(LivingEntity entity, Class<B> baubleClass, Predicate<? super B> predicate){
         CollarState state=getCollar(entity).getState();
         if(state!=null)
@@ -65,6 +66,8 @@ public class ToNekoCapabilityHelper {
             }
         return null;
     }
+
+    @SuppressWarnings("unchecked")
     public static <B extends CollarBaubleState> B getBaubleOnEntity(LivingEntity entity, Class<B> baubleClass){
         CollarState state=getCollar(entity).getState();
         if(state!=null)

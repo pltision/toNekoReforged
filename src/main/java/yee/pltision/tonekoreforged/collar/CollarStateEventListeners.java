@@ -10,11 +10,13 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yee.pltision.tonekoreforged.ToNeko;
 import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
+import yee.pltision.tonekoreforged.collar.bauble.NameFormatCollarBaubleState;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
 import yee.pltision.tonekoreforged.nekostate.util.NekoStateApi;
 
@@ -52,6 +54,15 @@ public class CollarStateEventListeners {
                 }
             }
 
+        }
+
+    }
+
+    @SubscribeEvent
+    public static void nameFormat(PlayerEvent.NameFormat event){
+        NameFormatCollarBaubleState baubleState=ToNekoCapabilityHelper.getBaubleOnEntity(event.getEntity(), NameFormatCollarBaubleState.class);
+        if(baubleState!=null){
+            event.setDisplayname(baubleState.format(event.getEntity(),event.getUsername(),event.getDisplayname()));
         }
     }
 

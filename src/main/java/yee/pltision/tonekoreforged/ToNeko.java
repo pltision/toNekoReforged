@@ -159,9 +159,6 @@ public class ToNeko
     public static final RegistryObject<PunjiEndRod> PUNJI_ROD =BLOCKS.register("punji_rod",()->new PunjiEndRod(BlockBehaviour.Properties.copy(Blocks.END_ROD)));
     public static final RegistryObject<Item> PUNJI_ROD_ITEM=ITEMS.register("punji_rod",()->new BlockItem(PUNJI_ROD.get(),new Item.Properties()));
 
-    public static final ResourceKey<DamageType> FALL_ON_END_ROD = ResourceKey.create(Registries.DAMAGE_TYPE, location("fall_on_end_rod"));
-    public static final ResourceKey<DamageType> FALLING_END_ROD = ResourceKey.create(Registries.DAMAGE_TYPE, location("falling_end_rod"));
-
     public static DamageSource damageSource(Level level, ResourceKey<DamageType> key){
         return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(key));
     }
