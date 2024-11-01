@@ -1,7 +1,9 @@
 package yee.pltision.tonekoreforged.datagen;
 
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -17,9 +19,9 @@ import yee.pltision.tonekoreforged.ToNeko;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 
 import static yee.pltision.tonekoreforged.datagen.TnDamageType.FALLING_END_ROD;
+import static yee.pltision.tonekoreforged.datagen.TnDamageType.FALL_ON_END_ROD;
 
 @Mod.EventBusSubscriber(modid = ToNeko.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModDataGenerator {
@@ -27,26 +29,24 @@ public class ModDataGenerator {
     public static void generateData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput output=generator.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookup=event.getLookupProvider();
 
         RegistrySetBuilder builder=new RegistrySetBuilder();
-
         builder.add(Registries.DAMAGE_TYPE,TnDamageType::bootstrap);
 
-        generator.addProvider(event.includeServer(),bindRegistries((packOutput, providerCompletableFuture) ->new DatapackBuiltinEntriesProvider(packOutput,providerCompletableFuture,builder,Set.of(ToNeko.MODID)) , lookup));
+        CompletableFuture<HolderLookup.Provider> lookup = event.getLookupProvider().thenApply(provider ->
+                builder.buildPatch(RegistryAccess.fromRegistryOfRegistries(BuiltInRegistries.REGISTRY), provider));
+
+        generator.addProvider(event.includeServer(), (DataProvider.Factory<DatapackBuiltinEntriesProvider>) o-> new DatapackBuiltinEntriesProvider(o,lookup,builder,Set.of(ToNeko.MODID)));
 
         generator.addProvider(event.includeServer(),new DamageTypeTagsProvider(output,lookup,ToNeko.MODID,null){
             @Override
             protected void addTags(HolderLookup.@NotNull Provider p_270108_) {
                 this.tag(DamageTypeTags.DAMAGES_HELMET).add( FALLING_END_ROD);
-                this.tag(DamageTypeTags.BYPASSES_SHIELD).addTag(DamageTypeTags.BYPASSES_ARMOR).add( FALLING_END_ROD);
-                this.tag(DamageTypeTags.IS_FALL).add(FALLING_END_ROD);
+                this.tag(DamageTypeTags.BYPASSES_SHIELD).add( FALLING_END_ROD);
+                this.tag(DamageTypeTags.IS_FALL).add(FALL_ON_END_ROD);
             }
         });
 
     }
 
-    static <T extends DataProvider> DataProvider.Factory<T> bindRegistries(BiFunction<PackOutput, CompletableFuture<HolderLookup.Provider>, T> p_256618_, CompletableFuture<HolderLookup.Provider> p_256515_) {
-        return (p_255476_) -> p_256618_.apply(p_255476_, p_256515_);
-    }
 }
