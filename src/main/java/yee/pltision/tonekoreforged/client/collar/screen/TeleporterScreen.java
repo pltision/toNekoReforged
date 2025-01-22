@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.client.collar;
+package yee.pltision.tonekoreforged.client.collar.screen;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.gui.GuiGraphics;

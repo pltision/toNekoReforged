@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.client.collar;
+package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
@@ -6,8 +6,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
-import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
-import yee.pltision.tonekoreforged.collar.CollarState;
+import yee.pltision.tonekoreforged.client.collar.CollarRenderHelper;
+import yee.pltision.tonekoreforged.client.collar.CollarRendererInstances;
 import yee.pltision.tonekoreforged.collar.bauble.CollarBaubleState;
 
 import java.util.Arrays;

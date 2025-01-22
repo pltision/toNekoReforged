@@ -1,4 +1,4 @@
-package yee.pltision.tonekoreforged.client.collar;
+package yee.pltision.tonekoreforged.client.collar.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import yee.pltision.tonekoreforged.ToNeko;
+import yee.pltision.tonekoreforged.client.collar.InitCollarScreenContext;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 
 @OnlyIn(Dist.CLIENT)

@@ -17,11 +17,12 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.collar.BasicCollarState;
-import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
 import yee.pltision.tonekoreforged.collar.CollarState;
+import yee.pltision.tonekoreforged.collar.EnderCollarMenu;
 
-public class BasicCollarItem extends Item implements CollarItem{
-    public BasicCollarItem(Properties p_41383_) {
+public class EnderCollarItem extends Item implements CollarItem {
+
+    public EnderCollarItem(Properties p_41383_) {
         super(p_41383_);
     }
 
@@ -38,7 +39,7 @@ public class BasicCollarItem extends Item implements CollarItem{
 
             @Override
             public AbstractContainerMenu createMenu(int id, @NotNull Inventory inventory, @NotNull Player p_39956_) {
-                return new BasicCollarMenu(id,inventory,state,item);
+                return new EnderCollarMenu(id,inventory,state,item);
             }
         };
 
@@ -58,4 +59,5 @@ public class BasicCollarItem extends Item implements CollarItem{
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return super.canApplyAtEnchantingTable(stack, enchantment)||enchantment instanceof BindingCurseEnchantment;
     }
+
 }

@@ -41,6 +41,7 @@ import yee.pltision.tonekoreforged.block.PointedEndRod;
 import yee.pltision.tonekoreforged.block.PunjiEndRod;
 import yee.pltision.tonekoreforged.client.nekoarmor.NekoArmorClientItemExtensions;
 import yee.pltision.tonekoreforged.collar.BasicCollarMenu;
+import yee.pltision.tonekoreforged.collar.EnderCollarMenu;
 import yee.pltision.tonekoreforged.collar.bauble.TeleporterMenu;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.curios.CuriosInterface;
@@ -50,6 +51,7 @@ import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
 import yee.pltision.tonekoreforged.item.collar.BellItem;
 import yee.pltision.tonekoreforged.item.collar.EnderBoltItem;
+import yee.pltision.tonekoreforged.item.collar.EnderCollarItem;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
@@ -124,12 +126,14 @@ public class ToNeko
     });
 
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ENDER_COLLAR=ITEMS.register("ender_collar",()->new EnderCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
     public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new EnderBoltItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLeadItem(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 
     public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
+    public static final RegistryObject<MenuType<EnderCollarMenu>> ENDER_COLLAR_MENU=MENUS.register("ender_collar",()-> new MenuType<>(EnderCollarMenu::new, FeatureFlagSet.of()));
     public static final RegistryObject<MenuType<TeleporterMenu>> ENDER_BLOT_MENU=MENUS.register("end_bolt",()-> new MenuType<>(TeleporterMenu::new, FeatureFlagSet.of()));
 
     public static final EnchantmentCategory SHEARS=EnchantmentCategory.create("shears",item -> item instanceof ShearsItem);

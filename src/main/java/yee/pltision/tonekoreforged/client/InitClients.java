@@ -10,10 +10,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import yee.pltision.tonekoreforged.ToNeko;
-import yee.pltision.tonekoreforged.client.collar.BasicCollarScreen;
+import yee.pltision.tonekoreforged.client.collar.screen.BasicCollarScreen;
 import yee.pltision.tonekoreforged.client.collar.CollarLayout;
 import yee.pltision.tonekoreforged.client.collar.CollarRendererInstances;
-import yee.pltision.tonekoreforged.client.collar.TeleporterScreen;
+import yee.pltision.tonekoreforged.client.collar.screen.EnderCollarScreen;
+import yee.pltision.tonekoreforged.client.collar.screen.TeleporterScreen;
 import yee.pltision.tonekoreforged.client.nekoarmor.ArmorModelInstances;
 
 import static yee.pltision.tonekoreforged.ToNeko.MODID;
@@ -48,6 +49,7 @@ public class InitClients {
     public static void onClientSetup(FMLClientSetupEvent event)
     {
         MenuScreens.register(ToNeko.BASIC_COLLAR_MENU.get(), BasicCollarScreen::new);
+        MenuScreens.register(ToNeko.ENDER_COLLAR_MENU.get(), EnderCollarScreen::new);
         MenuScreens.register(ToNeko.ENDER_BLOT_MENU.get(), TeleporterScreen::new);
     }
 }
