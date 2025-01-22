@@ -1,5 +1,7 @@
 package yee.pltision.tonekoreforged.curios;
 
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -38,4 +40,5 @@ public class CuriosCollarHandel implements CollarSlotHandler {
         if(curiosItemHandler.get()==null)return ItemStack.EMPTY;
         return curiosItemHandler.get().getStacks().getSlots()>0?curiosItemHandler.get().getStacks().getStackInSlot(0):null;
     }
+
 }

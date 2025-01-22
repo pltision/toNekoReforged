@@ -20,16 +20,12 @@ public interface CollarSlotHandler extends CollarStateHandler{
 
     default void setCollarSlotAndSend(LivingEntity entity, ItemStack item){
         this.setCollarSlot(item);
-        NekoNetworks.INSTANCE.send(
-                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity),
-                new CCollarStateChangePacket(entity.getId(), getCollarItem())
-        );
-//        if(entity instanceof ServerPlayer player)
-//            sendToClient(player,player);
     }
 
     default void sendToClient(ServerPlayer player, LivingEntity entity) {
-        NekoNetworks.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new CCollarStateChangePacket(entity.getId(), getCollarItem()));
+    }
+
+    default void tracking(LivingEntity entity) {
     }
 
     default boolean canTake(@Nullable ServerPlayer taker,LivingEntity entity){

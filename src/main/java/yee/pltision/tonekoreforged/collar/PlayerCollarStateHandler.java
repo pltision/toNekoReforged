@@ -5,8 +5,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import yee.pltision.tonekoreforged.ToNekoCapabilityHelper;
+import yee.pltision.tonekoreforged.network.CCollarStateChangePacket;
+import yee.pltision.tonekoreforged.network.NekoNetworks;
 
 public class PlayerCollarStateHandler implements CollarSlotHandler {
     CollarState collarState;
@@ -59,5 +62,22 @@ public class PlayerCollarStateHandler implements CollarSlotHandler {
     @Override
     public boolean disableSlotUi() {
         return false;
+    }
+
+    public void setCollarSlotAndSend(LivingEntity entity, ItemStack item){
+        CollarSlotHandler.super.setCollarSlotAndSend(entity,item);
+        NekoNetworks.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(()->entity),
+                new CCollarStateChangePacket(entity.getId(), getCollarItem())
+        );
+    }
+
+    public void sendToClient(ServerPlayer player, LivingEntity entity) {
+        NekoNetworks.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new CCollarStateChangePacket(entity.getId(), getCollarItem()));
+    }
+
+    public void tracking(LivingEntity entity) {
+        if( ! getCollarItem().isEmpty() )
+            NekoNetworks.INSTANCE.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), new CCollarStateChangePacket(entity.getId(), getCollarItem()));
     }
 }

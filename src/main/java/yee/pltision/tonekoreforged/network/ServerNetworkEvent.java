@@ -15,23 +15,28 @@ public class ServerNetworkEvent {
     @SubscribeEvent
     public static void trackingEntity(PlayerEvent.StartTracking event){
 //        System.out.println("yee2");
-        if(
-                event.getTarget() instanceof LivingEntity entity
-        ){
-            CollarSlotHandler handler= ToNekoCapabilityHelper.getCollar(entity);
-            ItemStack item=handler.getCollarItem();
-            if( ( ! item.isEmpty() ) &&event.getEntity() instanceof ServerPlayer player) {
-                handler.sendToClient(player,entity);
-            }
+        if(event.getTarget() instanceof LivingEntity entity){
+            ToNekoCapabilityHelper.getCollar(entity).tracking(entity);
         }
     }
     @SubscribeEvent
     public static void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event){
-        if(
-                event.getEntity() instanceof ServerPlayer player
-        ){
-            CollarSlotHandler handler= ToNekoCapabilityHelper.getCollar(player);
-            handler.sendToClient(player,player);
+        if(event.getEntity() instanceof ServerPlayer player){
+            ToNekoCapabilityHelper.getCollar(player).sendToClient(player,player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void respawn(PlayerEvent.PlayerRespawnEvent event){
+        if(event.getEntity() instanceof ServerPlayer player){
+            ToNekoCapabilityHelper.getCollar(player).sendToClient(player,player);
+        }
+    }
+
+    @SubscribeEvent
+    public static void changedDim(PlayerEvent.PlayerChangedDimensionEvent event){
+        if(event.getEntity() instanceof ServerPlayer player){
+            ToNekoCapabilityHelper.getCollar(player).sendToClient(player,player);
         }
     }
 

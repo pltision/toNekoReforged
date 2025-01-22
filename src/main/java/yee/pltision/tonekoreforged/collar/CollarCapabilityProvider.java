@@ -2,6 +2,7 @@ package yee.pltision.tonekoreforged.collar;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -71,6 +72,7 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
         @Override
         public void setCollarSlot(ItemStack item) {
         }
+
     };
 
     @SubscribeEvent
@@ -116,15 +118,5 @@ public class CollarCapabilityProvider implements ICapabilitySerializable<Compoun
             }
         });
         event.getOriginal().invalidateCaps();
-    }
-
-    @SubscribeEvent
-    public static void respawn(PlayerEvent.PlayerRespawnEvent event){
-        event.getEntity().getCapability(COLLAR_HANDLER,null).ifPresent(cap->
-                NekoNetworks.INSTANCE.send(
-                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity),
-                        new CCollarStateChangePacket(event.getEntity().getId(), cap.getCollarItem())
-                )
-        );
     }
 }
