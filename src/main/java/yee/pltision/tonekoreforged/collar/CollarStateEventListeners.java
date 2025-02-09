@@ -67,7 +67,7 @@ public class CollarStateEventListeners {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void dropItems(LivingDropsEvent event){
         LivingEntity entity=event.getEntity();
 
