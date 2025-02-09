@@ -156,6 +156,7 @@ dependencies {
 
     // Compile against only the API artifact
     compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api"))
+//    implementation(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}"))
     // Use the full Curios API jar at runtime
 //    runtimeOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}"))
 }

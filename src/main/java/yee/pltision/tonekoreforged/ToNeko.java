@@ -46,12 +46,9 @@ import yee.pltision.tonekoreforged.collar.bauble.TeleporterMenu;
 import yee.pltision.tonekoreforged.config.Config;
 import yee.pltision.tonekoreforged.curios.CuriosInterface;
 import yee.pltision.tonekoreforged.enchentment.RobShearEnchantment;
-import yee.pltision.tonekoreforged.item.EnderLeadItem;
 import yee.pltision.tonekoreforged.item.NekoArmorMaterial;
 import yee.pltision.tonekoreforged.item.collar.BasicCollarItem;
 import yee.pltision.tonekoreforged.item.collar.BellItem;
-import yee.pltision.tonekoreforged.item.collar.EnderBoltItem;
-import yee.pltision.tonekoreforged.item.collar.EnderCollarItem;
 import yee.pltision.tonekoreforged.network.NekoNetworks;
 import yee.pltision.tonekoreforged.recipe.DyingTranslateRecipe;
 
@@ -126,10 +123,10 @@ public class ToNeko
     });
 
     public static final RegistryObject<Item> COLLAR=ITEMS.register("collar",()->new BasicCollarItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ENDER_COLLAR=ITEMS.register("ender_collar",()->new EnderCollarItem(new Item.Properties().stacksTo(1)));
+//    public static final RegistryObject<Item> ENDER_COLLAR=ITEMS.register("ender_collar",()->new EnderCollarItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> BELL=ITEMS.register("bell",()->new BellItem(new Item.Properties()));
-    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new EnderBoltItem(new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLeadItem(new Item.Properties()));
+//    public static final RegistryObject<Item> ENDER_BLOT=ITEMS.register("ender_bolt",()->new EnderBoltItem(new Item.Properties().stacksTo(1)));
+//    public static final RegistryObject<Item> ENDER_LEAD=ITEMS.register("ender_lead",()->new EnderLeadItem(new Item.Properties()));
     public static final RegistryObject<SoundEvent> BELL_SOUND=SOUND_EVENTS.register("item.bell.ding",()->SoundEvent.createVariableRangeEvent(ToNeko.location("item.bell.ding")));
 
     public static final RegistryObject<MenuType<BasicCollarMenu>> BASIC_COLLAR_MENU=MENUS.register("basic_collar",()-> new MenuType<>(BasicCollarMenu::new, FeatureFlagSet.of()));
@@ -230,11 +227,16 @@ public class ToNeko
             Class<?> curiosCapability=Class.forName("top.theillusivec4.curios.api.CuriosCapability");
             Field field=curiosCapability.getField("ITEM");
 
+            LOGGER.info("Found Curios mod class");
             curiosItemCapability =(Capability<?>) field.get(null);
+            installedCurios=true;
         } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException | ClassCastException ignored) {
+//            ignored.printStackTrace();
         }
-        if(installedCurios())
+        if(installedCurios()) {
+//            LOGGER.info("Found Curios mod capability");
             CuriosInterface.registryRenderers();
+        }
 
     }
 
